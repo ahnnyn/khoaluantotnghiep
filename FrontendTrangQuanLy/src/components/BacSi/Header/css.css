@@ -1,0 +1,53 @@
+.header-container {
+  background-color: #072D44;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccebea;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.logo-img {
+  height: 40px;
+}
+
+.welcome-text {
+  font-size: 18px;
+  font-weight: 500;
+  color: #FFF;
+}
+
+.welcome-text span {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.header-actions .icon-btn {
+  font-size: 18px;
+  margin-left: 8px;
+  color: #007bff;
+}
+
+
+.marquee {
+    width: 100%; 
+    overflow: hidden;  /* Ẩn chữ ngoài vùng chứa */
+    white-space: nowrap; /* Đảm bảo chữ không xuống dòng */
+  }
+
+  .marquee-text {
+    display: inline-block; /* Chữ chạy theo chiều ngang */
+    animation: marquee 10s linear infinite; /* Sử dụng animation */
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(100%); /* Bắt đầu từ bên phải */
+    }
+    100% {
+      transform: translateX(-100%); /* Chạy ra ngoài bên trái */
+    }
+  }

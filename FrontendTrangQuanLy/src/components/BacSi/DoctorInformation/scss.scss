@@ -1,0 +1,10 @@
+#basic_fullName, #basic_address, #basic_phoneNumber, #basic_email{
+    border: 1px solid rgb(214, 214, 214);
+    border-radius: 5px;
+}
+
+.ant-form-item-label > label {
+  font-weight: 600;
+  font-size: 16px;
+  color: #1f1f1f; /* hoặc #000 nếu muốn đậm hơn */
+}

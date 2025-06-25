@@ -1,0 +1,144 @@
+.container-2 {
+  width: 100%;
+  max-width: 100%;
+  height: calc(100vh - 100px);
+  overflow-y: scroll;            /* vẫn cho cuộn */
+  -ms-overflow-style: none;      /* IE, Edge */
+  scrollbar-width: none; 
+}
+
+.container-2::-webkit-scrollbar {
+  display: none;                 /* Chrome, Safari */
+}
+
+  .account-tab-area-start {
+  padding: 30px 0;
+  background-color: #f0f2f5;
+}
+
+
+
+/* Sidebar style */
+.sidebar-left {
+  background-color: #072D44;
+  color: white;
+  padding: 20px 10px;
+  border-radius: 8px;
+}
+
+.user-info {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+  margin-bottom: 10px;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.user-role {
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* Menu buttons */
+.sidebar-menu .nav-link {
+  color: white;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s;
+  font-size: 16px;
+}
+
+.sidebar-menu .nav-link:hover {
+  background-color: #5790AB;
+  color: white;
+}
+
+.sidebar-menu .nav-link.active,
+.sidebar-menu .nav-link:active,
+.sidebar-menu .nav-link.show {
+  background-color: #064469 !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+/* Nội dung bên phải */
+.content-area {
+  background-color: #fff;
+  padding: 20px;
+  border-left: 1px solid #d9d9d9;
+}
+
+/* Wrapper tổng chứa sidebar và nội dung */
+@media (min-width: 992px) {
+  .sidebar-left {
+    position: fixed; /* cố định ở bên trái */
+    top: 100px; /* bằng chiều cao header nếu header cao 100px */
+    left: 0;
+    width: 16.666667%; /* = col-lg-2 */
+    height: calc(100vh - 100px); /* 100vh trừ header và padding/margin */
+    background-color: #072D44;
+    color: white;
+    padding: 20px 10px;
+    border-radius: 8px;
+    overflow-y: auto;
+  }
+
+  .content-area {
+    margin-left: 16.666667%; /* để tránh bị đè lên bởi sidebar cố định */
+    padding: 20px;
+    top: 100px;
+    background-color: #fff;
+    border-left: 1px solid #d9d9d9;
+    height: calc(100vh - 100px);
+    padding: 20px 10px;
+  }
+
+  .container-2 {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .row {
+    margin: 0;
+  }
+}
+
+/* Mobile: không cần chiều cao 100%, để tự cuộn */
+@media (max-width: 991.98px) {
+  .sidebar-left {
+    width: 100%;
+    position: relative;
+    height: auto;
+  }
+
+  .content-area {
+    width: 100%;
+    height: auto;
+  }
+
+  .row.full-height-layout {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
+/* Phần còn lại giữ nguyên */
