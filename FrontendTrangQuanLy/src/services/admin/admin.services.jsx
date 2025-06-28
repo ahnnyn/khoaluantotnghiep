@@ -1,4 +1,4 @@
-import axios from "utils/axios-customize"
+import axios from "utils/axios-customize";
 
 const fetchAllVaiTro = async () => {
   const URL_BACKEND = `/api/vaitro.php?action=layDanhSachVaiTro`;
@@ -9,11 +9,14 @@ const createVaiTro = async (tenVaiTro) => {
 };
 
 const updateVaiTro = async (maVaiTro, tenVaiTro) => {
-  return axios.post("/api/vaitro.php?action=suaVaiTro", { maVaiTro, tenVaiTro });
+  return axios.post("/api/vaitro.php?action=suaVaiTro", {
+    maVaiTro,
+    tenVaiTro,
+  });
 };
 
 const deleteVaiTro = async (maVaiTro) => {
-  return axios.delete(`/api/vaitro.php?action=xoaVaiTro&maVaiTro=${ maVaiTro }`);
+  return axios.delete(`/api/vaitro.php?action=xoaVaiTro&maVaiTro=${maVaiTro}`);
 };
 
 const fetchAllBenhNhan = async () => {
@@ -25,7 +28,7 @@ const fetchOneAccKH = (maBenhNhan) => {
   return axios.get(URL_BACKEND);
 };
 
-const callUploadDoctorImg = (file) => {
+const callUploadImg = (file) => {
   const bodyFormData = new FormData();
   bodyFormData.append("file", file);
 
@@ -37,7 +40,6 @@ const callUploadDoctorImg = (file) => {
     }
   );
 };
-
 
 const createChuyenKhoa = (name, description, image) => {
   return axios.post("/api/doctor/create-chuyen-khoa", {
@@ -57,7 +59,6 @@ const updateChuyenKhoa = (_id, name, description, image) => {
     image,
   });
 };
-
 
 const fetchAllDepartment = async () => {
   const URL_BACKEND = `/api/admin/get-all-departments`;
@@ -155,7 +156,7 @@ const updateDoctor = (
   moTa,
   maKhoa
 ) => {
-axios.post("/api/bacsi.php?action=update-thongtin-bacsi", {
+  axios.post("/api/bacsi.php?action=update-thongtin-bacsi", {
     maBacSi,
     hoTen,
     gioiTinh,
@@ -173,7 +174,6 @@ const deleteBacSi = async (maBacSi) => {
   return axios.delete(`/api/bacsi.php?action=xoaBacSi&maBacSi=${maBacSi}`);
 };
 
-
 export {
   fetchAllVaiTro,
   createVaiTro,
@@ -181,7 +181,7 @@ export {
   deleteVaiTro,
   fetchAllBenhNhan,
   fetchOneAccKH,
-  callUploadDoctorImg,
+  callUploadImg,
   createChuyenKhoa,
   deleteChuyenKhoa,
   updateChuyenKhoa,
@@ -192,4 +192,4 @@ export {
   themBacSi,
   updateDoctor,
   deleteBacSi,
-}
+};

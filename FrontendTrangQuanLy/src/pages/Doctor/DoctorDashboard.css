@@ -26,24 +26,39 @@ body {
   white-space: nowrap;
 }
 /* ===== SIDEBAR ===== */
+/* ===== SIDEBAR ===== */
 .ant-layout-sider {
   background-color: #ffffff !important;
   border-right: 1px solid #eaeaea;
-  overflow: auto;
   height: 100vh;
   position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ẩn scroll ngoài, cuộn bên trong */
 }
 
 .ant-layout-sider .ant-layout-sider-children {
-  height: 100%;
-  overflow: auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 100px; /* Giúp tránh che nội dung cuối */
 }
 
+/* Custom scrollbar (optional) */
+.ant-layout-sider-children::-webkit-scrollbar {
+  width: 6px;
+}
+.ant-layout-sider-children::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+/* Sidebar menu item */
 .ant-menu-light .ant-menu-item-selected {
   background-color: #e6f7ff !important;
   color: #1890ff !important;
@@ -69,6 +84,7 @@ body {
   color: #999;
   text-transform: uppercase;
 }
+
 
 /* ===== SUBMENU INDENTATION ===== */
 .ant-menu-submenu .ant-menu-item {
@@ -159,22 +175,31 @@ body {
   line-height: 1;
 }
 
-/* ===== SEARCH BOX ===== */
-.ant-input-search {
-  width: 300px;
+/* ===== SEARCH BOX TRONG HEADER ===== */
+.dashboard-header .custom-search-input {
+  width: 500px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 20px;
+  margin-left: 80px;
+  height: 40px;
+  display: flex;
+  align-items: center;
 }
 
-.ant-input-search-button {
+.dashboard-header .ant-input-search-button {
   background-color: #1890ff !important;
   color: #fff !important;
   border: none !important;
   transition: background-color 0.3s;
+  height: 40px;
+  width: 40px;
 }
 
-.ant-input-search-button:hover {
+.dashboard-header .ant-input {
+  height: 40px !important;
+}
+
+.dashboard-header .ant-input-search-button:hover {
   background-color: #40a9ff !important;
 }
 
@@ -243,45 +268,63 @@ body {
   color: #096dd9;
 }
 
-/* Dark mode style */
-body[data-theme="dark"] .theme-toggle {
-  background-color: transparent;
-  color: var(--menu-text);
-}
-
-body[data-theme="dark"] .theme-toggle:hover {
-  background-color: #303030;
-  color: var(--menu-hover);
-}
-
-
-
-/* Toàn cục */
 body[data-theme="dark"] {
   --bg-color: #1f1f1f;
   --text-color: #f0f0f0;
   --menu-bg: #141414;
   --menu-text: #ccc;
   --menu-hover: #1890ff;
-
-  background-color: var(--bg-color) !important;
-  color: var(--text-color) !important;
+  --menu-active-bg: #303030;
+  --menu-group-color: #888;
 }
 
-/* Sidebar */
+/* Sider + Menu chung */
 [data-theme="dark"] .ant-layout-sider {
   background-color: var(--menu-bg) !important;
 }
+
 [data-theme="dark"] .ant-menu {
   background-color: var(--menu-bg) !important;
   color: var(--menu-text) !important;
 }
+
+[data-theme="dark"] .ant-menu-item,
+[data-theme="dark"] .ant-menu-submenu-title {
+  background-color: var(--menu-bg) !important;
+  color: var(--menu-text) !important;
+}
+
+/* Hover & Active */
 [data-theme="dark"] .ant-menu-item:hover,
-[data-theme="dark"] .ant-menu-item-selected {
-  background-color: #303030 !important;
+[data-theme="dark"] .ant-menu-submenu-title:hover {
+  background-color: var(--menu-active-bg) !important;
   color: var(--menu-hover) !important;
 }
 
+[data-theme="dark"] .ant-menu-item-selected {
+  background-color: var(--menu-active-bg) !important;
+  color: var(--menu-hover) !important;
+}
+
+/* Group title (Overview / Preference...) */
+[data-theme="dark"] .ant-menu-item-group-title {
+  color: var(--menu-group-color) !important;
+}
+
+/* Collapse icon + theme toggle */
+[data-theme="dark"] .toggle-icon {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .theme-toggle {
+  background-color: transparent;
+  color: var(--menu-text);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+  background-color: var(--menu-active-bg);
+  color: var(--menu-hover);
+}
 /* Header */
 body[data-theme="dark"] .dashboard-header {
   background-color: #1f1f1f !important;
@@ -289,10 +332,13 @@ body[data-theme="dark"] .dashboard-header {
   border-bottom: 1px solid #333;
 }
 
-/* Content */
-body[data-theme="dark"] .ant-layout-content {
-  background-color: #181818 !important;
+body[data-theme="dark"] .dashboard-header .doctor-name,
+body[data-theme="dark"] .dashboard-header .doctor-role {
   color: #f0f0f0 !important;
+}
+
+body[data-theme="dark"] .ant-layout {
+  background-color: var(--menu-bg) !important;
 }
 
 /* Card */

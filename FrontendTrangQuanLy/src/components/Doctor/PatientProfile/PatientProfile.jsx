@@ -137,6 +137,14 @@ const PatientProfile = () => {
   ];
 
   return (
+    <>
+    <Row>
+      <Col span={24} style={{ padding: "10px 0 30px", fontSize: "20px", textAlign: "center" }}>
+              <span style={{ fontWeight: "550", color: "#2A95BF" }}>
+                HỒ SƠ BỆNH NHÂN ĐÃ KHÁM
+              </span>
+      </Col>
+    </Row>
     <Row gutter={[20, 10]}>
       <Col xs={24} style={{ display: "flex", justifyContent: "center" }}>
         <div style={{ width: "800px", maxWidth: "100%" }}>
@@ -168,6 +176,7 @@ const PatientProfile = () => {
         setDataView={setDataView}
       />
     </Row>
+  </>
   );
 };
 

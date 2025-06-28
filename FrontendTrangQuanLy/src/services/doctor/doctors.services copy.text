@@ -138,7 +138,7 @@ const dangKyKhungGioKham = (maBS, ngayLam, khungGio, hinhThucKham) => {
 const xoaLichCu = (_id) => {
   return axios.post("/api/doctor/delete-old-time-slots", { _id: _id });
 };
-const callUploadDoctorImg = (file) => {
+const callUploadImg = (file) => {
   const bodyFormData = new FormData();
   bodyFormData.append("file", file);
 
@@ -392,7 +392,7 @@ export {
   getTimeSlotsByDoctorAndDate,
   dangKyKhungGioKham,
   xoaLichCu,
-  callUploadDoctorImg,
+  callUploadImg,
   fetchBacSiByMaBS,
   fetchDoctorById,
   fetchDoctorByNgayGio1,

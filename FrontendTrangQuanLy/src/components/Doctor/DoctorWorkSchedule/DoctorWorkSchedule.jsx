@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { useEffect, useState } from "react";
 import "./DoctorWorkSchedule.scss";
-import { getUserById } from "../../../services/user/user.auth.services";
+import { getUserById } from "services/user/user.auth.services";
 import {
   fetchAllTimeSlots,
   fetchWorkScheduleByDoctor,
@@ -126,7 +126,7 @@ const DoctorWorkSchedule = () => {
   useEffect(() => {
     const startOfWeek = selectedWeek.startOf("week");
     const days = Array.from({ length: 7 }, (_, i) => startOfWeek.add(i, "day"));
-
+    const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
     const columns = [
       {
         title: "Khung giờ",
@@ -134,30 +134,58 @@ const DoctorWorkSchedule = () => {
         key: "timeRange",
         fixed: "left",
       },
-      ...days.map((day) => ({
-        title: day.format("dddd, DD/MM"),
-        dataIndex: day.format("YYYY-MM-DD"),
-        key: day.format("YYYY-MM-DD"),
-        render: (slots) => (
-          <Space direction="vertical">
-            {slots?.map((item, idx) => (
-              <div key={idx} style={{ background: "#e6f7ff", border: "1px solid #91d5ff", padding: 8, borderRadius: 4 }}>
-                <Tag color={item.examinationType === "OFFLINE" ? "green" : "blue"}>
-                  {item.examinationType === "OFFLINE" ? "Chuyên khoa" : "Trực tuyến"} - {statusMap[item.status] || item.status}
-                </Tag>
-                {item.examinationId && (
-                  <div style={{ marginTop: 4 }}>
-                    <Tag color={item.examinationId.status === "completed" ? "green" : item.examinationId.status === "cancelled" ? "red" : "orange"}>
-                      {examStatusMap[item.examinationId.status] || item.examinationId.status}
-                    </Tag>
-                    <Tag color="purple">{item.examinationId.patientProfileId?.fullName || "Chưa có bệnh nhân"}</Tag>
-                  </div>
-                )}
-              </div>
-            ))}
-          </Space>
-        ),
-      })),
+      ...days.map((day) => {
+        const capitalizedDay = capitalizeFirstLetter(day.format("dddd"));
+        return {
+          title: `${capitalizedDay}, ${day.format("DD/MM")}`,
+          dataIndex: day.format("YYYY-MM-DD"),
+          key: day.format("YYYY-MM-DD"),
+          render: (slots) => (
+            <Space direction="vertical">
+              {slots?.map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    background: "#e6f7ff",
+                    border: "1px solid #91d5ff",
+                    padding: 8,
+                    borderRadius: 4,
+                  }}
+                >
+                  <Tag
+                    color={item.examinationType === "OFFLINE" ? "green" : "blue"}
+                  >
+                    {item.examinationType === "OFFLINE"
+                      ? "Chuyên khoa"
+                      : "Trực tuyến"}{" "}
+                    - {statusMap[item.status] || item.status}
+                  </Tag>
+                  {item.examinationId && (
+                    <div style={{ marginTop: 4 }}>
+                      <Tag
+                        color={
+                          item.examinationId.status === "completed"
+                            ? "green"
+                            : item.examinationId.status === "cancelled"
+                            ? "red"
+                            : "orange"
+                        }
+                      >
+                        {examStatusMap[item.examinationId.status] ||
+                          item.examinationId.status}
+                      </Tag>
+                      <Tag color="purple">
+                        {item.examinationId.patientProfileId?.fullName ||
+                          "Chưa có bệnh nhân"}
+                      </Tag>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </Space>
+          ),
+        };
+      }),
     ];
 
     const rows = Array.isArray(dataTime) ? dataTime.map((timeSlot) => {
@@ -232,8 +260,8 @@ const DoctorWorkSchedule = () => {
   return (
     <>
     <Row>
-      <Col span={24} style={{ padding: "20px 0 30px", fontSize: "20px", textAlign: "center" }}>
-              <span style={{ fontWeight: "550", color: "navy" }}>
+      <Col span={24} style={{ padding: "10px 0 30px", fontSize: "20px", textAlign: "center" }}>
+              <span style={{ fontWeight: "550", color: "#2A95BF" }}>
                 ĐĂNG KÝ LỊCH LÀM VIỆC
               </span>
       </Col>
@@ -298,7 +326,7 @@ const DoctorWorkSchedule = () => {
         </Row>
 
         <Row justify="center" style={{ marginTop: 20 }}>
-          <Button type="primary" htmlType="submit" style={{width: "200px", height: "40px"}}>LƯU LỊCH</Button>
+          <Button type="primary" htmlType="submit" style={{width: "200px", height: "40px", backgroundColor: "#2A95BF"}}>LƯU LỊCH</Button>
         </Row>
       </Form>
 
@@ -306,7 +334,7 @@ const DoctorWorkSchedule = () => {
 
       <Row>
         <Col span={24} style={{ padding: "10px 0 20px", fontSize: "20px", textAlign: "center" }}>
-                <span style={{ fontWeight: "550", color: "navy" }}>
+                <span style={{ fontWeight: "550", color: "#2A95BF" }}>
                   LỊCH LÀM VIỆC
                 </span>
         </Col>
@@ -334,7 +362,7 @@ const DoctorWorkSchedule = () => {
         bordered
         pagination={false}
         scroll={{ x: "max-content" }}
-        style={{ marginTop: 20 }}
+        style={{ marginTop: 20, marginBottom: 100 }}
       />
     </>
   );

@@ -16,8 +16,7 @@ import {
   KeyOutlined,
   ProfileOutlined,
   IdcardOutlined,
-  BulbOutlined,
-  BulbFilled,
+  DownOutlined
 } from "@ant-design/icons";
 import { FaSun, FaMoon } from "react-icons/fa";
 
@@ -28,6 +27,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getUserById, logoutUser } from "services/user/user.auth.services";
@@ -39,7 +39,6 @@ import DoctorUpdate from "components/Doctor/DoctorInformation/DoctorUpdate";
 import DoctorWorkSchedule from "components/Doctor/DoctorWorkSchedule/DoctorWorkSchedule";
 import ChangePasswordModal from "components/Doctor/ChangePasswordModal/ChangePasswordModal";
 import "./DoctorDashboard.css";
-import { SunburstChart } from "recharts";
 
 const { Header, Sider, Content } = Layout;
 
@@ -207,7 +206,7 @@ const toggleTheme = (checked) => {
               onClick={() => setCollapsed(true)}
             />
           )}
-          <div className="header-logo">MediCare+</div>
+          <div className="header-logo">Healio</div>
           <Input.Search placeholder="Search..." className="custom-search-input" />
         </div>
 
@@ -229,7 +228,12 @@ const toggleTheme = (checked) => {
           >
             <div
               className="user-dropdown"
-              style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}
+              style={{
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+              }}
             >
               <div className="user-info" style={{ textAlign: "right" }}>
                 <div className="doctor-name">{user?.fullName}</div>
@@ -244,8 +248,10 @@ const toggleTheme = (checked) => {
                 alt="avatar"
                 className="doctor-avatar"
               />
+              <DownOutlined style={{ fontSize: 12, color: "#999" }} />
             </div>
           </Dropdown>
+
         </div>
       </Header>
 

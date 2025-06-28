@@ -9,7 +9,6 @@ import {
   Input,
   InputNumber,
   message,
-  Modal,
   notification,
   Radio,
   Row,
@@ -19,7 +18,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUserById, updateUserInfo, uploadFile } from "services/user/user.auth.services";
-import { fetchAllDepartments, fetchAllPositons } from "../../../services/doctor/doctors.services";
+import { fetchAllDepartments, fetchAllPositons } from "services/doctor/doctors.services";
 import { FaSave } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { doUpdateAccountAction } from "@redux/account/accountSlice";
@@ -241,8 +240,8 @@ useEffect(() => {
 
   return (
     <Row>
-      <Col span={24} style={{ padding: "0 0 20px", fontSize: "20px", textAlign: "center" }}>
-        <span style={{ fontWeight: "550", color: "navy" }}>
+      <Col span={24} style={{ padding: "10px 0 20px", fontSize: "20px", textAlign: "center" }}>
+        <span style={{ fontWeight: "550", color: "#2A95BF" }}>
           THÔNG TIN CÁ NHÂN
         </span>
       </Col>

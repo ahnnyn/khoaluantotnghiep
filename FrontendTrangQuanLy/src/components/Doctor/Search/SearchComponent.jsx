@@ -1,6 +1,6 @@
 import { Input } from 'antd';
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
+
 const { Search } = Input;
 
 const SearchComponent = ({ onSearch, placeholder }) => {
@@ -21,13 +21,15 @@ const SearchComponent = ({ onSearch, placeholder }) => {
 
     return (
         <Search
-            style={{ border: "1px solid blue", borderRadius:"5px"}}
-            placeholder={placeholder} 
+            placeholder={placeholder}
             onSearch={onSearch}
-            enterButton 
+            enterButton
             onChange={(e) => handleSearchChange(e.target.value)}
-            
+            style={{
+                width: '100%',            
+            }}
         />
     );
 };
-export default SearchComponent
+
+export default SearchComponent;

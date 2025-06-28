@@ -18,7 +18,7 @@ import { triggerReloadMedicalData } from "@redux/app/globalSlice";
 import { useDispatch } from "react-redux";
 
 
-const ModalPhieuKham = ({ isModalOpen, setIsModalOpen, editingRecord }) => {
+const ModalMedicalExamination = ({ isModalOpen, setIsModalOpen, editingRecord }) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -190,4 +190,4 @@ const ModalPhieuKham = ({ isModalOpen, setIsModalOpen, editingRecord }) => {
   );
 };
 
-export default ModalPhieuKham;
+export default ModalMedicalExamination;

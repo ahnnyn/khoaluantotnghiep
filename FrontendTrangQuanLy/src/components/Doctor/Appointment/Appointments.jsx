@@ -31,7 +31,7 @@ import {
   fetchMedicalExaminationsByDoctor,
 } from "services/doctor/doctors.services";
 import SearchComponent from "../Search/SearchComponent";
-import ModalPhieuKham from "../PhieuKhamBenh/ModalPhieuKham";
+import ModalMedicalExamination from "../MedicalExamination/ModalMedicalExamination";
 import { useDispatch } from "react-redux";
 import { triggerReloadMedicalData } from "@redux/app/globalSlice";
 
@@ -296,8 +296,15 @@ const Appointment = () => {
 
   return (
     <>
+      <Row>
+        <Col span={24} style={{ padding: "10px 0 30px", fontSize: "20px", textAlign: "center" }}>
+          <span style={{ fontWeight: "550", color: "#2A95BF" }}>
+            LỊCH HẸN KHÁM BỆNH
+          </span>
+        </Col>
+      </Row>
       <Row gutter={[20, 25]}>
-        <Col xs={6}>
+        <Col xs={5}>
           <Select
             value={statusFilter}
             onChange={setStatusFilter}
@@ -305,7 +312,7 @@ const Appointment = () => {
             options={[{ value: "tatca", label: "Tất cả trạng thái khám" }, ...Object.entries(STATUS_MAP).map(([v, l]) => ({ value: v, label: l }))]}
           />
         </Col>
-        <Col xs={6}>
+        <Col xs={5}>
           <Select
             value={paymentFilter}
             onChange={setPaymentFilter}
@@ -313,7 +320,7 @@ const Appointment = () => {
             options={[{ value: "tatca", label: "Tất cả trạng thái thanh toán" }, ...Object.entries(PAYMENT_STATUS_MAP).map(([v, l]) => ({ value: v, label: l }))]}
           />
         </Col>
-        <Col xs={12}>
+        <Col xs={14}>
           <SearchComponent
             onSearch={setSearchValue}
             placeholder="Tìm bệnh nhân theo tên, email hoặc số điện thoại"
@@ -343,7 +350,7 @@ const Appointment = () => {
         setOpenViewDH={(open) => setViewModal((prev) => ({ ...prev, open }))}
       />
 
-      <ModalPhieuKham
+      <ModalMedicalExamination
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         editingRecord={editingRecord}
