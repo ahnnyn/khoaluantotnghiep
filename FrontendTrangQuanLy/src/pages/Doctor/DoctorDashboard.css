@@ -1,0 +1,318 @@
+/* ===== GLOBAL RESET ===== */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background-color: #f4f6f9;
+  color: #1e1e1e;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  text-align: center;
+  padding: 18px 0;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  letter-spacing: 1px;
+}
+
+.header-logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a95bf;
+  margin-right: 24px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+/* ===== SIDEBAR ===== */
+.ant-layout-sider {
+  background-color: #ffffff !important;
+  border-right: 1px solid #eaeaea;
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.ant-layout-sider .ant-layout-sider-children {
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-menu-light .ant-menu-item-selected {
+  background-color: #e6f7ff !important;
+  color: #1890ff !important;
+  font-weight: 600;
+}
+
+.ant-menu-light .ant-menu-item:hover {
+  background-color: #f0f5ff !important;
+  color: #096dd9 !important;
+}
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+  padding-left: 24px !important;
+  font-size: 15px;
+}
+
+.ant-menu-item-group-title {
+  padding-left: 16px;
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #999;
+  text-transform: uppercase;
+}
+
+/* ===== SUBMENU INDENTATION ===== */
+.ant-menu-submenu .ant-menu-item {
+  padding-left: 40px !important; /* lùi submenu con vào sâu hơn */
+}
+
+.ant-menu-submenu .ant-menu-submenu-title {
+  padding-left: 24px !important; /* giữ menu cha vừa phải */
+}
+
+/* ===== HEADER ===== */
+.dashboard-header {
+  background-color: #ffffff;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eaeaea;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a95bf;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-size: 18px;
+}
+
+.sidebar-menu {
+  border-right: 1px solid #eaeaea;
+  padding-top: 12px;
+}
+
+.ant-layout-content {
+  min-height: calc(100vh - 64px); /* trừ chiều cao header */
+}
+
+
+.notification-icon {
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
+  transition: color 0.3s;
+  cursor: pointer;
+}
+
+.notification-icon:hover {
+  color: #1890ff;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-right: 8px;
+}
+
+.doctor-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.2;
+}
+
+.doctor-role {
+  font-size: 12px;
+  color: #888;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+/* ===== SEARCH BOX ===== */
+.ant-input-search {
+  width: 300px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 20px;
+}
+
+.ant-input-search-button {
+  background-color: #1890ff !important;
+  color: #fff !important;
+  border: none !important;
+  transition: background-color 0.3s;
+}
+
+.ant-input-search-button:hover {
+  background-color: #40a9ff !important;
+}
+
+/* ===== MAIN CONTENT ===== */
+.ant-layout-content {
+  margin: 24px 16px;
+  padding: 24px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow-y: auto;
+  max-height: calc(100vh - 64px); /* đảm bảo có giới hạn để cuộn */
+}
+/* ===== DASHBOARD CARD ===== */
+.dashboard-card {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    margin-left: 0;
+  }
+
+  .header-left,
+  .header-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .ant-input-search {
+    width: 100% !important;
+  }
+
+  .ant-layout-content {
+    margin-left: 0 !important;
+  }
+}
+
+/* ===== DARK MODE SWITCH STYLE ===== */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.theme-toggle:hover {
+  background-color: #f0f5ff;
+  color: #096dd9;
+}
+
+/* Dark mode style */
+body[data-theme="dark"] .theme-toggle {
+  background-color: transparent;
+  color: var(--menu-text);
+}
+
+body[data-theme="dark"] .theme-toggle:hover {
+  background-color: #303030;
+  color: var(--menu-hover);
+}
+
+
+
+/* Toàn cục */
+body[data-theme="dark"] {
+  --bg-color: #1f1f1f;
+  --text-color: #f0f0f0;
+  --menu-bg: #141414;
+  --menu-text: #ccc;
+  --menu-hover: #1890ff;
+
+  background-color: var(--bg-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Sidebar */
+[data-theme="dark"] .ant-layout-sider {
+  background-color: var(--menu-bg) !important;
+}
+[data-theme="dark"] .ant-menu {
+  background-color: var(--menu-bg) !important;
+  color: var(--menu-text) !important;
+}
+[data-theme="dark"] .ant-menu-item:hover,
+[data-theme="dark"] .ant-menu-item-selected {
+  background-color: #303030 !important;
+  color: var(--menu-hover) !important;
+}
+
+/* Header */
+body[data-theme="dark"] .dashboard-header {
+  background-color: #1f1f1f !important;
+  color: #f0f0f0 !important;
+  border-bottom: 1px solid #333;
+}
+
+/* Content */
+body[data-theme="dark"] .ant-layout-content {
+  background-color: #181818 !important;
+  color: #f0f0f0 !important;
+}
+
+/* Card */
+body[data-theme="dark"] .dashboard-card {
+  background-color: #202020 !important;
+  color: #f0f0f0 !important;
+}
+
+/* Search box */
+body[data-theme="dark"] .custom-search-input {
+  background-color: #2a2a2a !important;
+  color: #f0f0f0 !important;
+  border-color: #444 !important;
+}
+body[data-theme="dark"] .custom-search-input:hover,
+body[data-theme="dark"] .custom-search-input:focus {
+  border-color: #1890ff !important;
+}
+
+/* Icon */
+body[data-theme="dark"] .notification-icon {
+  color: #f0f0f0 !important;
+}

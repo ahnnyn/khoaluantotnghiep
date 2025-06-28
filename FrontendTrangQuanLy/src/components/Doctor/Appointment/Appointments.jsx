@@ -24,13 +24,16 @@ import { BsCameraVideoFill } from "react-icons/bs";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import { FaEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import ViewLichHen from "./ViewLichHen";
+import AppoitmentDetails from "./AppointmentDetails";
 import { RiEdit2Fill } from "react-icons/ri";
 import {
   updateMedicalExaminationStatus,
   fetchMedicalExaminationsByDoctor,
 } from "services/doctor/doctors.services";
 import SearchComponent from "../Search/SearchComponent";
+import ModalPhieuKham from "../PhieuKhamBenh/ModalPhieuKham";
+import { useDispatch } from "react-redux";
+import { triggerReloadMedicalData } from "@redux/app/globalSlice";
 
 // ---- Constants ----
 const STATUS_MAP = {
@@ -72,7 +75,7 @@ const PAYMENT_ICON_MAP = {
   refunded: <UndoOutlined />,
 };
 
-const QuanLyLichHen = () => {
+const Appointment = () => {
   const [originalData, setOriginalData] = useState([]);
   const [dataOrder, setDataOrder] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -86,6 +89,10 @@ const QuanLyLichHen = () => {
   const [form] = Form.useForm();
   const user = useSelector((state) => state.account?.user);
   const [updatingId, setUpdatingId] = useState(null);
+  const reloadMedicalData = useSelector((state) => state.global.reloadMedicalData);
+  const dispatch = useDispatch();
+
+
 
 
   // ---- Fetch data ----
@@ -110,6 +117,12 @@ const QuanLyLichHen = () => {
   useEffect(() => {
     fetchData();
   }, [user]);
+
+    useEffect(() => {
+    fetchData();
+  }, [reloadMedicalData]);
+
+
 
   // ---- Filter & paginate ----
   useEffect(() => {
@@ -146,6 +159,7 @@ const QuanLyLichHen = () => {
       const res = await updateMedicalExaminationStatus(record._id, status);
       if (res?.data) {
         message.success("Cập nhật trạng thái khám thành công");
+        dispatch(triggerReloadMedicalData());
         await fetchData(); /// fetch lại data sau mỗi lần cập nhật trạng thái khám thành công
         setPagination((prev) => ({ ...prev, current: 1 }));
         const freshData = await fetchMedicalExaminationsByDoctor(user._id);
@@ -232,7 +246,7 @@ const QuanLyLichHen = () => {
       render: (_, __, index) => (pagination.current - 1) * pagination.pageSize + index + 1,
     },
     {
-      title: "Bệnh nhân",
+      title: "Thông tin bệnh nhân",
       render: (_, r) => (
         <>
           <b>{r.patientProfileId?.fullName}</b><br />
@@ -241,7 +255,12 @@ const QuanLyLichHen = () => {
         </>
       ),
     },
-    { title: "Thời gian khám", render: (_, r) => r.examinationTime },
+    { title: "Thời gian khám", render: (_, r) => (
+      <>
+        <span>Ngày khám: {moment(r.scheduledDate).format("DD/MM/YYYY")}</span>
+        <br />
+        <span>Khung giờ: {r.scheduledTimeSlot}</span>
+      </>) },
     {
       title: "Trạng thái khám",
       render: (_, r) => (
@@ -318,13 +337,23 @@ const QuanLyLichHen = () => {
         </Col>
       </Row>
 
-      <ViewLichHen
+      <AppoitmentDetails
         openViewDH={viewModal.open}
         dataViewDH={viewModal.data}
         setOpenViewDH={(open) => setViewModal((prev) => ({ ...prev, open }))}
+      />
+
+      <ModalPhieuKham
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        editingRecord={editingRecord}
+        form={form}
+        setEditingRecord={setEditingRecord}
+        fetchData={fetchData}
+        setPagination={setPagination}
       />
     </>
   );
 };
 
-export default QuanLyLichHen;
+export default Appointment;

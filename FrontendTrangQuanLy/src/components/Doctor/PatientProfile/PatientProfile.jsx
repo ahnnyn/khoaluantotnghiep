@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { FaEye } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { fetchMedicalExaminationsByDoctor } from "services/doctor/doctors.services";
-import ModalHoSoBenhNhan from "./ModalHoSoBenhNhan";
+import ModalPatientProfile from "./ModalPatientProfile";
 import SearchComponent from "../Search/SearchComponent";
 
-const HoSoBenhNhan = () => {
+const PatientProfile = () => {
   const [openView, setOpenView] = useState(false);
   const [dataView, setDataView] = useState([]);
   const [dataOrder, setDataOrder] = useState([]);
@@ -16,35 +16,48 @@ const HoSoBenhNhan = () => {
   const [total, setTotal] = useState(0);
   const [loadingOrder, setLoadingOrder] = useState(false);
   const user = useSelector((state) => state.account.user);
+  const reloadMedicalData = useSelector(
+    (state) => state.global.reloadMedicalData
+  );
 
   const findAllOrder = async () => {
     if (!user?._id) return;
     setLoadingOrder(true);
     try {
       const res = await fetchMedicalExaminationsByDoctor(user._id);
-      if (Array.isArray(res) && res.length > 0) {
-        const filteredData = res.filter((item) => item.status === "Đã khám");
-        const groupedData = filteredData.reduce((acc, item) => {
-          const { patient } = item;
-          if (!acc[patient]) {
-            acc[patient] = {
-              ...item,
-              soLanDaKham: 1,
-              lichKham: [item],
-            };
-          } else {
-            acc[patient].soLanDaKham++;
-            acc[patient].lichKham.push(item);
-          }
-          return acc;
-        }, {});
-        setDataOrder(Object.values(groupedData));
-        setTotal(Object.values(groupedData).length);
-        setOriginalData(Object.values(groupedData));
-      } else {
-        setDataOrder([]);
-        setTotal(0);
-      }
+      const data = res?.data || [];
+
+      // Lọc chỉ lấy các phiếu khám đã hoàn thành
+      const filteredData = data.filter((item) => item.status === "completed");
+
+      // Gom nhóm theo bệnh nhân (patientProfileId)
+      const groupedData = filteredData.reduce((acc, item) => {
+        const patient = item.patientProfileId;
+        if (!patient?._id) return acc;
+
+        const id = patient._id;
+
+        if (!acc[id]) {
+          acc[id] = {
+            patientId: id,
+            fullName: patient.fullName,
+            email: patient.email,
+            phone: patient.phoneNumber,
+            address: patient.address || "",
+            soLanDaKham: 1,
+            lichKham: [item],
+          };
+        } else {
+          acc[id].soLanDaKham += 1;
+          acc[id].lichKham.push(item);
+        }
+        return acc;
+      }, {});
+
+      const result = Object.values(groupedData);
+      setDataOrder(result);
+      setOriginalData(result);
+      setTotal(result.length);
     } catch (error) {
       console.error("Error fetching orders:", error);
       setDataOrder([]);
@@ -58,8 +71,8 @@ const HoSoBenhNhan = () => {
   }, [user]);
 
   useEffect(() => {
-    console.log("dataView", dataView);
-  }, [dataView]);
+    findAllOrder(); // fetch lại hồ sơ
+  }, [reloadMedicalData]);
 
   const handleViewDetails = (record) => {
     setDataView(record.lichKham);
@@ -67,15 +80,16 @@ const HoSoBenhNhan = () => {
   };
 
   const handleSearch = (value) => {
+    const keyword = value.toLowerCase();
     const filtered = originalData.filter(
       (item) =>
-        item.fullName.toLowerCase().includes(value.toLowerCase()) ||
-        item.email.toLowerCase().includes(value.toLowerCase()) ||
-        item.phone.includes(value)
+        item.fullName?.toLowerCase().includes(keyword) ||
+        item.email?.toLowerCase().includes(keyword) ||
+        item.phone?.includes(value)
     );
     setDataOrder(filtered);
     setTotal(filtered.length);
-    setCurrent(1); // reset về trang đầu nếu cần
+    setCurrent(1);
   };
 
   const columns = [
@@ -89,7 +103,7 @@ const HoSoBenhNhan = () => {
     },
     {
       title: "Bệnh nhân",
-      dataIndex: "patient",
+      dataIndex: "fullName",
       render: (_, record) => (
         <div>
           <span style={{ fontWeight: "bold" }}>{record.fullName}</span> <br />
@@ -102,9 +116,7 @@ const HoSoBenhNhan = () => {
     {
       title: "Số lần đã khám",
       dataIndex: "soLanDaKham",
-      render: (_, record) => (
-        <span style={{ fontWeight: "bold" }}>{record.soLanDaKham} lần</span>
-      ),
+      render: (text) => <span style={{ fontWeight: "bold" }}>{text} lần</span>,
       width: 200,
     },
     {
@@ -130,18 +142,14 @@ const HoSoBenhNhan = () => {
         <div style={{ width: "800px", maxWidth: "100%" }}>
           <SearchComponent
             onSearch={handleSearch}
-            style={{
-              width: "100%",
-              height: "38px",
-              marginBottom: "20px",
-            }}
+            style={{ width: "100%", height: "38px", marginBottom: "20px" }}
             placeholder="Tìm bệnh nhân theo tên, email hoặc số điện thoại"
           />
         </div>
       </Col>
       <Col xs={24} sm={12} md={24}>
         <Table
-          pagination={{ current, pageSize, total }}
+          pagination={{ current, pageSize, total, onChange: setCurrent }}
           loading={loadingOrder}
           columns={columns}
           dataSource={dataOrder}
@@ -153,7 +161,7 @@ const HoSoBenhNhan = () => {
           }
         />
       </Col>
-      <ModalHoSoBenhNhan
+      <ModalPatientProfile
         openView={openView}
         setOpenView={setOpenView}
         dataView={dataView}
@@ -163,4 +171,4 @@ const HoSoBenhNhan = () => {
   );
 };
 
-export default HoSoBenhNhan;
+export default PatientProfile;

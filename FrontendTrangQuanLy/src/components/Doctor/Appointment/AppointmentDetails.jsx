@@ -15,12 +15,13 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { use } from "react";
 
-const ViewLichHen = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) => {
+const AppointmentDetails = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) => {
   const user = useSelector((state) => state.account.user);
 
   useEffect(() => {
     if (openViewDH) {
       console.log("Open ViewLichHen Modal with data:", dataViewDH);
+
       
     }
   }, [openViewDH, dataViewDH, setOpenViewDH, setDataViewDH]);
@@ -55,6 +56,12 @@ const ViewLichHen = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) =
       });
   };
 
+  const formatAddress = (addr) => {
+  if (!addr || typeof addr !== "object") return "N/A";
+  const { streetDetail = "", ward = "", district = "", province = "" } = addr;
+  return [streetDetail, ward, district, province].filter(Boolean).join(", ");
+};
+
   const items = [
     {
       key: "hinhAnh",
@@ -73,7 +80,7 @@ const ViewLichHen = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) =
       label: "Họ và tên bệnh nhân",
       children: (
         <>
-          {dataViewDH?.patientProfileId.fullName || "N/A"}
+          {dataViewDH?.patientProfileId?.fullName || "N/A"}
           <br />({formatDate(dataViewDH?.dataOrder)})
         </>
       ),
@@ -85,16 +92,16 @@ const ViewLichHen = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) =
       children: dataViewDH?.patientProfileId.phoneNumber || "N/A",
       span: 1,
     },
-    {
-      key: "diaChi",
-      label: "Địa chỉ",
-      children: dataViewDH?.patientProfileId.address || "N/A",
-      span: 2,
-    },
+    // {
+    //   key: "diaChi",
+    //   label: "Địa chỉ",
+    //   children: <span>formatAddress(dataViewDH?.patientProfileId?.address)</span>,
+    //   span: 2,
+    // },
     {
       key: "ngayKham",
       label: "Ngày khám",
-      children: dataViewDH?.examinationTime || "N/A",
+      children: dataViewDH?.scheduledDate || "N/A",
       span: 1,
     },
     {
@@ -118,7 +125,7 @@ const ViewLichHen = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) =
     {
       key: "khungGio",
       label: "Thời gian khám",
-      children: dataViewDH?.examinationTime || "N/A",
+      children: dataViewDH?.scheduledTimeSlot || "N/A",
       span: 1.5,
     },
   ];
@@ -129,13 +136,13 @@ const ViewLichHen = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) =
         <div style={{ textAlign: "center", color: "navy", fontWeight: "bold", fontSize: 18 }}>
           CHI TIẾT LỊCH HẸN CỦA BỆNH NHÂN: <span>{dataViewDH?.patientProfileId.fullName || "N/A"}</span>
         </div>
-      }
-      open={openViewDH}
-      onCancel={cancel}
-      footer={null}
-      width={850}
-      destroyOnClose
-    >
+            }
+            open={openViewDH}
+            onCancel={cancel}
+            footer={null}
+            width={850}
+            destroyOnClose
+          >
       <div style={{ textAlign: "center", marginBottom: 10 }}>
         <Button
           icon={<FaFileExport />}
@@ -153,4 +160,4 @@ const ViewLichHen = ({ openViewDH, dataViewDH, setOpenViewDH, setDataViewDH }) =
   );
 };
 
-export default ViewLichHen;
+export default AppointmentDetails;

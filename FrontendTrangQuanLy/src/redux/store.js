@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import accountReducer from "@redux/account/accountSlice";
+import globalReducer from "@redux/app/globalSlice";
 
 import {
   persistStore,
@@ -23,6 +24,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   account: accountReducer,
+  global: globalReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

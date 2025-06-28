@@ -32,6 +32,7 @@ export const accountSlice = createSlice({
     doLogoutAction: (state) => {
       localStorage.removeItem("access_token");
       localStorage.removeItem("isUserAuthenticated");
+      localStorage.removeItem("user");
 
       state.isUserAuthenticated = false;
       state.isLoading = false;
@@ -45,12 +46,24 @@ export const accountSlice = createSlice({
         avatar: "",
         role: "",
       };
+    },
+
+    // ✅ THÊM MỚI: cập nhật thông tin user sau khi chỉnh sửa
+    doUpdateAccountAction: (state, action) => {
+      state.user = {
+        ...state.user,
+        ...action.payload,
+      };
       localStorage.setItem("user", JSON.stringify(state.user));
     },
   },
 });
 
-export const { doLoginAction, doGetAccountAction, doLogoutAction } =
-  accountSlice.actions;
+export const {
+  doLoginAction,
+  doGetAccountAction,
+  doLogoutAction,
+  doUpdateAccountAction,
+} = accountSlice.actions;
 
 export default accountSlice.reducer;

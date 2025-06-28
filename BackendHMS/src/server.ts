@@ -68,15 +68,15 @@ connection()
     // const profile = await seedPatientProfile(users.patient);
     // const meds = await seedMedication();
 
+    // //Bước 1: Seed Exam trước
     // const exam = await seedMedicalExamination(users, null, profile);
 
+    // // Bước 2: Seed đơn thuốc và gắn vào phiếu khám
     // const prescription = await seedPrescription(exam._id, meds);
-
     // exam.prescriptionId = prescription._id;
     // await exam.save();
 
-    // // Tạo lịch làm việc gắn với phiếu khám
-    // await seedWorkSchedule(users.doctor, exam);
+    // //Bước 3: Seed TimeSlot TRƯỚC
     // const timeSlots = [
     //   { timeRange: "07:30-08:00", start: "07:30", end: "08:00" },
     //   { timeRange: "08:00-08:30", start: "08:00", end: "08:30" },
@@ -104,6 +104,8 @@ connection()
     //   console.log('Time slots already exist, skipping...');
     // }
 
+    // //Bước 4: Sau khi đã có TimeSlot thì mới seed lịch làm việc
+    // await seedWorkSchedule(users.doctor, exam);
 
     console.log('All data seeded!');
     
@@ -111,6 +113,3 @@ connection()
       console.log(`Server is running on http://localhost:${PORT}`);
     });
   })
-  .catch(error => {
-    console.error('Failed to connect MongoDB:', error);
-  });

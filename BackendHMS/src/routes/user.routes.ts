@@ -11,6 +11,8 @@ import {
   putUpdatePassword,
 } from "controllers/user/user.auth.controller";
 
+import { ACCOUNT_ROLE } from "config/constants"; // Import ACCOUNT_ROLE nếu cần
+
 const router = express.Router();
 
 const userRoutes = (app: Express) => {
@@ -18,7 +20,15 @@ const userRoutes = (app: Express) => {
   router.post("/auth/login", loginAPI);
 
   //Gắn auth cho các route còn lại
-  router.use(authjwt);
+  // Tạo middleware cho các role được phép
+  const authorizeUser= authjwt([
+    ACCOUNT_ROLE.ADMIN,
+    ACCOUNT_ROLE.DOCTOR,
+    ACCOUNT_ROLE.PATIENT,
+  ]);
+
+  // Gắn middleware vào router (KHÔNG gắn vào app)
+  router.use(authorizeUser);
 
   router.post("/auth/logout", postLogout);
   router.get("/create-user", getCreateUserPage);

@@ -6,22 +6,62 @@ import WorkSchedule from "models/WorkSchedules";
 import Department from "models/Departments";
 import Position from "models/Position";
 import TimeSlot from "models/TimeSlot";
+import Prescription from "models/Prescription";
+import PrescriptionItem from "models/PrescriptionItem";
+import Medication from "models/Medication";
 
 
 
-const findMedicalExaminationByPatientID = async (id: string) => {
-    return await MedicalExamination.find({ patientId: id })
-}
+const findMedicalExaminationByPatientID = async (patientId: string) => {
+  return await MedicalExamination.find({ patientId })
+    .populate("patientProfileId", "fullName email phoneNumber")
+    .populate("doctorId", "fullName email")
+    .populate({
+      path: "prescriptionId",
+      populate: {
+        path: "items",
+        populate: {
+          path: "medication",
+          select: "name unit usage ingredient"
+        }
+      }
+    })
+    .lean();
+};
 
 const findMedicalExaminationByDoctorID = async (doctorId: string) => {
   return await MedicalExamination.find({ doctorId })
-    .populate("patientProfileId", "fullName email phoneNumber") // populate từ bảng User
-    .populate("doctorId", "fullName") // nếu cần hiển thị tên bác sĩ
-    .lean(); // lean để trả về object đơn giản
+    .populate("patientProfileId", "fullName email phoneNumber")
+    .populate("doctorId", "fullName email")
+    .populate({
+      path: "prescriptionId",
+      populate: {
+        path: "items",
+        populate: {
+          path: "medication",
+          select: "name unit usage ingredient"
+        }
+      }
+    })
+    .lean();
 };
+
 
 const findMedicalExaminationByID = async (id: string) => {
     return await MedicalExamination.findById(id)
+    .populate("patientProfileId", "fullName email phoneNumber")
+    .populate("doctorId", "fullName email")
+    .populate({
+      path: "prescriptionId",
+      populate: {
+        path: "items",
+        populate: {
+          path: "medication",
+          select: "name unit usage ingredient"
+        }
+      }
+    })
+    .lean();
 }
 
 const updateStatusMedicalExamination = async (id: string, status: string) => {
@@ -42,18 +82,70 @@ const updateStatusMedicalExamination = async (id: string, status: string) => {
 };
 
 
-const updateResultMedicalExamination = async (id: string, result: any) => {
-    const medicalExamination = await MedicalExamination.findById(id);
-    if (!medicalExamination) {
-        throw new Error("Medical examination not found");
+const updateResultMedicalExamination = async (
+  id: string,
+  result: {
+    diagnosis: string;
+    conclusion: string;
+    prescriptionItems: {
+      tenThuoc: string;
+      lieuLuong: string;
+      soLanDungTrongNgay: number;
+      soNgayDung: number;
+      ghiChu?: string;
+    }[];
+  }
+) => {
+  const medicalExam = await MedicalExamination.findById(id);
+  if (!medicalExam) throw new Error("Không tìm thấy phiếu khám");
+
+  // Cập nhật thông tin cơ bản
+  medicalExam.diagnosis = result.diagnosis;
+  medicalExam.conclusion = result.conclusion;
+  medicalExam.status = "completed";
+
+  // Nếu phiếu khám đã có đơn thuốc, xóa Prescription và các PrescriptionItem liên quan
+  if (medicalExam.prescriptionId) {
+    const oldPrescription = await Prescription.findById(medicalExam.prescriptionId);
+    if (oldPrescription) {
+      // Xoá từng PrescriptionItem
+      await PrescriptionItem.deleteMany({ _id: { $in: oldPrescription.items } });
+      // Xoá Prescription
+      await Prescription.findByIdAndDelete(oldPrescription._id);
     }
-    
-    medicalExamination.diagnosis = result.diagnosis;
-    medicalExamination.conclusion = result.conclusion;
-    medicalExamination.prescriptionId = result.prescriptionId;
-    
-    return await medicalExamination.save();
-}
+    medicalExam.prescriptionId = undefined;
+  }
+
+  // Nếu có đơn thuốc mới -> tạo mới Prescription
+  if (result.prescriptionItems && result.prescriptionItems.length > 0) {
+    const newPrescriptionItems = [];
+
+    for (const item of result.prescriptionItems) {
+      const med = await Medication.findOne({ name: item.tenThuoc });
+      if (!med) throw new Error(`Không tìm thấy thuốc: ${item.tenThuoc}`);
+
+      const newItem = await PrescriptionItem.create({
+        medication: med._id,
+        dosage: item.lieuLuong,
+        frequency: `${item.soLanDungTrongNgay} lần/ngày`,
+        duration: `${item.soNgayDung} ngày`,
+        quantity: item.soLanDungTrongNgay * item.soNgayDung,
+        instructions: item.ghiChu || "",
+      });
+
+      newPrescriptionItems.push(newItem._id);
+    }
+
+    const newPrescription = await Prescription.create({
+      medicalExaminationId: medicalExam._id,
+      items: newPrescriptionItems,
+    });
+
+    medicalExam.prescriptionId = newPrescription._id as any;
+  }
+
+  return await medicalExam.save();
+};
 
 
 const findWorkScheduleByDoctorID = async (id: string) => {
@@ -68,7 +160,7 @@ const findWorkScheduleByDoctorID = async (id: string) => {
       populate: {
         path: "patientProfileId",
         select: "fullName",
-        model: "PatientProfile", // thêm rõ ràng model
+        model: "PatientProfile",
         match: {}, // bắt buộc populate kể cả khi `examinationId` null
       },
     })

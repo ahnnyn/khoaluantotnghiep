@@ -188,7 +188,8 @@ export const seedMedicalExamination = async (
     paymentStatus: 'unpaid',
     paymentMethod: null,
     price: 300000,
-    examinationTime: new Date()
+    scheduledDate: new Date('2025-06-27'),
+    scheduledTimeSlot: "08:30 - 09:00", 
   });
 
   console.log('MedicalExamination seeded!');
@@ -196,47 +197,40 @@ export const seedMedicalExamination = async (
 };
 
 export const seedWorkSchedule = async (doctor: any, examination: any) => {
-  const randomInt = (min: number, max: number) =>
-    Math.floor(Math.random() * (max - min + 1)) + min;
-
   const allTimeSlots = await TimeSlot.find();
   if (!allTimeSlots || allTimeSlots.length < 6) {
     console.warn('Not enough time slots in DB to seed schedules.');
     return;
   }
 
-  const schedules = [];
+  const date = new Date('2025-06-27'); // khớp với phiếu khám
+  date.setHours(0, 0, 0, 0);
 
-  for (let i = 1; i <= 5; i++) {
-    const date = new Date();
-    date.setDate(date.getDate() + i);
-    date.setHours(0, 0, 0, 0);
-
-    const slotCount = randomInt(2, 4);
-    const selectedSlotIndexes = new Set<number>();
-    while (selectedSlotIndexes.size < slotCount) {
-      selectedSlotIndexes.add(randomInt(0, allTimeSlots.length - 1));
-    }
-
-    const slots = Array.from(selectedSlotIndexes).map((index, j) => {
-      const slot = allTimeSlots[index];
-      return {
-        timeSlotId: slot._id,
-        status: j === 0 && i === 1 ? 'booked' : 'available',
-        examinationId: j === 0 && i === 1 ? examination?._id : null,
-        examinationType: j % 2 === 0 ? 'OFFLINE' : 'ONLINE',
-      };
-    });
-
-    schedules.push({
-      doctorId: doctor._id,
-      date,
-      slots,
-    });
+  const slotToBook = allTimeSlots.find(slot => slot.timeRange === "08:30-09:00");
+  if (!slotToBook) {
+    throw new Error("TimeSlot '08:30 - 09:00' not found!");
   }
 
-  await WorkSchedule.insertMany(schedules);
-console.log("==> Seeding WorkSchedule for doctor:", doctor._id);
-console.log("==> TimeSlots found:", allTimeSlots.length);
-console.log("==> WorkSchedule sample:", JSON.stringify(schedules[0], null, 2));
+  const slots = [
+    {
+      timeSlotId: slotToBook._id,
+      status: 'booked',
+      examinationId: examination._id,
+      examinationType: 'OFFLINE',
+    },
+    ...allTimeSlots.slice(1, 3).map((slot) => ({
+      timeSlotId: slot._id,
+      status: 'available',
+      examinationId: null,
+      examinationType: 'ONLINE',
+    }))
+  ];
+
+  await WorkSchedule.create({
+    doctorId: doctor._id,
+    date,
+    slots
+  });
+
+  console.log('WorkSchedule seeded for doctor:', doctor._id);
 };

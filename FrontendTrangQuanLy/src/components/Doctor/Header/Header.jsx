@@ -9,15 +9,13 @@ import {
 } from "@ant-design/icons";
 import { doLogoutAction } from "@redux/account/accountSlice";
 import { Navigate, useNavigate } from "react-router-dom";
-import "./css.css";
+import "./Header.css";
 import { logoutUser } from "services/user/user.auth.services";
 
 const Header = () => {
   const user = useSelector((state) => state.account.user);
 
-  const isuserenticated = useSelector(
-    (state) => state.account.isuserenticated
-  );
+  const isUserAuthenticated = useSelector((state) => state.account.isUserAuthenticated);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -30,8 +28,7 @@ const Header = () => {
     try {
       const res = await logoutUser();
       if (res.data?.success) {
-        dispatch(doLogoutAction()); // Xóa user khỏi Redux
-        localStorage.removeItem("access_token"); // Xóa token local
+        dispatch(doLogoutAction());
         message.success(res.data.message || "Đăng xuất thành công");
         navigate("/");
       }
@@ -41,6 +38,7 @@ const Header = () => {
       );
     }
   };
+
 
   return (
     <div className="header-container">
@@ -61,7 +59,7 @@ const Header = () => {
         <Col xs={0} md={16} />
 
         {/* Welcome + Logout (Only show if userenticated) */}
-        {isuserenticated && (
+        {isUserAuthenticated && (
           <Col xs={0} md={4} style={{ textAlign: "right" }}>
             <div
               className="welcome-text"

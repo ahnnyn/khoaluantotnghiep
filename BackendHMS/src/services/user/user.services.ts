@@ -51,7 +51,15 @@ const getAllUsers = async () => {
 
 // Lấy user theo ID
 const getUserByID = async (id: string) => {
-return ((await (await User.findById(id)).populate("departmentId", "name image description")).populate("positionId", "name image description"));
+const user = await User.findById(id)
+  .populate("departmentId", "name image description")
+  .populate("positionId", "name image description");
+
+if (!user) {
+  throw new Error("Người dùng không tồn tại");
+}
+
+return user;
 };
 
 // Cập nhật user

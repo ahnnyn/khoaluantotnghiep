@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   Calendar,
   Col,
@@ -14,8 +13,7 @@ import {
   message,
 } from "antd";
 import { useEffect, useState } from "react";
-import moment from "moment";
-import "./css.scss";
+import "./DoctorWorkSchedule.scss";
 import { getUserById } from "../../../services/user/user.auth.services";
 import {
   fetchAllTimeSlots,
@@ -27,13 +25,11 @@ import dayjs from "dayjs";
 import "dayjs/locale/vi";
 import utc from "dayjs/plugin/utc";
 
-
 dayjs.locale("vi");
 dayjs.extend(utc);
 
-
 const statusMap = {
-  available: "Sẵn sàng",
+  available: "Còn trống",
   booked: "Đã đặt",
   unavailable: "Không khả dụng",
 };
@@ -45,7 +41,7 @@ const examStatusMap = {
   cancelled: "Đã hủy",
 };
 
-const QuanLyLichLamViec = () => {
+const DoctorWorkSchedule = () => {
   const [form] = Form.useForm();
   const [dataDoctor, setDataDoctor] = useState({});
   const [dataTime, setDataTime] = useState([]);
@@ -345,4 +341,4 @@ const QuanLyLichLamViec = () => {
 };
 
 
-export default QuanLyLichLamViec;
+export default DoctorWorkSchedule;

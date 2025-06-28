@@ -21,7 +21,9 @@ import { useSelector } from "react-redux";
 import { getUserById, updateUserInfo, uploadFile } from "services/user/user.auth.services";
 import { fetchAllDepartments, fetchAllPositons } from "../../../services/doctor/doctors.services";
 import { FaSave } from "react-icons/fa";
-import "./scss.scss";
+import { useDispatch } from "react-redux";
+import { doUpdateAccountAction } from "@redux/account/accountSlice";
+import "./DoctorUpdate.scss";
 
 const DoctorUpdate = () => {
   const [form] = Form.useForm();
@@ -36,6 +38,7 @@ const DoctorUpdate = () => {
   const [fileName, setFileName] = useState("");
   const [genderDoctor, setGenderDoctor] = useState(null);
   const user = useSelector((state) => state.account.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (user?._id) {
@@ -213,6 +216,15 @@ useEffect(() => {
 
       if (res.status) {
         message.success(res.message || "Cập nhật thông tin thành công!");
+        dispatch(doUpdateAccountAction({
+          fullName: values.fullName,
+          avatar: fileName, // fileName được set từ kết quả upload
+          gender: values.gender === "0" ? true : values.gender === "1" ? false : undefined,
+          email: values.email,
+          address: values.address,
+          phone: values.phoneNumber,
+        }));
+
         fetchDoctorInfo(user._id);
       } else {
         notification.error({ message: "Lỗi", description: res.error });

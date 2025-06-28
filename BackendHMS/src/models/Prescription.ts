@@ -9,7 +9,7 @@ const PrescriptionSchema = new mongoose.Schema({
   },
   items: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'PrescriptionItem'
+    ref: 'Prescription_Item'
   }]
 }, { timestamps: true });
 

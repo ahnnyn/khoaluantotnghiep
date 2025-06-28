@@ -2,11 +2,12 @@
 import { getDepartment, getMedicalExaminationById, getMedicalExaminationsByDoctor, getMedicalExaminationsByPatient, getPosition, getTimeSlots, getWorkScheduleByDates, getWorkScheduleByDoctor, postCreateWorkSchedule, updateMedicalExaminationResult, updateMedicalExaminationStatus } from 'controllers/doctor/doctor.controller';
 import express, { Express } from 'express';
 import authjwt from 'middleware/auth.jwt';
+import { ACCOUNT_ROLE } from 'config/constants'; // Import ACCOUNT_ROLE nếu cần
 
 const router = express.Router();
 
 const doctorRoutes = (app: Express) => {
-  router.use(authjwt);
+  router.use(authjwt([ACCOUNT_ROLE.DOCTOR])); // Gắn middleware yêu cầu phải là bác sĩ
 
   // Thêm route bác sĩ ở đây
   router.get('/view-examination-by-patient/:id', getMedicalExaminationsByPatient);

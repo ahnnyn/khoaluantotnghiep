@@ -4,3 +4,9 @@ export const ACCOUNT_TYPE={
     GITHUB: "GITHUB",
     FACEBOOK: "",
 }
+
+export const ACCOUNT_ROLE = {
+  ADMIN: 'ADMIN',
+  DOCTOR:  'DOCTOR',
+  PATIENT: 'PATIENT',
+}
