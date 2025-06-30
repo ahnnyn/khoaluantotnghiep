@@ -1,4 +1,3 @@
-// ✅ Tối ưu: tách logic, rút gọn điều kiện, giảm lặp, cải thiện hiệu năng & readability
 import { Button, Checkbox, Form, Input, Modal, notification } from "antd";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { doLoginAction } from "@redux/account/accountSlice";
 import { forgotPassword, loginUser } from "services/user/user.auth.services";
 import "./Login.css";
+import HeaderLogin from "../../components/Doctor/Header/Header.Login";
 
 const Login = () => {
   const [form] = Form.useForm();
@@ -103,6 +103,7 @@ const Login = () => {
 
   return (
     <>
+    <HeaderLogin />
     <div className="rts-register-area rts-section-gap bg_light-1">
       <div className="container">
         <div className="registration-wrapper-1" style={{ maxWidth: 450, margin: "0 auto", background: "#fff", padding: 40, borderRadius: 12, boxShadow: "0 0 15px rgba(0,0,0,0.1)" }}>

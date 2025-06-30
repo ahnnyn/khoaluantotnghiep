@@ -1,6 +1,4 @@
 // App.jsx
-import React from "react";
-import Header from "components/Doctor/Header/Header";
 import { Outlet } from "react-router-dom";
 import "@schedule-x/theme-shadcn/dist/index.css";
 

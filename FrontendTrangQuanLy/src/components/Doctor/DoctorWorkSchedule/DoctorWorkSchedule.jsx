@@ -102,11 +102,19 @@ const DoctorWorkSchedule = () => {
     }
   };
 
-  const fetchAllTimes = async () => {
-    const res = await fetchAllTimeSlots();
-    if (res?.data) setDataTime(res.data);
-  };
+const fetchAllTimes = async () => {
+  const res = await fetchAllTimeSlots();
+  if (res?.data) {
+    const sortedTime = [...res.data].sort((a, b) => {
+      const [aStart] = a.timeRange.split("-");
+      const [bStart] = b.timeRange.split("-");
 
+      return dayjs(aStart, "HH:mm").isBefore(dayjs(bStart, "HH:mm")) ? -1 : 1;
+    });
+
+    setDataTime(sortedTime);
+  }
+};
   const fetchDoctorSchedule = async (id) => {
     try {
       const res = await fetchWorkScheduleByDoctor(id);

@@ -1,0 +1,86 @@
+/* ===== GLOBAL RESET ===== */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  background-color: #f4f6f9;
+  color: #1e1e1e;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  color: #fff;
+  font-weight: 700;
+  font-size: 22px;
+  text-align: center;
+  padding: 18px 0;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  letter-spacing: 1px;
+}
+
+.header-logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #2a95bf;
+  margin-right: 24px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+/* ===== SIDEBAR ===== */
+.ant-layout-sider {
+  background-color: #ffffff !important;
+  border-right: 1px solid #eaeaea;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ẩn scroll ngoài, cuộn bên trong */
+}
+
+.ant-layout-sider .ant-layout-sider-children {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 100px; /* Giúp tránh che nội dung cuối */
+}
+
+/* Custom scrollbar (optional) */
+.ant-layout-sider-children::-webkit-scrollbar {
+  width: 6px;
+}
+.ant-layout-sider-children::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+/* Sidebar menu item */
+.ant-menu-light .ant-menu-item-selected {
+  background-color: #e6f7ff !important;
+  color: #1890ff !important;
+  font-weight: 600;
+}
+
+.ant-menu-light .ant-menu-item:hover {
+  background-color: #f0f5ff !important;
+  color: #096dd9 !important;
+}
+
+.ant-menu-item,
+.ant-menu-submenu-title {
+  padding-left: 24px !important;
+  font-size: 15px;
+}
+
+.ant-menu-item-group-title {
+  padding-left: 16px;
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #999;
+  text-transform: uppercase;
+}
+
