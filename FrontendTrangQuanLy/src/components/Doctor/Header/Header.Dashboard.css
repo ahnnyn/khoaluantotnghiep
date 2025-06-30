@@ -6,22 +6,22 @@ body {
   color: #1e1e1e;
 }
 
-/* ===== LOGO ===== */
-.logo {
-  color: #fff;
-  font-weight: 700;
-  font-size: 22px;
-  text-align: center;
-  padding: 18px 0;
-  background: linear-gradient(135deg, #00c6ff, #0072ff);
-  letter-spacing: 1px;
+/* ===== HEADER BRAND (LOGO + TEXT) ===== */
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.header-logo {
+.logo-image {
+  height: 45px;
+  object-fit: contain;
+}
+
+.logo-text {
   font-size: 22px;
   font-weight: 700;
   color: #2a95bf;
-  margin-right: 24px;
   letter-spacing: 1px;
   white-space: nowrap;
 }

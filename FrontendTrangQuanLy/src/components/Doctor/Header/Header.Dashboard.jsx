@@ -66,7 +66,14 @@ const HeaderDashboard = ({ collapsed, setCollapsed }) => {
               onClick={() => setCollapsed(true)}
             />
           )}
-          <div className="header-logo">Healio</div>
+          <div className="header-brand">
+            <img
+              src="/assets/images/logo/healio_logo-removebg-preview.png"
+              alt="Healio Logo"
+              className="logo-image"
+            />
+            <span className="logo-text">Healio</span>
+          </div>
           <Input.Search placeholder="Search..." className="custom-search-input" />
         </div>
 
