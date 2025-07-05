@@ -1,0 +1,67 @@
+.col-body {
+    background-color: rgb(255, 255, 252);
+    margin: auto;
+}
+
+.txt-title {
+    padding-left: 10px;
+    font-size: 18px;
+    color: rgb(69, 195, 210);
+}
+.title-lichhen {
+    font-size: 25px;
+    padding-left: 10px;
+    margin-top: 10px;
+    font-weight: 500;
+}
+.box-lich-kham {
+    margin: 0 auto 50px;
+    // background-color: yellowgreen;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3); /* Softer, more pronounced shadow */
+}
+.ben-trai {
+    text-align: center;
+}
+.txt-trai {
+    color: rgb(255, 194, 14);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.txt-phai {
+    font-size: 19px;
+    line-height: 15px;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.txt-phai-benhnhan {
+    font-size: 20px;
+    line-height: 15px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.kham {
+    color: rgb(69, 195, 210);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.btn-dat-kham {
+    background-color: rgb(255, 194, 14) ;
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 22px 40px;
+    border-radius: 10px;
+}
+.hdsd {
+    display: flex;
+    justify-content: space-between;    
+    font-size: 18px;
+}
+
+

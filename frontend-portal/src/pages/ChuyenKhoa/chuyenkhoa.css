@@ -1,0 +1,24 @@
+.lich-kham {
+    background-color: #e6f7ff;
+    border: 1px solid #91d5ff;
+    border-radius: 8px;
+    padding: 5px 5px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+    min-height: 35px; /* Chiều cao cố định để các ô đều nhau */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.lich-kham:hover {
+    background-color: #bae7ff;
+    color: #1890ff;
+    border-color: #40a9ff;
+}
+
+.cach-deu {
+    padding: 0 5px;
+}

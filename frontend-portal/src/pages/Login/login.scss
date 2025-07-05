@@ -1,0 +1,67 @@
+// Căn giữa tiêu đề
+.login-modal .ant-modal-title {
+    text-align: center;
+    font-size: 25px;
+    font-weight: 600;
+}
+/* Fix chung cho input thường và password */
+.ant-input,
+.ant-input-password .ant-input {
+  height: 30px !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  box-sizing: border-box;
+  line-height: 1.5715; /* line height mặc định của Ant Design */
+}
+
+
+
+// Định dạng phần chứa ghi nhớ tài khoản & quên mật khẩu
+.login-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+
+        .ant-checkbox-wrapper {
+            color: black;
+            font-size: 14px;
+        }
+    }
+
+    .forgot-password {
+        color: #333; // Màu chữ bình thường, không highlight
+        font-size: 14px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+
+        &:hover {
+            color: #1890ff;
+        }
+    }
+}
+
+// Căn giữa nút đăng nhập
+.login-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+
+    .login-button {
+        width: 150px; // Đặt chiều rộng cho nút đẹp hơn
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+// Căn giữa đoạn "Chưa có tài khoản?"
+.register-link {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+}

@@ -1,0 +1,117 @@
+.body-top {
+    // background-color: rgb(184, 235, 252);
+    height: 55vh;
+    overflow-x: hidden;
+}
+
+
+.danh-cho-ban {
+    // height: 50vh;
+    display: flex;
+    justify-content: center;
+    padding: 4vh 0;
+    margin: 80px;
+
+    @media (max-width: 768px) {
+        padding: 2vh 5px; // Giảm cho nhỏ hơn
+      }
+
+    .ben-trong {
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 10px;
+        margin: 0 auto;
+    
+        @media (max-width: 768px) {
+            padding: 0 5px;
+            width: 95%;
+        }
+    }
+    
+
+    .cot-ben-trong {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .htron {
+        height: 30vh;
+        width: 30vh;
+        background-color: yellow;
+        border-radius: 50%;
+    }
+
+    .hcn-toan-dien {
+        width: 100%; // <-- Cái này sẽ giúp box tự co theo cột của AntD
+        height: auto; // Nếu muốn cao theo nội dung
+    
+        // Giữ mấy cái cũ nếu cần
+        border-radius: 5vh;
+        border: 1px solid rgb(231, 223, 223);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    
+        @media (max-width: 768px) {
+            border-radius: 20px;
+        }
+    }
+
+    .boc-ngoai-Imghcn {
+        width: 10vh;
+        height: 10vh;
+        // background-color: rgb(187, 187, 187);
+        background-color: rgb(255, 246, 238);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 8% 20%;
+
+        @media (max-width: 768px) {
+            width: 8vh;
+            height: 8vh;
+            margin: 10px auto;
+        }
+    }
+    
+}
+
+.custom-carousel {
+    .slick-dots li {
+        width: 5px; // Kích thước dấu tròn
+        height: 5px; // Chiều cao dấu tròn
+        border-radius: 50%; // Biến thành hình tròn
+        background-color: yellow; // Màu vàng
+        margin: 0 5px; // Khoảng cách
+        border: none; // Bỏ border
+        box-shadow: none; // Bỏ bóng
+
+        &.slick-active {
+            background-color: darkorange; // Màu cho dấu đang hoạt động
+            width: 10px; // Kích thước dấu tròn
+            height: 10px; // Chiều cao dấu tròn
+            border-radius: 50%; // Biến thành hình tròn
+            border: none; // Bỏ border
+            box-shadow: none; // Bỏ bóng
+        }
+    }
+}
+
+
+.slicer-banner {
+
+    @media (max-width: 768px) {
+    }
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        border-radius: 0 0 20px 20px;
+    }
+}
+
+

@@ -1,0 +1,131 @@
+import axios from "utils/axios-customize"
+
+
+const createUser = ({ fullName, username, password, email, phoneNumber, avatar }) => {
+  const formData = new FormData();
+  formData.append("fullname", fullName);
+  formData.append("username", username);
+  formData.append("password", password);
+  formData.append("email", email);
+  formData.append("phoneNumber", phoneNumber);
+
+  if (avatar) {
+    formData.append("avatar", avatar); // avatar là file
+  }
+
+  return axios.post("/api/user/create-user", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+
+// Đăng nhập
+const loginUser = (username, password) => {
+  const URL = "/api/user/auth/login";
+  return axios.post(URL, { username, password });
+};
+
+// Đăng xuất
+const logoutUser = () => {
+  const token = localStorage.getItem("access_token");
+  return axios.post(
+    "/api/user/auth/logout",
+    {},
+    {
+       headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }
+  );
+};
+
+// Đổi mật khẩu (Cập nhật tài khoản)
+const changeUserPassword = (id, oldPassword, newPassword, newUsername) => {
+  return axios.put("/api/user/update-account", {
+    id,
+    oldPassword,
+    newPassword,
+    newUsername,
+  });
+};
+
+// Quên mật khẩu (nếu có)
+const forgotPassword = (email) => {
+  return axios.post("/api/user/auth/forgot-password", { email });
+};
+
+// Lấy thông tin user theo ID
+const getUserById = (id) => {
+  return axios.get(`/api/user/view-user/${id}`);
+};
+
+// Cập nhật thông tin user
+const updateUserInfo = ({
+  id,
+  fullName,
+  gender,
+  dateOfBirth,
+  phone,
+  email,
+  address,
+  avatar,
+  price,
+  positionId,
+  departmentId,
+}) => {
+  return axios.put("/api/user/update-user", {
+    id,
+    fullName,
+    gender, // nên đảm bảo trước khi truyền là boolean thật
+    dateOfBirth,
+    phone,
+    email,
+    address,
+    avatar,
+    price,
+    positionId,
+    departmentId,
+  });
+};
+
+// Upload ảnh 
+const uploadFile = (file) => {
+  const formData = new FormData();
+  formData.append("image", file); 
+
+  return axios.post("/api/upload-file/single", formData, 
+    {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`, 
+    },
+  });
+};
+
+// const callUploadBacSiImg = (file) => {
+//     const bodyFormData = new FormData();
+//     bodyFormData.append('file', file);
+//     return axios({
+//         method: 'post',
+//         url: '/api/bacsi.php',
+//         data: bodyFormData,
+//         headers: {
+//             "Content-Type": "multipart/form-data",
+//             "upload-type": "book"
+//         },
+//     });
+// }
+
+export {
+  loginUser,
+  logoutUser,
+  changeUserPassword,
+  forgotPassword,
+  getUserById,
+  updateUserInfo,
+  uploadFile,
+  createUser
+};
+

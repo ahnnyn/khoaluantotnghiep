@@ -1,0 +1,37 @@
+/* PhieuKhamTable.css */
+
+.custom-table-row:hover {
+    background-color: #f0f8ff; /* Hiệu ứng hover với màu nền nhẹ */
+  }
+  
+  .ant-table-thead > tr > th {
+    background-color: #003366; /* Nền tối cho tiêu đề */
+    color: white; /* Màu chữ tiêu đề trắng */
+    font-weight: bold; /* In đậm tiêu đề */
+  }
+  
+  .ant-table-tbody > tr > td {
+    text-align: center; /* Căn giữa dữ liệu trong bảng */
+    padding: 12px; /* Tăng khoảng cách giữa các ô */
+  }
+  
+  .ant-table-tbody > tr:nth-child(even) {
+    background-color: #f7f7f7; /* Thêm màu nền cho các dòng chẵn */
+  }
+  
+  .ant-table-tbody > tr:nth-child(odd) {
+    background-color: #ffffff; /* Thêm màu nền cho các dòng lẻ */
+  }
+  
+  .ant-table {
+    border-radius: 8px; /* Bo góc bảng */
+    overflow: hidden; /* Ẩn phần tràn ngoài */
+  }
+  
+  .ant-modal-header {
+    background-color: #003366; /* Nền modal header */
+    color: white; /* Màu chữ header modal */
+  }
+  
+
+  

@@ -1,0 +1,129 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    font-family: Arial, sans-serif;
+  }
+
+  /* Tiêu đề chính */
+  h2.form-title {
+    color: #0b568f;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  .alert-info {
+    background-color: #d1ecf1;
+    padding: 12px 20px;
+    border-radius: 6px;
+    color: #0c5460;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  /* Ghi chú bắt buộc */
+  .form-note {
+    color: red;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  
+  /* Nhóm form */
+  .form-wrapper {
+    padding: 24px 0;
+  }
+  
+  /* Label cho các input */
+  .ant-form-item-label > label {
+    color: #002b4e;
+    font-weight: 600;
+    font-size: 16px;
+  }
+  
+  .ant-form-item-required::before {
+    content: "* ";
+    color: red;
+  }
+  
+  /* Tiêu đề từng phần */
+  .section-title {
+    margin: 32px 0 12px;
+    font-weight: bold;
+    font-size: 18px;
+    color: #003b5c;
+    border-bottom: 1px solid #d9d9d9;
+    padding-bottom: 4px;
+  }
+  
+
+  /* Riêng select */
+  .ant-select-selector {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Text trong datepicker */
+  .ant-picker-input > input {
+    font-size: 16px;
+  }
+  
+  /* Nút bấm */
+  .form-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 32px;
+  }
+  
+  /* Nút Nhập lại - cam */
+  .btn-reset {
+    background-color: #fbb03b;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-reset:hover {
+    background-color: #e49d2e;
+  }
+  
+  /* Nút Tạo mới - xanh gradient */
+  .btn-submit {
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    opacity: 0.9;
+  }
+  /* Làm cho tất cả các input, select, datepicker có chiều cao giống nhau */
+.ant-input,
+.ant-select-selector,
+.ant-picker {
+  height: 40px !important;
+  padding: 4px 11px !important;
+  display: flex;
+  align-items: center;
+}
+
+.ant-select-selector {
+  line-height: 32px !important;
+}
+
+.ant-form-item {
+  margin-bottom: 16px; /* cho khoảng cách đều hơn */
+}

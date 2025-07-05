@@ -1,0 +1,25 @@
+/* Đảm bảo tất cả các input cùng chiều cao, bo góc đẹp */
+.ant-input,
+.ant-input-password .ant-input,
+.ant-input-affix-wrapper {
+  height: 40px !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  box-sizing: border-box;
+  line-height: 1.5715;
+  display: flex;
+  align-items: center;
+}
+
+
+/* Fix cho Upload ảnh (bo tròn) */
+.ant-upload.ant-upload-select-picture-card {
+  border-radius: 12px !important;
+}
+/* Tăng kích thước tiêu đề modal */
+.ant-modal-title {
+    font-size: 22px !important;
+    font-weight: 700;
+    color: #1890ff; /* màu xanh chủ đạo (tuỳ chỉnh nếu cần) */
+    text-align: center;
+  }

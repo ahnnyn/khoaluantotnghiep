@@ -1,0 +1,190 @@
+// Header.scss - Styling cho header hiện đại với bố cục responsive tối ưu
+
+.header-modern {
+  width: 100%;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 5px 16px;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+body {
+  padding-top: 80px;
+}
+
+.header-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.header-row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  flex-wrap: wrap;
+  padding: 0 16px;
+  gap: 16px;
+}
+
+.header-row-bottom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0 0 15px 0;
+}
+
+.logo-img {
+  height: 60px;
+  cursor: pointer;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.header-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  flex-grow: 1;
+  flex-wrap: wrap;
+}
+
+.header-center .header-link {
+  font-weight: 500;
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.header-center .header-link:hover {
+  color: #1890ff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.header-right .user-name {
+  font-weight: 500;
+  font-size: 15px;
+  color: #333;
+}
+
+.logout-item {
+  background-color: #ff4d4f;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.hamburger {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+  margin-left: 0;
+}
+
+@media (max-width: 991px) {
+  .header-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-row-top {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 16px;
+  }
+
+  .header-row-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 16px;
+  }
+
+  .hamburger {
+    display: block;
+    font-size: 22px;
+    margin: 8px 0 4px 0;
+  }
+
+  .header-center {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    background-color: #fff;
+    padding: 8px 12px;
+    width: 100%;
+    flex-grow: 1;
+    flex-wrap: wrap;
+  }
+
+  .header-center .header-link {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    font-size: 18px;
+  }
+
+  .header-center .header-link {
+    font-size: 13px;
+    padding: 4px 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .logo-img {
+    height: 40px;
+  }
+
+  .user-name {
+    font-size: 13px;
+  }
+
+  .hamburger {
+    font-size: 14px;
+  }
+
+  .header-center {
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  .header-center .header-link {
+    font-size: 11px;
+  }
+
+  .logout-item {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+}
