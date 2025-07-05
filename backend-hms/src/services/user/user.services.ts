@@ -160,10 +160,12 @@ const handleUpdatePassword = async (
 // Đăng nhập
 const handleUserLogin = async (username: string, password: string) => {
   await getConnection();
-  const user = await (await User.findOne({ username })).populate("roleId", "roleName");
-  if (!user) {
-    throw new Error(`User with username ${username} not found.`);
+  const userRaw = await User.findOne({ username });
+  if (!userRaw) {
+    throw new Error(`User with username is ${username} not found.`);
   }
+
+const user = await userRaw.populate("roleId", "roleName");
 
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {

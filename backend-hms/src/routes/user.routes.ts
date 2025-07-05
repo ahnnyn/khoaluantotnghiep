@@ -31,7 +31,7 @@ const userRoutes = (app: Express) => {
   router.use(authorizeUser);
 
   router.post("/auth/logout", postLogout);
-  router.get("/create-user", postCreateUser);
+  router.post("/create-user", postCreateUser);
   router.get("/view-user/:id", getViewUserByID);
   router.put("/update-user", putUpdateUser);
   router.put("/update-account", putUpdatePassword);
