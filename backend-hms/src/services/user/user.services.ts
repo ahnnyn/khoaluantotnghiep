@@ -64,7 +64,8 @@ const getAllUsers = async () => {
 const getUserByID = async (id: string) => {
 const user = await User.findById(id)
   .populate("departmentId", "name image description")
-  .populate("positionId", "name image description");
+  .populate("positionId", "name image description")
+  .populate("roleId", "roleName");
 
 if (!user) {
   throw new Error("Người dùng không tồn tại");

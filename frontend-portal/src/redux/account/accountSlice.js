@@ -6,7 +6,7 @@ const userFromStorage = JSON.parse(localStorage.getItem("user")) || {};
 
 const initialState = {
   isUserAuthenticated: isUserAuthenticatedFromStorage,
-  isLoading: true,
+  isLoading: false,
   user: userFromStorage,
 };
 
@@ -18,7 +18,10 @@ export const accountSlice = createSlice({
       const { user, token } = action.payload;
       state.isUserAuthenticated = true;
       state.isLoading = false;
-      state.user = user;
+      state.user = {
+        ...user,
+        role: user.roleId?.roleName || user.role, // ép kiểu chuẩn
+      };
 
       localStorage.setItem("isUserAuthenticated", "true");
       localStorage.setItem("user", JSON.stringify(user));
@@ -52,6 +55,7 @@ export const accountSlice = createSlice({
       state.user = {
         ...state.user,
         ...action.payload,
+        role: action.payload.roleId?.roleName || action.payload.role || state.user.role,
       };
       localStorage.setItem("user", JSON.stringify(state.user));
     },

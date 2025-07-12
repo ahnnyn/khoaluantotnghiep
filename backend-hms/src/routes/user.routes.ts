@@ -18,6 +18,8 @@ const router = express.Router();
 const userRoutes = (app: Express) => {
   //Route public (Không cần auth)
   router.post("/auth/login", loginAPI);
+  router.get("/view-user/:id", getViewUserByID);
+
 
   //Gắn auth cho các route còn lại
   // Tạo middleware cho các role được phép
@@ -32,7 +34,6 @@ const userRoutes = (app: Express) => {
 
   router.post("/auth/logout", postLogout);
   router.post("/create-user", postCreateUser);
-  router.get("/view-user/:id", getViewUserByID);
   router.put("/update-user", putUpdateUser);
   router.put("/update-account", putUpdatePassword);
   // router.post("/handle-create-user", fileUploadMiddleware("avatar"), postCreateUser);

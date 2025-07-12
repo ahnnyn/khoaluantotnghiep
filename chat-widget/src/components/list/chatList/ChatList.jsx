@@ -1,5 +1,5 @@
 import "./ChatList.css";
-import { getUserById, fetchBacSiByMaBS } from "../../../services/api";
+import { getUserById, fetchDoctorByID } from "../../../services/api";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -18,7 +18,7 @@ const ChatList = () => {
       try {
         let res;
         if (currentUserRole === "benhnhan" && doctorId) {
-          res = await fetchBacSiByMaBS(doctorId);
+          res = await fetchDoctorByID(doctorId);
         } else if (currentUserRole === "bacsi" && patientId) {
           res = await getUserById(patientId);
         }
@@ -40,7 +40,9 @@ const ChatList = () => {
   const getAvatarUrl = () => {
     if (targetUser?.hinhAnh) {
       const folder = currentUserRole === "benhnhan" ? "bacsi" : "benhnhan";
-      return `${import.meta.env.VITE_BACKEND_URL}/public/${folder}/${targetUser.hinhAnh}`;
+      return `${import.meta.env.VITE_BACKEND_URL}/public/${folder}/${
+        targetUser.hinhAnh
+      }`;
     }
     return "./avatar.png";
   };

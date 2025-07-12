@@ -1,24 +1,214 @@
-.lich-kham {
-    background-color: #e6f7ff;
-    border: 1px solid #91d5ff;
-    border-radius: 8px;
-    padding: 5px 5px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s;
-    min-height: 35px; /* Chiều cao cố định để các ô đều nhau */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.card {
+  transition: all 0.3s;
+}
+.ant-card.expanded {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
-.lich-kham:hover {
-    background-color: #bae7ff;
-    color: #1890ff;
-    border-color: #40a9ff;
+.info p {
+  margin: 8px 0;
+  font-size: 14px;
 }
 
-.cach-deu {
-    padding: 0 5px;
+.schedule-section {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .schedule-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .times {
+    justify-content: flex-start;
+  }
+}
+
+/* Nút chọn giờ khám */
+.time-btn {
+  padding: 10px 12px;
+  margin: 4px 8px;
+  width: 110px;
+  height: 44px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  background-color: #fff;
+  color: #333;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.time-btn:hover:not(:disabled) {
+  background-color: #e6f7ff;
+  border-color: #1890ff;
+  color: #1890ff;
+}
+
+.time-btn.selected {
+  background-color: #1890ff;
+  border-color: #1890ff;
+  color: #fff;
+  font-weight: 600;
+}
+
+.time-btn:disabled {
+  background-color: #f5f5f5;
+  color: #bbb;
+  cursor: not-allowed;
+}
+
+/* Container chứa khung giờ */
+.times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Nút đặt lịch */
+.book-btn {
+  margin: 16px auto 0;
+  width: 200px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+}
+
+/* Datepicker custom */
+.react-datepicker {
+  min-width: 300px !important;
+  padding: 8px;
+  font-size: 16px !important;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border: none;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__header {
+  background-color: #f0f8ff;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 8px 0;
+  border-radius: 8px 8px 0 0;
+  font-size: 16px;
+}
+
+.react-datepicker__current-month {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.react-datepicker__month-container {
+  width: 300px !important;
+}
+
+.react-datepicker__day-name,
+.react-datepicker__day {
+  width: 40px;
+  line-height: 40px;
+  margin: 2px;
+  font-size: 15px;
+}
+
+.react-datepicker__day--selected {
+  background-color: #1890ff;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #bae7ff;
+}
+
+/* Card bác sĩ chung */
+.ant-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+/* Khi hover vào card */
+.ant-card:hover {
+  border-color: #1890ff;
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.15);
+}
+
+/* Khi card được mở rộng */
+.ant-card.expanded {
+  border-color: #096dd9;
+  box-shadow: 0 6px 20px rgba(24, 144, 255, 0.2);
+}
+
+/* Thông tin bác sĩ */
+.info p {
+  margin: 6px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Card layout khoảng cách */
+.grid-container .ant-col {
+  padding-bottom: 20px;
+}
+
+/* Icon chọn lịch khám */
+.select-schedule-icon {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  color: #1890ff;
+  gap: 6px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+}
+@media (max-width: 480px) {
+  .select-schedule-icon {
+    font-size: 13px;
+    padding: 2px 7px;
+    gap: 4px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ant-card {
+    margin-bottom: 16px;
+  }
+}
+
+.icon-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icon-text.email svg {
+  color: #1890ff;
+}
+.icon-text.phone svg {
+  color: red;
 }

@@ -43,10 +43,10 @@ const HoSoBenhNhan = () => {
   const acc = useSelector((state) => state.account.user);
 
   const getProfile = async () => {
-    if (!acc?.user?.maBenhNhan) return;
+    if (!acc?._id) return;
     setLoading(true);
     try {
-      const res = await fetchHoSoBenhNhan(acc?.user?.maBenhNhan);
+      const res = await fetchHoSoBenhNhan(acc?._id);
       if (res?.data) {
         setProfile(res.data);
       } else {

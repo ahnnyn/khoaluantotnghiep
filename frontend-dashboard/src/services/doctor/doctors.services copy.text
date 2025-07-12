@@ -152,7 +152,7 @@ const callUploadImg = (file) => {
 };
 
 
-const fetchBacSiByMaBS = (maBacSi) => {
+const fetchDoctorByID = (maBacSi) => {
   const URL_BACKEND = `/api/bacsi.php?action=getBacSiByID&maBacSi=${maBacSi}`;
   return axios.get(URL_BACKEND);
 };
@@ -390,7 +390,7 @@ export {
   dangKyKhungGioKham,
   xoaLichCu,
   callUploadImg,
-  fetchBacSiByMaBS,
+  fetchDoctorByID,
   fetchDoctorById,
   fetchDoctorByNgayGio1,
   fetchDoctorByNgayGio,

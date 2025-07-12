@@ -33,60 +33,60 @@ const Login = () => {
   }, [form]);
 
   const handleLogin = async ({ username, password }) => {
-  setIsLoading(true);
-  try {
-    const res = await loginUser(username, password);
-    console.log("Login response:", res);
-    const data = res?.data;
+    setIsLoading(true);
+    try {
+      const res = await loginUser(username, password);
+      console.log("Login response:", res);
+      const data = res?.data;
 
-    if (!data || !data.user || !data.accessToken) {
-      throw new Error(res?.message || "Thông tin không đúng");
-    }
+      if (!data || !data.user || !data.accessToken) {
+        throw new Error(res?.message || "Thông tin không đúng");
+      }
 
-    const { user, accessToken: token } = data;
+      const { user, accessToken: token } = data;
 
-    if (remember) {
-      localStorage.setItem("rememberedDoctor", JSON.stringify({ username, password }));
-    } else {
-      localStorage.removeItem("rememberedDoctor");
-    }
+      if (remember) {
+        localStorage.setItem("rememberedDoctor", JSON.stringify({ username, password }));
+      } else {
+        localStorage.removeItem("rememberedDoctor");
+      }
 
-    dispatch(doLoginAction({ user, token }));
-    localStorage.setItem("access_token", token);
-    form.resetFields();
+      dispatch(doLoginAction({ user, token }));
+      localStorage.setItem("access_token", token);
+      form.resetFields();
 
-    notification.success({
-      message: "Đăng nhập thành công!",
-      description: `Chào mừng ${user.fullName || "người dùng"}`,
-      duration: 3,
-    });
-
-    const redirectMap = {
-      DOCTOR: "/doctor",
-      ADMIN: "/admin",
-    };
-
-    if (redirectMap[user.role]) {
-      navigate(redirectMap[user.role]);
-    } else {
-      notification.warning({
-        message: "Vai trò không hợp lệ",
-        description: "Vui lòng liên hệ quản trị viên.",
+      notification.success({
+        message: "Đăng nhập thành công!",
+        description: `Chào mừng ${user.fullName || "người dùng"}`,
+        duration: 3,
       });
-    }
-  } catch (err) {
-    const msg =
-      err?.response?.data?.message || // lấy message từ backend
-      err?.message ||                 // fallback từ throw Error
-      "Đã có lỗi xảy ra";             // fallback cuối
 
-    notification.error({
-      message: "Đăng nhập thất bại",
-      description: msg,
-    });
-  } finally {
-    setIsLoading(false);
-  }
+      const redirectMap = {
+        DOCTOR: "/doctor",
+        ADMIN: "/admin",
+      };
+
+      if (redirectMap[user.role]) {
+        navigate(redirectMap[user.role]);
+      } else {
+        notification.warning({
+          message: "Vai trò không hợp lệ",
+          description: "Vui lòng liên hệ quản trị viên.",
+        });
+      }
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message || // lấy message từ backend
+        err?.message ||                 // fallback từ throw Error
+        "Đã có lỗi xảy ra";             // fallback cuối
+
+      notification.error({
+        message: "Đăng nhập thất bại",
+        description: msg,
+      });
+    } finally {
+      setIsLoading(false);
+    }
 };
 
 

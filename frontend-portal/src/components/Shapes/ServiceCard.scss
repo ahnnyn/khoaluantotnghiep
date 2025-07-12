@@ -1,0 +1,32 @@
+/* ServiceCard.scss */
+.service-card-wrapper {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.service-card {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .icon-wrapper {
+    margin-bottom: 12px;
+    font-size: 32px;
+    color: #1890ff;
+  }
+
+  .service-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #093b7b;
+  }
+}

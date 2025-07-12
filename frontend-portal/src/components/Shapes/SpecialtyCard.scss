@@ -1,0 +1,47 @@
+/* SpecialtyCard.scss */
+.specialty-card-wrappers {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  margin-right: 20px;;
+}
+
+.specialty-cards {
+  width: 100%;
+  max-width: 200px;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+
+  .specialty-images {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+
+  .specialty-texts {
+    padding: 0 4px;
+  }
+
+  .specialty-titles {
+    font-size: 15px;
+    font-weight: 600;
+    color: #093b7b;
+    margin-bottom: 4px;
+    line-height: 1.3;
+  }
+
+  .specialty-descriptions {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+    line-height: 1.4;
+  }
+}

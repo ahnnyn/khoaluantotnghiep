@@ -6,6 +6,7 @@ import "./Private.scss";
 
 const PrivateRoute = ({ children, allowedRoles }) => {
   const { user, isUserAuthenticated } = useSelector((state) => state.account);
+  console.log("User from PrivateRoute:", user);
 
   if (!isUserAuthenticated) {
     return (
@@ -16,7 +17,7 @@ const PrivateRoute = ({ children, allowedRoles }) => {
           subTitle="Vui lòng đăng nhập để tiếp tục."
           extra={
             <Button type="primary">
-              <Link to="/login">Đăng nhập</Link>
+              <Link to="/user/login">Đăng nhập</Link>
             </Button>
           }
         />
@@ -24,7 +25,9 @@ const PrivateRoute = ({ children, allowedRoles }) => {
     );
   }
 
-  if (!allowedRoles.includes(user.role)) {
+  const roleName = user?.role || user?.roleId?.roleName || "";
+
+  if (allowedRoles && !allowedRoles.includes(roleName)) {
     return (
       <div className="private-route-center">
         <Result

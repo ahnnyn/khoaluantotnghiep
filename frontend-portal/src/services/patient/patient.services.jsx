@@ -20,25 +20,31 @@ const fetchDepartmentByID = (id) => {
 };
 
 // BÁC SĨ //
-const fetchAllBacSi = async () => {
+const fetchAllDoctor = async () => {
     return axios.get(`/api/public/get-all-doctors`);
 };
 
-const findBacSiByTen = (query) => {
+const findBacSiByName = (query) => {
     const URL_BACKEND = `/api/bacsi.php?action=search&${query}`;
     return axios.get(URL_BACKEND);
   };
 
-const fetchBacSiByChuyenKhoa = (maKhoa) => {
-    const URL_BACKEND = `/api/bacsi.php?action=getBacSiByChuyenKhoa&maKhoa=${maKhoa}`
+const fetchDoctorByDepartment= (id) => {
+    const URL_BACKEND = `/api/public/get-doctors-by-deptID/${id}`;
     return axios.get(URL_BACKEND)
 }
     
-const fetchBacSiByMaBS = (maBacSi) => {
+const fetchDoctorByID = (maBacSi) => {
     console.log("Đang gọi API với maBacSi: ", maBacSi); // 👈 debug ở đây
     const URL_BACKEND = `/api/bacsi.php?action=getBacSiByID&maBacSi=${maBacSi}`;
     return axios.get(URL_BACKEND);
 };
+
+
+const getWorkScheduleByDoctor = (id) => {
+    const URL_BACKEND = `/api/public/get-work-schedule-by-doctorID/${id}`;
+    return axios.get(URL_BACKEND);
+}
 
 const getTimeSlotsByDoctorAndDate = async (maBacSi, ngayLamViec) => {
     const URL_BACKEND = `/api/lichlamviec.php?action=getLichLamViecTheoNgay&maBacSi=${maBacSi}&ngayLamViec=${ngayLamViec}`;
@@ -58,23 +64,6 @@ const getTimeSlotsByDoctorAndDate = async (maBacSi, ngayLamViec) => {
     }
   };
 
-const getTimeSlotsByDoctor = async (maBacSi) => {
-    const URL_BACKEND = `/api/lichlamviec.php?action=getLichLamViec&maBacSi=${maBacSi}`;
-  
-    try {
-      const response = await axios.get(URL_BACKEND);
-  
-      console.log("Dữ liệu lịch làm việc từ API:", response);
-  
-      return response; // Trả về response.data thay vì response
-    } catch (error) {
-      console.error(
-        "Lỗi khi gọi lịch làm việc API:",
-        error.response ? error.response : error.message
-      );
-      return [];
-    }
-  };
 
 // fetch time
 const fetchAllTime = () => {
@@ -282,11 +271,11 @@ const fetchNgayLamViecByBacSi = (maBacSi, hinhThucKham) => {
 };
 
 export {
-    fetchAllBacSi,
-    findBacSiByTen,
-    fetchBacSiByChuyenKhoa,
-    fetchBacSiByMaBS,
-    getTimeSlotsByDoctor,
+    fetchAllDoctor,
+    findBacSiByName,
+    fetchDoctorByDepartment,
+    fetchDoctorByID,
+    getWorkScheduleByDoctor,
     fetchAllTime,
     fetchAllTime2,
     addTimeKhamBenh,

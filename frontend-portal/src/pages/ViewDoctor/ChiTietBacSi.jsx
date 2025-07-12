@@ -2,11 +2,7 @@ import { Avatar, Button, Col, Divider, Drawer, Row } from "antd";
 import Footer from "components/Footer/Footer";
 import Header from "components/Header/Header";
 import "./ChiTietBacSi.scss";
-import {
-  DownOutlined,
-  PhoneOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { DownOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 
 import { FaRegHandPointUp } from "react-icons/fa6";
 import { useEffect, useState } from "react";
@@ -18,8 +14,8 @@ const { Option } = Select;
 
 import { useLocation, useNavigate } from "react-router-dom";
 import {
-  fetchBacSiByMaBS,
-  getTimeSlotsByDoctor,
+  fetchDoctorByID,
+  getWorkScheduleByDoctor,
 } from "services/patient/patient.services";
 import moment from "moment";
 
@@ -68,7 +64,7 @@ const ChiTietBacSi = () => {
   console.log("giaKham: ", giaKham);
 
   const fetchBacSiByID = async (maBacSi) => {
-    const res = await fetchBacSiByMaBS(maBacSi);
+    const res = await fetchDoctorByID(maBacSi);
     console.log("res: ", res.data);
     if (res && res.data) {
       setDataBacSi(res.data);
@@ -84,7 +80,7 @@ const ChiTietBacSi = () => {
       }
 
       // Fetch data by doctor ID
-      const res = await getTimeSlotsByDoctor(maBacSi);
+      const res = await getWorkScheduleByDoctor(maBacSi);
       console.log("res fetch: ", res);
 
       if (res && Array.isArray(res)) {

@@ -203,59 +203,59 @@ const getAllTimeSlots = async () => {
 }
 
 const createWorkSchedule = async (workScheduleData: any) => {
-  const { doctorId, date, slots } = workScheduleData;
+    const { doctorId, date, slots } = workScheduleData;
 
-  const normalizedDate = new Date(date);
+    const normalizedDate = new Date(date);
 
-  const currentType = slots[0]?.examinationType;
-  if (!currentType) throw new Error("Missing examinationType in slots");
+    const currentType = slots[0]?.examinationType;
+    if (!currentType) throw new Error("Missing examinationType in slots");
 
-  let schedule = await WorkSchedule.findOne({ doctorId, date: normalizedDate });
+    let schedule = await WorkSchedule.findOne({ doctorId, date: normalizedDate });
 
-  const incomingSlotKeys = new Set(
-    slots.map((s: any) => `${s.timeSlotId}-${s.examinationType}`)
-  );
+    const incomingSlotKeys = new Set(
+      slots.map((s: any) => `${s.timeSlotId}-${s.examinationType}`)
+    );
 
-  if (!schedule) {
-    // Nếu chưa có lịch thì tạo mới luôn
-    return await WorkSchedule.create({
-      doctorId,
-      date: normalizedDate,
-      slots,
-    });
-  }
+    if (!schedule) {
+      // Nếu chưa có lịch thì tạo mới luôn
+      return await WorkSchedule.create({
+        doctorId,
+        date: normalizedDate,
+        slots,
+      });
+    }
 
-  // Tách các slot hiện có thành:
-  // - slot khác loại (không phải loại đang gửi lên): giữ nguyên
-  // - slot cùng loại: xử lý so sánh
-  const otherTypeSlots = schedule.slots.filter(
-    (s) => s.examinationType !== currentType
-  );
+    // Tách các slot hiện có thành:
+    // - slot khác loại (không phải loại đang gửi lên): giữ nguyên
+    // - slot cùng loại: xử lý so sánh
+    const otherTypeSlots = schedule.slots.filter(
+      (s) => s.examinationType !== currentType
+    );
 
-  const sameTypeSlots = schedule.slots.filter(
-    (s) => s.examinationType === currentType
-  );
+    const sameTypeSlots = schedule.slots.filter(
+      (s) => s.examinationType === currentType
+    );
 
-  const existingKeys = new Set(
-    sameTypeSlots.map((s) => `${s.timeSlotId}-${s.examinationType}`)
-  );
+    const existingKeys = new Set(
+      sameTypeSlots.map((s) => `${s.timeSlotId}-${s.examinationType}`)
+    );
 
-  // Những slot cùng loại cần giữ lại (vẫn còn trong request)
-  const keepSlots = sameTypeSlots.filter((s) =>
-    incomingSlotKeys.has(`${s.timeSlotId}-${s.examinationType}`)
-  );
+    // Những slot cùng loại cần giữ lại (vẫn còn trong request)
+    const keepSlots = sameTypeSlots.filter((s) =>
+      incomingSlotKeys.has(`${s.timeSlotId}-${s.examinationType}`)
+    );
 
-  // Những slot mới (chưa có trong DB)
-  const newSlots = slots.filter(
-    (s: any) =>
-      !existingKeys.has(`${s.timeSlotId}-${s.examinationType}`)
-  );
+    // Những slot mới (chưa có trong DB)
+    const newSlots = slots.filter(
+      (s: any) =>
+        !existingKeys.has(`${s.timeSlotId}-${s.examinationType}`)
+    );
 
-  // Gộp lại: slot khác loại + slot giữ lại cùng loại + slot mới
-  schedule.slots = [...otherTypeSlots, ...keepSlots, ...newSlots];
+    // Gộp lại: slot khác loại + slot giữ lại cùng loại + slot mới
+    schedule.slots = [...otherTypeSlots, ...keepSlots, ...newSlots];
 
-  await schedule.save();
-  return schedule;
+    await schedule.save();
+    return schedule;
 };
 
 

@@ -4,7 +4,13 @@ import EmojiPicker from "emoji-picker-react";
 import { Download } from "lucide-react";
 
 import { format } from "timeago.js";
-import { getUserById, fetchBacSiByMaBS, callUploadChatFile, saveMessage, fetchMessages } from "../../services/api";
+import {
+  getUserById,
+  fetchDoctorByID,
+  callUploadChatFile,
+  saveMessage,
+  fetchMessages,
+} from "../../services/api";
 import { useSearchParams } from "react-router-dom";
 import "./Chat.css";
 
@@ -33,11 +39,11 @@ const Chat = () => {
       try {
         if (currentUserRole === "benhnhan") {
           const currentUser = await getUserById(currentUserID);
-          const receiverUser = await fetchBacSiByMaBS(doctorId);
+          const receiverUser = await fetchDoctorByID(doctorId);
           setCurrentUserData(currentUser.data);
           setReceiverUserData(receiverUser.data);
         } else if (currentUserRole === "bacsi") {
-          const currentUser = await fetchBacSiByMaBS(currentUserID);
+          const currentUser = await fetchDoctorByID(currentUserID);
           const receiverUser = await getUserById(patientId);
           setCurrentUserData(currentUser.data);
           setReceiverUserData(receiverUser.data);
@@ -73,7 +79,7 @@ const Chat = () => {
           const formattedMessages = res.data.map((msg) => {
             const isImage = msg.loaitinnhan === "image";
             const isFile = msg.loaitinnhan === "file";
-          
+
             return {
               senderId: msg.nguoigui_id,
               receiverId: currentUserRole === "benhnhan" ? doctorId : patientId,
@@ -84,35 +90,32 @@ const Chat = () => {
               role: msg.role,
             };
           });
-          
+
           setChatMessages(formattedMessages);
         } else {
           console.warn("Không lấy được tin nhắn từ API");
         }
-
       } catch (err) {
         console.error("Lỗi khi lấy tin nhắn:", err);
       }
     };
-  
+
     if (appointmentId) {
       getMessages();
     }
   }, [appointmentId, currentUserRole, doctorId, patientId]);
-  
 
   useEffect(() => {
     return () => {
       socket.disconnect();
     };
   }, []);
-  
 
   const handleSendMessage = async () => {
     if (text.trim() !== "" || img.file) {
       const receiverId = currentUserRole === "benhnhan" ? doctorId : patientId;
       const now = new Date().toISOString();
-  
+
       // Thiết lập tin nhắn cơ bản, ban đầu lấy nội dung là text (nếu có)
       const baseMessage = {
         nguoigui_id: currentUserID,
@@ -123,7 +126,7 @@ const Chat = () => {
         loaitinnhan: img.file ? "image" : "text", // tạm thời set là "text" nếu không có file
         thoigian: now,
       };
-  
+
       // Payload gửi qua socket
       let socketPayload = {
         senderId: currentUserID,
@@ -133,38 +136,38 @@ const Chat = () => {
         createdAt: now,
         role: currentUserRole,
       };
-  
+
       try {
         // Nếu có file, upload file trước
         if (img.file) {
           const res = await callUploadChatFile(img.file);
           const data = res;
           if (!data?.url) throw new Error("Lỗi upload file");
-  
+
           baseMessage.file_url = data.url;
           console.log("File URL:", data.url);
           // Kiểm tra xem file upload có phải ảnh không:
           const isImage = /^image\//.test(data.type);
-  
+
           // Cập nhật loại tin nhắn: "image" nếu là ảnh, "file" nếu không phải ảnh
           baseMessage.loaitinnhan = isImage ? "image" : "file";
-  
+
           // Nếu người dùng không nhập text, dùng tên file để lưu nội dung cho tin nhắn
           if (!text.trim()) {
             baseMessage.noidung = data.filename;
           }
-  
+
           // Cập nhật socketPayload:
           socketPayload.img = isImage ? data.url : null;
           socketPayload.text = text.trim() || data.filename;
           socketPayload.file_url = data.url;
         }
-        
+
         // Nếu không có file thì vẫn là tin nhắn văn bản
         if (!img.file) {
           socketPayload.img = null;
         }
-  
+
         // Gửi tin nhắn qua socket để hiển thị ngay cho cả hai bên
         socket.emit("sendMessage", socketPayload);
         setChatMessages((prev) => [...prev, socketPayload]);
@@ -172,7 +175,7 @@ const Chat = () => {
         setText("");
         setImg({ file: null, url: "" });
         setEmojiOpen(false);
-  
+
         // Lưu tin nhắn vào DB
         const saveRes = await saveMessage(baseMessage);
         if (!saveRes.success) throw new Error(saveRes.error || "Lỗi lưu DB");
@@ -182,7 +185,7 @@ const Chat = () => {
       }
     }
   };
-  
+
   const handleEmoji = (e) => {
     setText((prev) => prev + e.emoji);
   };
@@ -190,40 +193,40 @@ const Chat = () => {
   const handleImg = async (e, type) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
-  
+
     const isImage = /^image\//.test(selectedFile.type);
-  
+
     if (type === "image" && !isImage) {
       alert("Chỉ được chọn file ảnh!");
       return;
     }
-  
+
     if (type === "file" && isImage) {
       alert("Chỉ được chọn file tài liệu!");
       return;
     }
-  
+
     const previewUrl = isImage ? URL.createObjectURL(selectedFile) : "";
-  
+
     // Cập nhật ảnh đã chọn (chỉ để preview tạm thời nếu là ảnh)
     setImg({
       file: selectedFile,
       url: previewUrl,
     });
-  
+
     // Gửi tin nhắn tự động
     try {
       const receiverId = currentUserRole === "benhnhan" ? doctorId : patientId;
       const now = new Date().toISOString();
-  
+
       const uploadRes = await callUploadChatFile(selectedFile);
       const data = uploadRes;
       if (!data?.url) throw new Error("Lỗi upload file");
-  
+
       const isImageFile = /^image\//.test(data.type);
       const fileUrl = data.url;
       const displayName = text || data.filename;
-  
+
       const socketPayload = {
         senderId: currentUserID,
         receiverId,
@@ -233,7 +236,7 @@ const Chat = () => {
         createdAt: now,
         role: currentUserRole,
       };
-  
+
       const baseMessage = {
         nguoigui_id: currentUserID,
         role: currentUserRole,
@@ -243,32 +246,34 @@ const Chat = () => {
         loaitinnhan: isImageFile ? "image" : "file",
         thoigian: now,
       };
-  
+
       socket.emit("sendMessage", socketPayload);
       setChatMessages((prev) => [...prev, socketPayload]);
       setText("");
       setImg({ file: null, url: "" });
       setEmojiOpen(false);
-  
+
       const saveRes = await saveMessage(baseMessage);
       if (!saveRes.success) throw new Error(saveRes.error || "Lỗi lưu DB");
     } catch (err) {
       console.error("Lỗi gửi/lưu file:", err);
     }
   };
-  
+
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       e.preventDefault(); // Ngăn form submit hoặc reload
       handleSendMessage();
     }
   };
-  
+
   const avatarUrl = (user) => {
     if (!user || !user.hinhAnh) return "./avatar.png";
     const isDoctor = Object.prototype.hasOwnProperty.call(user, "maBacSi");
     const folder = isDoctor ? "bacsi" : "benhnhan";
-    return `${import.meta.env.VITE_BACKEND_URL}/public/${folder}/${user.hinhAnh}`;
+    return `${import.meta.env.VITE_BACKEND_URL}/public/${folder}/${
+      user.hinhAnh
+    }`;
   };
 
   useEffect(() => {
@@ -290,7 +295,9 @@ const Chat = () => {
       <div className="center">
         {chatMessages.map((msg, index) => {
           const isOwn = msg.senderId === currentUserID;
-          const fileName = decodeURIComponent(msg.text || msg.file_url?.split("/").pop());
+          const fileName = decodeURIComponent(
+            msg.text || msg.file_url?.split("/").pop()
+          );
 
           return (
             <div
@@ -330,8 +337,17 @@ const Chat = () => {
                     );
                   } else if (msg.file_url) {
                     return (
-                      <div className="file-message" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span style={{ wordBreak: "break-word", color: "#007bff" }}>
+                      <div
+                        className="file-message"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                        }}
+                      >
+                        <span
+                          style={{ wordBreak: "break-word", color: "#007bff" }}
+                        >
                           📎 {fileName}
                         </span>
                         <a
@@ -357,7 +373,7 @@ const Chat = () => {
             </div>
           );
         })}
-    </div>
+      </div>
       <div className="bottom">
         <div className="icons">
           {/* Gửi ảnh */}
@@ -374,7 +390,11 @@ const Chat = () => {
 
           {/* Gửi file */}
           <label htmlFor="file-upload">
-            <img src="./attach_file_24dp_FFFF.png" alt="upload-file" title="Gửi file" />
+            <img
+              src="./attach_file_24dp_FFFF.png"
+              alt="upload-file"
+              title="Gửi file"
+            />
           </label>
           <input
             type="file"
@@ -398,7 +418,9 @@ const Chat = () => {
             alt="emoji"
             onClick={() => setEmojiOpen((prev) => !prev)}
           />
-          <div className="picker">{emojiOpen && <EmojiPicker onEmojiClick={handleEmoji} />}</div>
+          <div className="picker">
+            {emojiOpen && <EmojiPicker onEmojiClick={handleEmoji} />}
+          </div>
         </div>
         <button className="sendButton" onClick={handleSendMessage}>
           Gửi

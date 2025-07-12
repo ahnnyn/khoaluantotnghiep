@@ -1,289 +1,264 @@
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import {
-  Avatar,
-  Button,
-  Col,
-  Drawer,
-  Row,
-  Select,
-  Form,
-  DatePicker,
-  Radio,
-  Alert,
   Card,
+  Row,
+  Col,
+  Avatar,
+  Radio,
+  Button,
+  Divider,
+  Breadcrumb,
 } from "antd";
-import Footer from "components/Footer/Footer";
-import Header from "components/Header/Header";
-import "../QuanLyLichHen/lichhen.scss";
-import { IoHomeSharp } from "react-icons/io5";
-import { DownOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
-import { useEffect, useState, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import {
-  FaRegCalendarAlt,
-  FaRegHandPointUp,
-} from "react-icons/fa";
-import {
-  fetchDepartmentByID,
-  fetchBacSiByMaBS,
-  fetchBacSiByChuyenKhoa,
-  getTimeSlotsByDoctor,
-} from "services/patient/patient.services";
+  MailOutlined,
+  PhoneOutlined,
+  UserOutlined,
+  HomeOutlined,
+} from "@ant-design/icons";
+import { AiOutlineDownCircle } from "react-icons/ai";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { registerLocale } from "react-datepicker";
+import vi from "date-fns/locale/vi";
+registerLocale("vi", vi);
 import moment from "moment";
-import styled, { keyframes } from "styled-components";
-import { MailOutlined } from "@ant-design/icons";
+import {
+  fetchDoctorByDepartment,
+  fetchDepartmentByID,
+  getWorkScheduleByDoctor,
+} from "services/patient/patient.services";
+
 import "./chuyenkhoa.css";
+import { Layout } from "antd";
+import SearchComponent from "components/SearchComponent/SearchComponent";
+const { Content } = Layout;
 
-const shake = keyframes`
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-`;
+const { Meta } = Card;
 
-const ShakeLink = styled.a`
-  color: blue;
-  font-weight: 500;
-  font-size: 16px;
-  cursor: pointer;
-  font-style: italic;
-  animation: ${shake} 0.5s ease-in-out infinite;
-`;
+const HINH_THUC = [
+  { value: "OFFLINE", label: "Trực tiếp" },
+  { value: "ONLINE", label: "Trực tuyến" },
+];
 
 const ChuyenKhoaVaBacSi = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
+  const { id } = useParams();
+  const [doctors, setDoctors] = useState([]);
+  const [expandedData, setExpandedData] = useState({});
+  const [expandedId, setExpandedId] = useState(null);
+  const [selectedMap, setSelectedMap] = useState({});
+  const [dataSearch, setDataSearch] = useState("");
+  const [allDoctors, setAllDoctors] = useState([]);
+  const [khoaName, setKhoaName] = useState("");
 
-  let params = new URLSearchParams(location.search);
-  const maKhoa = params.get("maKhoa"); // Lấy giá trị của tham số "maKhoa"
-  console.log("check id chuyen khoa: ", maKhoa);
+  useEffect(() => {
+    if (!id) return;
 
-  const [dataChuyenKhoaByID, setDataChuyenKhoaByID] = useState(null);
-  const [dataBacSiByChuyenKhoa, setDataBacSiByChuyenKhoa] = useState([]);
-  const [dataLichLamViec, setDataLichLamViec] = useState([]);
-  const [dataBacSi, setDataBacSi] = useState(null);
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTimeId, setSelectedTimeId] = useState(null);
-  const [selectedBacSi, setSelectedBacSi] = useState(null);
-  const [showDetails, setShowDetails] = useState({});
-  const [open, setOpen] = useState(false);
-  const [hienThiTime, setHienThiTime] = useState("Chọn ngày khám!");
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [khungGio, setkhungGio] = useState([]);
-  const queryParams = new URLSearchParams(location.search);
-  const hinhThucKhamFromUrl = queryParams.get("hinhThucKham");
-  const [selectedHinhThucKham, setSelectedHinhThucKham] =
-    useState("chuyenkhoa");
-
-  const hienThiHinhThuc = {
-    chuyenkhoa: "Chuyên khoa",
-    tructuyen: "Trực tuyến",
-  };
-
-  const hinhThucKhamListFromUrl = hinhThucKhamFromUrl
-    ? hinhThucKhamFromUrl.split(",").map((s) => s.trim())
-    : [];
-  const fetchChuyenKhoaByMaKhoa = async (maKhoa) => {
-    const res = await fetchChuyenKhoaByID(maKhoa);
-    console.log("res chuyên khoa: ", res);
-    if (res && res.data) {
-      setDataChuyenKhoaByID(res.data);
-    }
-  };
-
-  console.log("dataChuyenKhoaByID: ", dataChuyenKhoaByID);
-
-  const fetchBacSiByKhoa = async (maKhoa) => {
-    const res = await fetchBacSiByChuyenKhoa(maKhoa);
-    console.log("res bác sĩ: ", res);
-    if (res && res.bacSiList) {
-      setDataBacSiByChuyenKhoa([...res.bacSiList]); // Spread operator để cập nhật state đúng cách
-    }
-  };
-
-  // Hàm loại bỏ dấu và chuẩn hóa chuỗi
-  const normalize = (str) =>
-    str
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/\s+/g, ""); // bỏ khoảng trắng
-
-  const bacSiFilter = useMemo(() => {
-    if (hinhThucKhamFromUrl) {
-      return dataBacSiByChuyenKhoa.filter((bs) => {
-        const hinhThucList = bs.hinhThucKhamList
-          ?.split(",")
-          .map((s) => normalize(s.trim()));
-        return hinhThucList?.includes(normalize(hinhThucKhamFromUrl));
+    fetchDepartmentByID(id)
+      .then((res) => {
+        setKhoaName(res.data?.name || "Không rõ khoa");
+      })
+      .catch((err) => {
+        console.error("Lỗi khi lấy tên khoa:", err);
+        setKhoaName("Không rõ khoa");
       });
+
+    fetchDoctorByDepartment(id)
+      .then((res) => {
+        const data = res?.data || [];
+        setAllDoctors(data);
+        setDoctors(data);
+      })
+      .catch(console.error);
+  }, [id]);
+
+  const handleCardClick = (doctorId) => {
+    if (expandedId === doctorId) {
+      setExpandedId(null);
+      return;
     }
-    return dataBacSiByChuyenKhoa || [];
-  }, [dataBacSiByChuyenKhoa, hinhThucKhamFromUrl]);
 
-  const fetchBacSiByID = async (maBacSi) => {
-    const res = await fetchBacSiByMaBS(maBacSi);
-    console.log("res: ", res.data);
-    if (res && res.data) {
-      setDataBacSi(res.data);
-    }
-  };
+    setExpandedId(doctorId);
 
-  useEffect(() => {
-    if (!selectedBacSi?.maBacSi) return;
-    fetchBacSiByID(selectedBacSi.maBacSi);
-  }, [selectedBacSi]);
+    getWorkScheduleByDoctor(doctorId)
+      .then((res) => {
+        const raw = res?.data || [];
 
-  useEffect(() => {
-    fetchChuyenKhoaByMaKhoa(maKhoa);
-    fetchBacSiByKhoa(maKhoa);
-  }, [maKhoa]);
+        // Lọc lịch đúng bác sĩ
+        const filteredRaw = raw.filter((s) => s.doctorId === doctorId);
 
-  // const fetchKhungGioKhamBacSi = async (maBacSi, date) => {
-  //     const res = await getTimeSlotsByDoctorAndDate(maBacSi, date);
-  //     if (Array.isArray(res)) {
-  //         setDataLichLamViec(res);
-  //     } else {
-  //         console.error("Lỗi khi lấy lịch khám:", await res?.json?.());
-  //     }
-  // };
+        const today = moment().startOf("day");
+        const minDate = today.clone().add(3, "days");
 
-  const fetchKhungGioKhamBacSi = async (maBacSi) => {
-    const res = await getTimeSlotsByDoctor(maBacSi);
-    if (Array.isArray(res)) {
-      setDataLichLamViec(res);
-    } else {
-      console.error("Lỗi khi lấy lịch khám:", await res?.json?.());
-    }
-  };
+        const hinhThuc = HINH_THUC[0].value;
 
-  console.log("dataLichLamViec: ", dataLichLamViec);
+        const validDates = filteredRaw
+          .filter(
+            (s) =>
+              moment(s.date).isSameOrAfter(minDate, "day") &&
+              s.slots?.some(
+                (slot) =>
+                  slot.examinationType === hinhThuc &&
+                  slot.status === "available"
+              )
+          )
+          .map((s) => moment(s.date).startOf("day"));
 
-  useEffect(() => {
-    if (selectedBacSi) {
-      setDataLichLamViec([]); // Reset lịch làm việc cũ
-      fetchKhungGioKhamBacSi(selectedBacSi.maBacSi); // Lấy lịch khám mới
-      setHienThiTime("Chọn ngày khám!"); // Reset ngày khám
-    }
-  }, [selectedBacSi]); // Lắng nghe thay đổi của bác sĩ
+        let selectedDate = validDates[0] || null;
+        let matchedSlots = [];
 
-  console.log("dataBacSiByChuyenKhoa: ", dataBacSiByChuyenKhoa);
-
-  useEffect(() => {
-    console.log("Cập nhật danh sách bác sĩ: ", dataBacSiByChuyenKhoa);
-  }, [dataBacSiByChuyenKhoa]);
-
-  const onChange = (value) => {
-    console.log(`selected ${value}`);
-  };
-  const onSearch = (value) => {
-    console.log("search:", value);
-  };
-
-  const showDrawer = (doctor) => {
-    setOpen(true);
-    setSelectedBacSi(doctor);
-    setSelectedTimeId(null);
-    setHienThiTime("Chọn ngày khám!");
-    setkhungGio([]); // Reset khung giờ khi bác sĩ thay đổi
-  };
-
-  useEffect(() => {
-    // Khi hình thức khám thay đổi, reset lại ngày khám
-    setHienThiTime("Chọn ngày khám!");
-    setSelectedTimeId(null); // Reset lại thời gian đã chọn
-    setkhungGio([]); // Reset lại khung giờ
-  }, [selectedHinhThucKham]); // Lắng nghe sự thay đổi của hình thức khám
-
-  const onClose = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    if (
-      hinhThucKhamFromUrl &&
-      (hinhThucKhamFromUrl === "tructuyen" ||
-        hinhThucKhamFromUrl === "chuyenkhoa")
-    ) {
-      const newSelected = {};
-      dataBacSiByChuyenKhoa?.forEach((item) => {
-        if (!selectedHinhThucKham[item.maBacSi]) {
-          newSelected[item.maBacSi] = hinhThucKhamFromUrl;
+        if (!selectedDate) {
+          // Nếu không có ngày hợp lệ, lấy ngày khám đầu tiên sau 3 ngày (nếu có)
+          const fallbackSchedule = filteredRaw.find((s) =>
+            moment(s.date).isSameOrAfter(minDate, "day")
+          );
+          selectedDate = fallbackSchedule
+            ? moment(fallbackSchedule.date).startOf("day")
+            : null;
         }
-      });
-      setSelectedHinhThucKham((prev) => ({ ...prev, ...newSelected }));
-    }
-  }, [dataBacSiByChuyenKhoa]);
-  const englishToVietnameseDays = {
-    Sunday: "Chủ nhật",
-    Monday: "Thứ 2",
-    Tuesday: "Thứ 3",
-    Wednesday: "Thứ 4",
-    Thursday: "Thứ 5",
-    Friday: "Thứ 6",
-    Saturday: "Thứ 7",
+
+        if (selectedDate) {
+          const matchedSchedule = filteredRaw.find((s) =>
+            moment(s.date).isSame(selectedDate, "day")
+          );
+
+          matchedSlots =
+            matchedSchedule?.slots?.filter(
+              (slot) => slot.examinationType === hinhThuc //&& slot.status === "available"
+            ) || [];
+        }
+
+        setExpandedData((prev) => ({
+          ...prev,
+          [doctorId]: {
+            selected: {
+              date: selectedDate,
+              hinhThuc,
+              timeSlot: null,
+            },
+            workSchedules: filteredRaw,
+            availableDates: validDates,
+            slots: matchedSlots,
+          },
+        }));
+      })
+      .catch(console.error);
   };
 
-  const toggleDetails = (doctorId) => {
-    setShowDetails((prevState) => ({
-      ...prevState,
-      [doctorId]: !prevState[doctorId], // Toggle the specific doctor's details
+  const handleDateChange = (doctorId, date) => {
+    const momentDate = moment(date);
+    const doctorData = expandedData[doctorId];
+    const matchedSchedule = doctorData.workSchedules.find((s) =>
+      moment(s.date).isSame(momentDate, "day")
+    );
+
+    const matchedSlots =
+      matchedSchedule?.slots?.filter(
+        (slot) =>
+          slot.examinationType === doctorData.selected.hinhThuc &&
+          slot.status === "available"
+      ) || [];
+
+    setExpandedData((prev) => ({
+      ...prev,
+      [doctorId]: {
+        ...prev[doctorId],
+        selected: {
+          ...prev[doctorId].selected,
+          date: momentDate,
+          timeSlot: null,
+        },
+        slots: matchedSlots,
+      },
     }));
   };
 
-  const styleTime = (index) => ({
-    cursor: "pointer",
-    fontSize: "18px",
-    color: hoveredIndex === index ? "red" : "black", // Đổi màu chữ khi hover
-  });
+  const handleHinhThucChange = (doctorId, hinhThuc) => {
+    const doctorData = expandedData[doctorId];
+    const today = moment().startOf("day");
+    const minDate = today.clone().add(3, "days");
 
-  // Lấy ngày hiện tại (không tính thời gian)
-  const today = moment().startOf("day");
+    const validDates = doctorData.workSchedules
+      .filter(
+        (s) =>
+          moment(s.date).isSameOrAfter(minDate, "day") &&
+          s.slots?.some(
+            (slot) => slot.examinationType === hinhThuc //&& slot.status === "available"
+          )
+      )
+      .map((s) => moment(s.date).startOf("day"));
 
-  console.log("dataLichLamViec: ", dataLichLamViec);
+    const currentSelectedDate = doctorData.selected.date;
+    let selectedDate = currentSelectedDate;
 
-  const formatCurrency = (value) => {
-    if (value === null || value === undefined) return "";
+    // Kiểm tra xem ngày đang chọn có hợp lệ không với hình thức mới
+    const matchedScheduleAtCurrent = doctorData.workSchedules.find(
+      (s) =>
+        moment(s.date).isSame(currentSelectedDate, "day") &&
+        s.slots?.some((slot) => slot.examinationType === hinhThuc)
+    );
 
-    const number = parseInt(value, 10); // loại bỏ phần thập phân nếu có
-    return `${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} VNĐ`;
-  };
-
-  console.log("selectedBacSi: ", selectedBacSi);
-
-  const handleRedirectViewBacSi = (maBacSi) => {
-    if (!maBacSi) {
-      console.error("Lỗi: maBacSi không tồn tại!", maBacSi);
-      return;
+    if (!matchedScheduleAtCurrent) {
+      // Nếu ngày hiện tại không còn slot cho hình thức này, fallback
+      selectedDate = validDates[0] || null;
     }
-    navigate(`/chi-tiet-bac-si?maBacSi=${maBacSi}`);
+
+    const matchedSchedule = doctorData.workSchedules.find((s) =>
+      moment(s.date).isSame(selectedDate, "day")
+    );
+
+    const matchedSlots =
+      matchedSchedule?.slots?.filter(
+        (slot) => slot.examinationType === hinhThuc
+      ) || [];
+
+    setExpandedData((prev) => ({
+      ...prev,
+      [doctorId]: {
+        ...prev[doctorId],
+        selected: {
+          date: selectedDate,
+          hinhThuc,
+          timeSlot: null,
+        },
+        availableDates: validDates,
+        slots: matchedSlots,
+      },
+    }));
   };
 
-  const handleRedirectBacSi = (
-    item,
-    idKhungGio,
-    thoiGianKhamBenh,
-    selectedDate,
-    giaKham,
-    hinhThucKham
-  ) => {
-    const formattedDate = moment(selectedDate, "YYYY-MM-DD").format(
-      "YYYY-MM-DD"
-    );
-    navigate(
-      `/page-dat-lich-kham?id=${item.maBacSi}&idGioKhamBenh=${idKhungGio}&khungGioKham=${thoiGianKhamBenh}&ngayKham=${formattedDate}&giaKham=${giaKham}&hinhThucKham=${hinhThucKham}`
-    );
+  const handleBook = (doctor) => {
+    const data = expandedData[doctor._id];
+    const khoa =
+      doctor.departmentId?.find((dep) => String(dep._id) === String(id))
+        ?.name || "";
+    const q = {
+      id: doctor._id,
+      fullName: doctor.fullName,
+      ngayKham: data.selected.date?.format("YYYY-MM-DD"),
+      hinhThuc: data.selected.hinhThuc,
+      gioKham: data.selected.timeSlot,
+      giaKham: doctor.price,
+      chuyenkhoa: encodeURIComponent(khoa),
+    };
+    window.location.href = `/page-dat-lich-kham?` + new URLSearchParams(q);
   };
 
+  const onSearch = (value) => {
+    const keyword = value.toLowerCase().trim();
+    const filtered = allDoctors.filter((doc) => {
+      const name = doc.fullName || doc.hoTen || doc.name || "";
+      return name.toLowerCase().includes(keyword);
+    });
+    setDoctors(filtered);
+  };
   return (
     <>
-      <Header />
-      <Row style={{ marginBottom: "120px" }}></Row>
       <div
         className=""
         style={{
-          backgroundImage: `url('../../public/Banner_2.jpg')`,
+          backgroundImage: `url('/Banner_2.jpg')`,
           height: "450px",
         }}
       >
@@ -336,9 +311,9 @@ const ChuyenKhoaVaBacSi = () => {
             </div>
           </Col>
 
-          <Col xs={24} md={12} className="z-0 flex justify-end">
+          <Col xs={4} md={12} className="z-0 flex justify-end">
             <img
-              src="../../public/banner_1-removebg-preview.png"
+              src="/banner_1-removebg-preview.png"
               alt="Doctors illustration"
               className=""
               style={{
@@ -352,603 +327,249 @@ const ChuyenKhoaVaBacSi = () => {
         </Row>
       </div>
       <Row style={{ marginTop: "20px" }}></Row>
-      <Row>
-        <Col span={18} className="col-body">
-          <Row
-            style={{
-              backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url(${
-                import.meta.env.VITE_BACKEND_URL
-              }/uploads/${dataChuyenKhoaByID?.image})`,
-              backgroundSize: "contain", // Adjust to 'contain' or use specific values
-              backgroundRepeat: "no-repeat", // Prevent the image from repeating
-              backgroundPosition: "center",
-            }}
-          >
-            <Col span={24}>
-              <p className="txt-title">
-                <IoHomeSharp /> / Khám chuyên khoa
-                <span style={{ marginLeft: "5px" }}>
-                  {" "}
-                  / {dataChuyenKhoaByID?.tenKhoa}
-                </span>
-              </p>
-
-              {/* <Divider/> */}
-              {/* <hr style={{border: "1px solid rgb(243, 243, 243)"}} /> */}
-            </Col>
-            <Col span={24}>
-              <span className="title-lichhen">
-                {" "}
-                {dataChuyenKhoaByID?.tenKhoa}
-              </span>
-            </Col>
-            <Col span={24}>
-              <Card
-                title={
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      fontSize: "22px",
-                      fontWeight: "bold",
-                      color: "#33c7d8",
-                      gap: "8px",
-                    }}
-                  >
-                    <InfoCircleOutlined />
-                    Mô tả chuyên khoa
-                  </div>
-                }
-                bordered={false}
+      <Row justify="center">
+        <Col xs={22} sm={20} md={16}>
+          <Row justify="center">
+            <Col xs={22} sm={20} md={16}>
+              <Breadcrumb
                 style={{
-                  margin: "20px",
-                  borderRadius: "10px",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+                  margin: "16px 0",
+                  fontWeight: 500,
+                  fontSize: 16,
                 }}
-                bodyStyle={{
-                  fontSize: "16px",
-                  lineHeight: "1.8",
-                  color: "#333",
-                  padding: "20px",
-                  backgroundColor: "#fdfdfd",
-                }}
-              >
-                <div
-                  dangerouslySetInnerHTML={{ __html: dataChuyenKhoaByID?.moTa }}
-                />
-              </Card>
-
-              {hinhThucKhamListFromUrl.length > 0 && (
-                <Card
-                  style={{
-                    margin: "20px 15px",
-                    background: "#f0f9ff",
-                    borderLeft: "5px solid #33c7d8",
-                    borderRadius: "10px",
-                  }}
-                  bodyStyle={{ padding: "12px 20px" }}
-                >
-                  <div style={{ fontSize: "17px", fontWeight: 500 }}>
-                    Danh sách các bác sĩ có lịch khám{" "}
-                    <span style={{ color: "#33c7d8" }}>
-                      {hinhThucKhamListFromUrl
-                        .map((ht) => hienThiHinhThuc[ht] || ht)
-                        .join(", ")}
-                    </span>
-                  </div>
-                </Card>
-              )}
+                items={[
+                  {
+                    title: (
+                      <Link
+                        to="/"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 6,
+                          color: "#1890ff",
+                        }}
+                      >
+                        <HomeOutlined />
+                        <span>Trang chủ</span>
+                      </Link>
+                    ),
+                  },
+                  {
+                    title: (
+                      <Link to="/dat-kham" style={{ color: "#1890ff" }}>
+                        Đặt khám
+                      </Link>
+                    ),
+                  },
+                  {
+                    title: (
+                      <strong style={{ color: "#1890ff" }}>{khoaName}</strong>
+                    ),
+                  },
+                ]}
+              />
             </Col>
           </Row>
         </Col>
       </Row>
-      <br />
-      <Row>
-        <Col span={24} className="view-body-xem-lich-ck">
-          <Row>
-            <Col
-              span={18}
-              className="col-body"
-              style={{
-                backgroundColor: "rgb(247, 246, 246)",
-                padding: "20px 10px",
-              }}
-            >
-              {bacSiFilter?.length > 0 ? (
-                bacSiFilter.map((item, index) => (
-                  <Col
-                    key={item.maBacSi}
-                    span={24}
-                    className="box-lich-kham"
-                    style={{ backgroundColor: "white" }}
-                  >
-                    <Row>
-                      <Col span={13}>
-                        <Row>
-                          <Col span={4}>
-                            <Avatar
-                              style={{ cursor: "pointer" }}
-                              onClick={() =>
-                                handleRedirectViewBacSi(item.maBacSi)
-                              }
-                              src={`${
-                                import.meta.env.VITE_BACKEND_URL
-                              }/public/bacsi/${item?.hinhAnh}`}
-                              size={80}
-                              icon={<UserOutlined />}
-                            />
-                          </Col>
-                          <Col span={19}>
-                            <p
-                              className="txt-bacsi colors"
-                              style={{ cursor: "pointer" }}
-                              onClick={() => {
-                                console.log("Bác sĩ được chọn:", item);
-                                console.log(
-                                  "Mã bác sĩ được chọn:",
-                                  item.maBacSi
-                                );
-                                handleRedirectViewBacSi(item.maBacSi);
-                              }}
-                            >
-                              {item?.hoTen}
-                            </p>
-                            <p
-                              style={{
-                                fontSize: "15px",
-                                lineHeight: "22px",
-                                paddingLeft: "10px",
-                              }}
-                              dangerouslySetInnerHTML={{ __html: item?.moTa }}
-                            />
+      <Row justify="center" style={{ marginTop: "20px", marginBottom: "20px" }}>
+        <Col xs={22} sm={18} md={12}>
+          <SearchComponent
+            placeholder="Tìm bác sĩ theo tên"
+            onSearch={onSearch}
+          />
+        </Col>
+      </Row>
+      <Content style={{ padding: "50px 50px 100px 50px" }}>
+        <div className="grid-container">
+          <Row gutter={[16, 16]}>
+            {doctors
+              .filter((doc) => doc.fullName?.toLowerCase().includes(dataSearch))
+              .map((doc) => {
+                const data = expandedData[doc._id] || {};
+                const selected = data.selected || {};
+                const slots = data.slots || [];
+                const availableDates = data.availableDates || [];
 
-                            <p style={{ fontSize: "15px" }}>
-                              <PhoneOutlined
-                                style={{ fontSize: 16, color: "#DB4437" }}
+                return (
+                  <Col xs={24} sm={24} md={12} key={doc._id}>
+                    <Card
+                      hoverable
+                      onClick={() => handleCardClick(doc._id)}
+                      className={expandedId === doc._id ? "expanded" : ""}
+                      style={{ maxWidth: 500, margin: "0 auto" }}
+                    >
+                      <Meta
+                        avatar={
+                          <Avatar
+                            size={64}
+                            src={`${
+                              import.meta.env.VITE_BACKEND_URL
+                            }/public/images/upload/${doc.avatar}`}
+                            icon={<UserOutlined />}
+                          />
+                        }
+                        title={doc.fullName}
+                        description={`${doc.positionId?.[0]?.name || ""} - ${
+                          doc.departmentId?.[0]?.name || ""
+                        }`}
+                      />
+                      <div className="info">
+                        <p>
+                          <strong>Giới thiệu:</strong>{" "}
+                          {doc.description || "Chưa có mô tả"}
+                        </p>
+                        <p className="icon-text email">
+                          <MailOutlined />
+                          <span>{doc.email}</span>
+                        </p>
+                        <p className="icon-text phone">
+                          <PhoneOutlined />
+                          <span>{doc.phone}</span>
+                        </p>
+
+                        <p>
+                          <strong>Địa chỉ:</strong>{" "}
+                          {doc.address || "Chưa cập nhật"}
+                        </p>
+                        <p>
+                          <strong>Giá khám:</strong>{" "}
+                          {doc.price?.toLocaleString()} VND
+                        </p>
+                      </div>
+                      {expandedId !== doc._id && (
+                        <div className="select-schedule-icon">
+                          <span>Chọn lịch khám</span>
+                          <AiOutlineDownCircle size={18} />
+                        </div>
+                      )}
+
+                      {expandedId === doc._id && (
+                        <>
+                          <div className="schedule-section">
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <DatePicker
+                                selected={selected.date?.toDate()}
+                                onChange={(date) =>
+                                  handleDateChange(doc._id, date)
+                                }
+                                dateFormat="dd/MM/yyyy"
+                                locale="vi"
+                                includeDates={(() => {
+                                  const dates = availableDates.map((d) =>
+                                    d.toDate?.()
+                                  );
+                                  const selectedDate =
+                                    selected.date?.toDate?.();
+                                  if (
+                                    selectedDate &&
+                                    !dates.some((d) =>
+                                      moment(d).isSame(selectedDate, "day")
+                                    )
+                                  ) {
+                                    dates.push(selectedDate);
+                                  }
+                                  return dates;
+                                })()}
+                                placeholderText="Chọn ngày khám"
+                                className="custom-datepicker"
                               />
-                              <span style={{ marginLeft: "3px" }}>
-                                {item?.soDT}
-                              </span>
-                              &nbsp; - &nbsp;
-                              <MailOutlined
-                                style={{ fontSize: 16, color: "#DB4437" }}
+                            </div>
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <Radio.Group
+                                options={HINH_THUC}
+                                value={selected.hinhThuc}
+                                onChange={(e) =>
+                                  handleHinhThucChange(doc._id, e.target.value)
+                                }
+                                optionType="button"
+                                buttonStyle="solid"
+                                style={{ marginTop: 8 }}
                               />
-                              <span style={{ marginLeft: "3px" }}>
-                                {" "}
-                                {item?.email}
-                              </span>
-                            </p>
-                          </Col>
-                        </Row>
-                      </Col>
-
-                      <Col
-                        span={11}
-                        style={{ borderLeft: "2px solid #f4f4f4" }}
-                      >
-                        <Row style={{ marginLeft: "15px" }}>
-                          <Col span={24}>
-                            <Radio.Group
-                              value={
-                                selectedHinhThucKham[item.maBacSi] ??
-                                (hinhThucKhamFromUrl === "tructuyen" ||
-                                hinhThucKhamFromUrl === "chuyenkhoa"
-                                  ? hinhThucKhamFromUrl
-                                  : "chuyenkhoa")
-                              }
-                              onChange={(e) => {
-                                const newValue = e.target.value;
-                                console.log(
-                                  "Hình thức khám cho bác sĩ này:",
-                                  newValue
-                                );
-
-                                setSelectedHinhThucKham({
-                                  ...selectedHinhThucKham,
-                                  [item.maBacSi]: newValue,
-                                });
-
-                                setSelectedBacSi(item);
-                                // Cập nhật lại lịch làm việc khi thay đổi hình thức khám
-                                fetchKhungGioKhamBacSi(item.maBacSi);
-                                setHienThiTime("Chọn ngày khám!");
-                                setSelectedDate(null);
-                              }}
-                            >
-                              <Radio value="chuyenkhoa">Chuyên khoa</Radio>
-                              <Radio value="tructuyen">Trực tuyến</Radio>
-                            </Radio.Group>
-                          </Col>
-
-                          <Col
-                            span={24}
-                            style={{
-                              backgroundColor: "white",
-                              position: "relative",
-                            }}
+                            </div>
+                          </div>
+                          <div
+                            className="times"
+                            onClick={(e) => e.stopPropagation()}
                           >
-                            <p
-                              onClick={() => {
-                                showDrawer(item);
-                                setSelectedDate(null);
-                                setSelectedBacSi(item);
-                                setHienThiTime("Chọn ngày khám!");
-                                console.log("Bác sĩ được chọn:", item);
-                              }}
-                              style={{
-                                color: "rgb(69, 195, 210)",
-                                fontWeight: "500",
-                                fontSize: "16px",
-                                padding: "10px 0",
-                                cursor: "pointer",
-                              }}
-                            >
-                              {selectedBacSi &&
-                              selectedBacSi.maBacSi === item.maBacSi
-                                ? hienThiTime
-                                : "Chọn ngày khám!"}
-                              <DownOutlined
+                            {slots.length === 0 ? (
+                              <div
+                                className="no-slot"
                                 style={{
-                                  fontSize: "14px",
-                                  marginLeft: "3px",
-                                  fontWeight: "600",
+                                  display: "flex",
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                  height: "20px",
+                                  width: "100%",
                                 }}
-                              />
-                              {hienThiTime !== "Chọn ngày khám" ? (
-                                <hr style={{ width: "150px", margin: "3px" }} />
-                              ) : (
-                                <hr style={{ width: "150px", margin: "3px" }} />
-                              )}
-                            </p>
-
-                            <Drawer
-                              title="Lịch khám của bác sĩ"
-                              placement="right"
-                              width={500}
-                              onClose={() => {
-                                onClose();
-                                setSelectedDate(null);
-                                setHienThiTime("Chọn ngày khám!");
-                              }}
-                              open={open}
-                            >
-                              {selectedBacSi ? (
-                                <>
-                                  <h3>Bác sĩ: {selectedBacSi.hoTen}</h3>
-                                  <div style={{ marginBottom: "8px" }}>
-                                    Chọn ngày khám:
-                                  </div>
-                                  <Select
-                                    style={{ width: "100%" }}
-                                    placeholder="Chọn ngày khám"
-                                    value={selectedDate}
-                                    onChange={(value) => {
-                                      setSelectedDate(value);
-                                      fetchKhungGioKhamBacSi(
-                                        selectedBacSi.maBacSi
-                                      );
-                                      fetchBacSiByID(selectedBacSi.maBacSi);
-
-                                      const formatted =
-                                        moment(value).format("DD/MM/YYYY");
-                                      const dayName =
-                                        englishToVietnameseDays[
-                                          moment(value).format("dddd")
-                                        ];
-                                      setHienThiTime(
-                                        `${dayName} - ${formatted}`
-                                      );
-
-                                      onClose();
-                                    }}
-                                  >
-                                    {dataLichLamViec
-                                      .filter((item) => {
-                                        // Lọc theo hình thức khám
-                                        if (
-                                          selectedHinhThucKham[
-                                            selectedBacSi?.maBacSi
-                                          ] === "tructuyen" &&
-                                          item.maBacSi ===
-                                            selectedBacSi?.maBacSi
-                                        ) {
-                                          return (
-                                            item.hinhThucKham === "Trực tuyến"
-                                          );
-                                        }
-                                        if (
-                                          selectedHinhThucKham[
-                                            selectedBacSi?.maBacSi
-                                          ] === "chuyenkhoa" &&
-                                          item.maBacSi ===
-                                            selectedBacSi?.maBacSi
-                                        ) {
-                                          return (
-                                            item.hinhThucKham === "Chuyên khoa"
-                                          );
-                                        }
-                                        return true; // Trường hợp "Tất cả"
-                                      })
-                                      .map((item) => item.ngayLamViec) // Lấy ngày làm việc
-
-                                      .filter(
-                                        (value, index, self) =>
-                                          self.indexOf(value) === index
-                                      ) // Lọc ra những ngày duy nhất
-                                      .map((ngayLamViec, index) => {
-                                        const formatted =
-                                          moment(ngayLamViec).format(
-                                            "DD/MM/YYYY"
-                                          );
-                                        const dayName =
-                                          englishToVietnameseDays[
-                                            moment(ngayLamViec).format("dddd")
-                                          ];
-
-                                        if (
-                                          moment(
-                                            ngayLamViec,
-                                            "YYYY-MM-DD"
-                                          ).isSameOrAfter(today)
-                                        ) {
-                                          return (
-                                            <Select.Option
-                                              key={ngayLamViec}
-                                              value={ngayLamViec}
-                                            >
-                                              {`${dayName} - ${formatted}`}
-                                            </Select.Option>
-                                          );
-                                        }
-                                        return null; // Không hiển thị ngày quá khứ
-                                      })}
-                                  </Select>
-                                </>
-                              ) : (
-                                <p>Chưa chọn bác sĩ để xem lịch.</p>
-                              )}
-                            </Drawer>
-                          </Col>
-
-                          <Col
-                            span={24}
-                            style={{
-                              backgroundColor: "white",
-                              position: "relative",
-                              top: "-30px",
-                            }}
-                          >
-                            <p
-                              style={{
-                                color: "gray",
-                                fontSize: "16px",
-                                fontWeight: "500",
-                                padding: "10px 0",
-                              }}
-                            >
-                              <FaRegCalendarAlt />
-                              <span style={{ marginLeft: "10px" }}>
-                                LỊCH KHÁM
-                              </span>
-                            </p>
-
-                            <Row
-                              gutter={[16, 16]}
-                              justify="start"
-                              style={{ marginTop: "-10px", flexWrap: "wrap" }}
-                            >
-                              {selectedBacSi?.maBacSi === item?.maBacSi &&
-                              selectedDate &&
-                              selectedHinhThucKham[selectedBacSi?.maBacSi] &&
-                              hienThiTime !==
-                                "Bấm vào đây để chọn lịch khám" ? (
-                                <>
-                                  {dataLichLamViec &&
-                                  dataLichLamViec.filter(
-                                    (lich) =>
-                                      lich.maBacSi === selectedBacSi?.maBacSi &&
-                                      lich.ngayLamViec === selectedDate &&
-                                      lich.trangThaiDatLich !== "booked" &&
-                                      lich.hinhThucKham ===
-                                        (selectedHinhThucKham[
-                                          selectedBacSi?.maBacSi
-                                        ] === "tructuyen"
-                                          ? "Trực tuyến"
-                                          : selectedHinhThucKham[
-                                              selectedBacSi?.maBacSi
-                                            ] === "chuyenkhoa"
-                                          ? "Chuyên khoa"
-                                          : lich.hinhThucKham)
-                                  ).length > 0 ? (
-                                    dataLichLamViec
-                                      .filter(
-                                        (lich) =>
-                                          lich.maBacSi ===
-                                            selectedBacSi?.maBacSi &&
-                                          lich.ngayLamViec === selectedDate &&
-                                          lich.trangThaiDatLich !== "booked" &&
-                                          lich.hinhThucKham ===
-                                            (selectedHinhThucKham[
-                                              selectedBacSi?.maBacSi
-                                            ] === "tructuyen"
-                                              ? "Trực tuyến"
-                                              : selectedHinhThucKham[
-                                                  selectedBacSi?.maBacSi
-                                                ] === "chuyenkhoa"
-                                              ? "Chuyên khoa"
-                                              : lich.hinhThucKham)
-                                      )
-                                      .map((lich, index) => (
-                                        <Col
-                                          key={index}
-                                          xs={24}
-                                          sm={12}
-                                          md={10}
-                                          lg={5}
-                                          className="cach-deu"
-                                          onClick={() => {
-                                            setkhungGio(lich?.khungGio);
-                                            setSelectedTimeId(lich?.maKhungGio);
-                                            setHoveredIndex(index);
-                                            handleRedirectBacSi(
-                                              selectedBacSi,
-                                              lich?.maKhungGio,
-                                              lich?.khungGio,
-                                              selectedDate,
-                                              selectedBacSi?.giaKham,
-                                              selectedHinhThucKham[
-                                                selectedBacSi?.maBacSi
-                                              ]
-                                            );
-                                          }}
-                                        >
-                                          <div className="lich-kham">
-                                            {lich.khungGio}
-                                          </div>
-                                        </Col>
-                                      ))
-                                  ) : (
-                                    <span
-                                      style={{
-                                        color: "red",
-                                        margin: "0 0 10px",
-                                      }}
-                                    >
-                                      Không có thời gian khám nào.
-                                      <br /> Chọn <FaRegHandPointUp
-                                        size={14}
-                                      />{" "}
-                                      và đặt (Phí đặt lịch 0đ)
-                                    </span>
-                                  )}
-                                </>
-                              ) : null}
-                            </Row>
-                          </Col>
-
-                          <Col
-                            span={24}
-                            style={{ backgroundColor: "white", top: "-30px" }}
-                          >
-                            {selectedHinhThucKham?.[item?.maBacSi] && (
-                              <p
-                                style={{ fontWeight: "500", fontSize: "16px" }}
                               >
-                                {selectedHinhThucKham[item?.maBacSi] ===
-                                "chuyenkhoa"
-                                  ? "ĐỊA CHỈ KHÁM: MediCare Hospital"
-                                  : "TƯ VẤN TRỰC TUYẾN"}
-                              </p>
-                            )}
-
-                            {showDetails[item.maBacSi] ? (
-                              <div>
-                                <p style={{ fontWeight: "500" }}>GIÁ KHÁM:</p>
-                                <div
+                                <p
                                   style={{
-                                    backgroundColor: "#f7f7f7",
-                                    border: "1px solid #d9d2d2",
-                                    display: "flex",
-                                    justifyContent: "space-between",
+                                    color: "red",
+                                    margin: 0,
                                   }}
                                 >
-                                  <span className="span-gia-kham">
-                                    <p style={{ fontWeight: "500" }}>
-                                      Giá khám
-                                    </p>
-                                    <p>
-                                      Giá khám chưa bao gồm chi phí chụp chiếu,
-                                      xét nghiệm
-                                    </p>
-                                  </span>
-                                  <span
-                                    style={{
-                                      lineHeight: "70px",
-                                      marginRight: "5px",
-                                      color: "red",
-                                      fontWeight: "500",
-                                    }}
-                                    className="span-gia-kham"
-                                  >
-                                    {formatCurrency(item?.giaKham)}
-                                  </span>
-                                </div>
-                                <a
-                                  onClick={() => toggleDetails(item.maBacSi)}
-                                  style={{ float: "right", marginTop: "5px" }}
-                                >
-                                  Ẩn bảng giá
-                                </a>
+                                  Không có khung giờ khám nào
+                                </p>
                               </div>
                             ) : (
-                              <p>
-                                <span
-                                  style={{ fontWeight: "500", color: "gray" }}
-                                >
-                                  GIÁ KHÁM:
-                                </span>{" "}
-                                &nbsp;
-                                <span
-                                  style={{ color: "red", fontWeight: "500" }}
-                                >
-                                  {formatCurrency(item?.giaKham)}
-                                </span>
-                                <a
-                                  onClick={() => toggleDetails(item.maBacSi)}
-                                  style={{ marginLeft: "10px" }}
-                                >
-                                  Xem chi tiết
-                                </a>
-                              </p>
+                              slots.map((slot) => {
+                                const timeRange =
+                                  slot?.timeSlotId?.timeRange || "Chưa có giờ";
+                                const disabled =
+                                  slot.status === "booked" ||
+                                  slot.status !== "available";
+                                const selectedSlot =
+                                  selected.timeSlot === timeRange;
+
+                                return (
+                                  <Button
+                                    key={slot._id}
+                                    className={`time-btn ${
+                                      selectedSlot ? "selected" : ""
+                                    }`}
+                                    disabled={disabled}
+                                    onClick={() =>
+                                      setExpandedData((prev) => ({
+                                        ...prev,
+                                        [doc._id]: {
+                                          ...prev[doc._id],
+                                          selected: {
+                                            ...prev[doc._id].selected,
+                                            timeSlot: timeRange,
+                                          },
+                                        },
+                                      }))
+                                    }
+                                  >
+                                    {timeRange}
+                                  </Button>
+                                );
+                              })
                             )}
-                          </Col>
-                        </Row>
-                      </Col>
-                    </Row>
+                          </div>
+
+                          <div onClick={(e) => e.stopPropagation()}>
+                            <Button
+                              type="primary"
+                              disabled={!selected.timeSlot}
+                              className="book-btn"
+                              onClick={() => handleBook(doc)}
+                            >
+                              Đặt lịch
+                            </Button>
+                          </div>
+                        </>
+                      )}
+                    </Card>
                   </Col>
-                ))
-              ) : hinhThucKhamFromUrl ? (
-                <Col
-                  span={24}
-                  className="box-lich-kham"
-                  style={{ backgroundColor: "white" }}
-                >
-                  <p
-                    style={{
-                      color: "red",
-                      fontSize: "22px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Không có bác sĩ phù hợp với hình thức khám này.
-                  </p>
-                </Col>
-              ) : (
-                <Col
-                  span={24}
-                  className="box-lich-kham"
-                  style={{ backgroundColor: "white" }}
-                >
-                  <p
-                    style={{
-                      color: "red",
-                      fontSize: "22px",
-                      textAlign: "center",
-                    }}
-                  >
-                    Chưa có bác sĩ nào thuộc chuyên khoa này.
-                  </p>
-                </Col>
-              )}
-            </Col>
+                );
+              })}
           </Row>
-        </Col>
-      </Row>
-
-      <Row style={{ marginBottom: "100px" }}></Row>
-
-      <Footer />
+        </div>
+      </Content>
     </>
   );
 };
+
 export default ChuyenKhoaVaBacSi;

@@ -3,7 +3,7 @@ import { Modal, Form, Input, Select, message, Button } from "antd";
 import moment from "moment";
 import {
   fetchAllDepartments,
-  fetchBacSiByChuyenKhoa,
+  fetchDoctorByDepartment,
   fetchNgayLamViecByBacSi,
   getKhungGioByNgay,
   updateLichHen,
@@ -18,43 +18,43 @@ const ModalCapNhatLichHen = ({ open, onCancel, data, onReload }) => {
   const [danhSachKhungGio, setDanhSachKhungGio] = useState([]);
 
   // Tải danh sách chuyên khoa khi mở modal
-useEffect(() => {
-  if (open) {
-    fetchDanhSachChuyenKhoa();
-  }
-}, [open]);
-
-useEffect(() => {
-  console.log("DATA TRUYỀN VÀO MODAL:", data);
-}, [data]);
-
-useEffect(() => {
-  if (data && danhSachChuyenKhoa.length > 0) {
-    const { maBacSi, lyDoKham, ngayKham, maKhungGio, hinhThucKham, maKhoa } = data;
-
-    form.setFieldsValue({
-      maKhoa,
-      maBacSi,
-      lyDoKham,
-      hinhThucKham,
-      ngayKham: moment(ngayKham).format("YYYY-MM-DD"),
-      maKhungGio,
-    });
-
-    console.log("maKhoa", maKhoa);
-
-    fetchDanhSachBacSi(maKhoa);
-
-    if (maBacSi && hinhThucKham) {
-      fetchNgayKham(maBacSi, hinhThucKham, ngayKham);
+  useEffect(() => {
+    if (open) {
+      fetchDanhSachChuyenKhoa();
     }
+  }, [open]);
 
-    if (maBacSi && ngayKham && hinhThucKham) {
-      fetchKhungGio(maBacSi, hinhThucKham, ngayKham, true);
+  useEffect(() => {
+    console.log("DATA TRUYỀN VÀO MODAL:", data);
+  }, [data]);
+
+  useEffect(() => {
+    if (data && danhSachChuyenKhoa.length > 0) {
+      const { maBacSi, lyDoKham, ngayKham, maKhungGio, hinhThucKham, maKhoa } =
+        data;
+
+      form.setFieldsValue({
+        maKhoa,
+        maBacSi,
+        lyDoKham,
+        hinhThucKham,
+        ngayKham: moment(ngayKham).format("YYYY-MM-DD"),
+        maKhungGio,
+      });
+
+      console.log("maKhoa", maKhoa);
+
+      fetchDanhSachBacSi(maKhoa);
+
+      if (maBacSi && hinhThucKham) {
+        fetchNgayKham(maBacSi, hinhThucKham, ngayKham);
+      }
+
+      if (maBacSi && ngayKham && hinhThucKham) {
+        fetchKhungGio(maBacSi, hinhThucKham, ngayKham, true);
+      }
     }
-  }
-}, [data, danhSachChuyenKhoa]);
-
+  }, [data, danhSachChuyenKhoa]);
 
   const fetchDanhSachChuyenKhoa = async () => {
     try {
@@ -67,18 +67,21 @@ useEffect(() => {
     }
   };
 
-const fetchDanhSachBacSi = async (maKhoa) => {
-  try {
-    const res = await fetchBacSiByChuyenKhoa(maKhoa);
-    // Lấy đúng mảng bác sĩ từ res.bacSiList
-    setDanhSachBacSi(Array.isArray(res.bacSiList) ? res.bacSiList : []);
-  } catch {
-    message.error("Không thể tải danh sách bác sĩ");
-  }
-};
+  const fetchDanhSachBacSi = async (maKhoa) => {
+    try {
+      const res = await fetchDoctorByDepartment(maKhoa);
+      // Lấy đúng mảng bác sĩ từ res.bacSiList
+      setDanhSachBacSi(Array.isArray(res.bacSiList) ? res.bacSiList : []);
+    } catch {
+      message.error("Không thể tải danh sách bác sĩ");
+    }
+  };
 
-
-  const fetchNgayKham = async (maBacSi, hinhThucKham, ngayKhamDaChon = null) => {
+  const fetchNgayKham = async (
+    maBacSi,
+    hinhThucKham,
+    ngayKhamDaChon = null
+  ) => {
     try {
       const res = await fetchNgayLamViecByBacSi(maBacSi, hinhThucKham);
       if (!Array.isArray(res)) throw new Error();
@@ -105,9 +108,19 @@ const fetchDanhSachBacSi = async (maKhoa) => {
     }
   };
 
-  const fetchKhungGio = async (maBacSi, hinhThucKham, ngay, isInitialLoad = false) => {
+  const fetchKhungGio = async (
+    maBacSi,
+    hinhThucKham,
+    ngay,
+    isInitialLoad = false
+  ) => {
     try {
-      const res = await getKhungGioByNgay(maBacSi, hinhThucKham, ngay, data?.maLich);
+      const res = await getKhungGioByNgay(
+        maBacSi,
+        hinhThucKham,
+        ngay,
+        data?.maLich
+      );
       setDanhSachKhungGio(Array.isArray(res) ? res : []);
       if (!isInitialLoad) {
         form.setFieldsValue({ maKhungGio: undefined });
@@ -119,7 +132,11 @@ const fetchDanhSachBacSi = async (maKhoa) => {
   };
 
   const handleChuyenKhoaChange = (maKhoa) => {
-    form.setFieldsValue({ maBacSi: undefined, ngayKham: undefined, maKhungGio: undefined });
+    form.setFieldsValue({
+      maBacSi: undefined,
+      ngayKham: undefined,
+      maKhungGio: undefined,
+    });
     setDanhSachBacSi([]);
     setDanhSachNgayKham([]);
     setDanhSachKhungGio([]);
@@ -203,7 +220,12 @@ const fetchDanhSachBacSi = async (maKhoa) => {
         <Button key="cancel" onClick={handleCancel}>
           Hủy
         </Button>,
-        <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
+        <Button
+          key="submit"
+          type="primary"
+          loading={loading}
+          onClick={handleOk}
+        >
           Cập nhật
         </Button>,
       ]}
@@ -214,7 +236,10 @@ const fetchDanhSachBacSi = async (maKhoa) => {
           name="maKhoa"
           rules={[{ required: true, message: "Vui lòng chọn chuyên khoa" }]}
         >
-          <Select placeholder="Chọn chuyên khoa" onChange={handleChuyenKhoaChange}>
+          <Select
+            placeholder="Chọn chuyên khoa"
+            onChange={handleChuyenKhoaChange}
+          >
             {danhSachChuyenKhoa.map((ck) => (
               <Select.Option key={ck.maKhoa} value={ck.maKhoa}>
                 {ck.tenKhoa}
@@ -242,7 +267,10 @@ const fetchDanhSachBacSi = async (maKhoa) => {
           name="hinhThucKham"
           rules={[{ required: true, message: "Vui lòng chọn hình thức khám" }]}
         >
-          <Select placeholder="Chọn hình thức khám" onChange={handleHinhThucKhamChange}>
+          <Select
+            placeholder="Chọn hình thức khám"
+            onChange={handleHinhThucKhamChange}
+          >
             <Select.Option value="Trực tuyến">Trực tuyến</Select.Option>
             <Select.Option value="Chuyên khoa">Chuyên khoa</Select.Option>
           </Select>

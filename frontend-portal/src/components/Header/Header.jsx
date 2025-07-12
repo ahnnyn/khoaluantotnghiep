@@ -1,207 +1,212 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { Avatar, Dropdown, Menu, message } from "antd";
-import { MdOutlineAccountCircle } from "react-icons/md";
-
-import { logoutUser, getUserById } from "services/auth.user/user.auth.services";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import {
+  HomeOutlined,
+  CalendarOutlined,
+  DollarOutlined,
+  SolutionOutlined,
+  LogoutOutlined,
+  UserOutlined,
+  LockOutlined,
+  MenuOutlined,
+  DownOutlined
+} from "@ant-design/icons";
+import { Menu, message, Avatar, Dropdown } from "antd";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchAllDepartments } from "services/patient/patient.services";
+import { logoutUser } from "services/auth.user/user.auth.services";
 import { doLogoutAction } from "@redux/account/accountSlice";
-
 import LoginPage from "pages/Login/Login";
-import UpdateBenhNhan from "../ThongTinNguoiDung/ModalUpdateThongTin";
-import ModalChangePassword from "../ModalChangePassword/ModalChangePassword";
-import ScrollToTop from "../ScrollToTop/ScrollToTop";
-import "./header.scss";
+import ModalChangePassword from "components/ModalChangePassword/ModalChangePassword";
+
+import logo from "../../../public/assets/images/healio_logo-removebg-preview.png";
+import "./Header.scss";
 
 const Header = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
-
-  const [modals, setModals] = useState({
-    login: false,
-    updateProfile: false,
-    changePassword: false,
-  });
-
-  const [dataAcc, setDataAcc] = useState(null);
-  const { isAuthenticated, user: acc } = useSelector((state) => state.account);
-
   const [current, setCurrent] = useState("home");
+  const [departments, setDepartments] = useState([]);
+  const [openModalLogin, setOpenModalLogin] = useState(false);
+  const [openModalDoiMK, setOpenModalDoiMK] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.account?.user);
+  console.log("User from Redux:", user);
+
+  // Load selected menu key từ localStorage hoặc pathname
   useEffect(() => {
-    if (location && location.pathname) {
-      const allRoutes = [
-        { key: "home", path: "/" },
-        { key: "chuyenkhoa", path: "/chuyen-khoa-kham" },
-        { key: "bacsinoibat", path: "/bac-si-noi-bat" },
-        { key: "dichvu", path: "/dich-vu-kham" },
-        { key: "lienhe", path: "/lien-he" },
-      ];
-      const match = allRoutes.find((item) => item.path === location.pathname);
-      if (match) {
-        setCurrent(match.key);
-      } else {
-        setCurrent("home");
+    const savedKey = localStorage.getItem("selectedMenuKey");
+    if (savedKey) {
+      setCurrent(savedKey);
+    } else {
+      const path = location.pathname;
+      if (path === "/") setCurrent("home");
+      else if (path.startsWith("/tu-van")) setCurrent("consult");
+      else if (path.startsWith("/bang-gia")) setCurrent("pricing");
+      else if (path.startsWith("/chuyen-khoa")) setCurrent("booking");
+    }
+  }, [location.pathname]);
+
+  // Fetch danh sách chuyên khoa
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const res = await fetchAllDepartments();
+        setDepartments(res.data || []);
+      } catch (err) {
+        console.error("Lỗi load khoa:", err);
       }
-    }
-  }, [location]);
-
-  useEffect(() => {
-    if (acc?._id) {
-      getUserById(acc._id).then((res) => {
-        if (res?.data) setDataAcc(res.data);
-      });
-    }
-  }, [acc?._id]);
+    };
+    fetch();
+  }, []);
 
   const handleLogout = async () => {
     try {
       await logoutUser();
-      localStorage.removeItem("access_tokenBenhNhan");
-      message.success("Đăng xuất thành công!");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("selectedMenuKey");
       dispatch(doLogoutAction());
+      message.success("Đăng xuất thành công!");
       navigate("/");
     } catch (error) {
       message.error("Đăng xuất không thành công!");
     }
   };
 
-  const onClick = (e) => {
-    const pathMap = {
-      home: "/",
-      chuyenkhoa: "/chuyen-khoa-kham",
-      bacsinoibat: "/bac-si-noi-bat",
-      dichvu: "/dich-vu-kham",
-      lienhe: "/lien-he",
-    };
-    setCurrent(e.key);
-    if (pathMap[e.key]) navigate(pathMap[e.key]);
-  };
-
   const menuItems = [
     {
-      label: "Trang chủ",
       key: "home",
+      label: <Link to="/">Trang chủ</Link>,
+      icon: <HomeOutlined />,
     },
     {
-      label: "Chuyên khoa",
-      key: "chuyenkhoa",
+      key: "consult",
+      label: <Link to="/tu-van">Tư vấn</Link>,
+      icon: <SolutionOutlined />,
     },
     {
-      label: "Bác sĩ",
-      key: "bacsinoibat",
+      key: "booking",
+      label: "Đặt lịch",
+      icon: <CalendarOutlined />,
+      children: departments.map((dept) => ({
+        key: `dept-${dept._id}`,
+        label: <Link to={`/chuyen-khoa/${dept._id}`}>{dept.name}</Link>,
+      })),
     },
     {
-      label: "Dịch vụ",
-      key: "dichvu",
-    },
-    {
-      label: "Liên hệ",
-      key: "lienhe",
+      key: "pricing",
+      label: <Link to="/bang-gia">Bảng giá</Link>,
+      icon: <DollarOutlined />,
     },
   ];
+
+  const getDropdownMenu = () => (
+    <Menu
+      items={[
+        {
+          key: "dashboard",
+          label: <Link to="/user/dashboard">Dashboard</Link>,
+          icon: <HomeOutlined />,
+        },
+        {
+          key: "change-password",
+          label: <span onClick={() => setOpenModalDoiMK(true)}>Đổi mật khẩu</span>,
+          icon: <LockOutlined />,
+        },
+        {
+          key: "logout",
+          label: <span onClick={handleLogout}>Đăng xuất</span>,
+          icon: <LogoutOutlined />,
+        },
+      ]}
+    />
+  );
+
+  const onClick = (e) => {
+    setCurrent(e.key);
+    localStorage.setItem("selectedMenuKey", e.key);
+
+    if (e.key === "login") setOpenModalLogin(true);
+    if (e.key === "change-password") setOpenModalDoiMK(true);
+    setShowMobileMenu(false);
+  };
 
   return (
     <>
       <div className="header-modern">
-        <div className="header-bar">
-          <div className="header-row-top full-width-menu">
-            <div className="header-left" onClick={() => navigate("/")}> 
-              <img
-                src="/medicare-Photoroom-removebg-preview.png"
-                alt="Logo"
-                className="logo-img"
-              />
-            </div>
+        <div className="header-left">
+          <Link to="/">
+            <img src={logo} alt="Logo" className="logo-img" />
+          </Link>
+        </div>
 
-            <div className="header-center">
-              <Menu
-                mode="horizontal"
-                onClick={onClick}
-                selectedKeys={[current]}
-                items={menuItems}
-                className="main-menu"
-              />
-            </div>
+        <div className="header-center desktop-only">
+          <Menu
+            onClick={onClick}
+            selectedKeys={[current]}
+            mode="horizontal"
+            items={menuItems}
+            className="nav-menu"
+          />
+        </div>
 
-            <div className="header-right">
-              {isAuthenticated ? (
-                <Dropdown
-                  trigger={["click"]}
-                  menu={{
-                    items: [
-                      {
-                        key: "account",
-                        label: (
-                          <span onClick={() => setModals((m) => ({ ...m, updateProfile: true }))}>
-                            Tài khoản của tôi
-                          </span>
-                        ),
-                      },
-                      {
-                        key: "lichhen",
-                        label: <span onClick={() => navigate("/user/lich-hen")}>Lịch hẹn</span>,
-                      },
-                      {
-                        key: "hoso",
-                        label: <span onClick={() => navigate("/user/ho-so-cua-toi")}>Hồ sơ của tôi</span>,
-                      },
-                      {
-                        key: "changepw",
-                        label: (
-                          <span onClick={() => setModals((m) => ({ ...m, changePassword: true }))}>
-                            Đổi mật khẩu
-                          </span>
-                        ),
-                      },
-                      {
-                        key: "logout",
-                        danger: true,
-                        label: <span onClick={handleLogout}>Đăng xuất</span>,
-                      },
-                    ],
-                  }}
-                >
-                  <span>
-                    {dataAcc?.hinhAnh ? (
-                      <Avatar
-                        src={`${import.meta.env.VITE_BACKEND_URL}/public/benhnhan/${acc.user.hinhAnh}`}
-                        size={40}
-                      />
-                    ) : (
-                      <MdOutlineAccountCircle size={36} color="#278DCA" />
-                    )}
-                  </span>
-                </Dropdown>
-              ) : (
-                <span onClick={() => setModals((m) => ({ ...m, login: true }))} style={{ cursor: "pointer" }}>
-                  Đăng nhập
-                </span>
-              )}
+        <div className="header-right">
+          <MenuOutlined
+            className="mobile-menu-icon"
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+          />
+
+          {user?._id ? (
+          <Dropdown overlay={getDropdownMenu()} placement="bottomRight" arrow>
+            <div className="user-info-dropdown">
+              <Avatar src={user.avatar || undefined} icon={<UserOutlined />} size="large" />
+              <span className="user-name">{user.fullName || "Người dùng"}</span>
+              <DownOutlined style={{ marginLeft: 6 }} />
             </div>
-          </div>
+          </Dropdown>
+          ) : (
+            <div className="login-btn" onClick={() => setOpenModalLogin(true)}>
+              <UserOutlined style={{ fontSize: "20px", marginRight: 6 }} />
+              <span>Đăng nhập</span>
+            </div>
+          )}
         </div>
       </div>
 
+      {showMobileMenu && (
+        <div className="mobile-menu-dropdown">
+          <Menu
+            onClick={onClick}
+            selectedKeys={[current]}
+            mode="vertical"
+            items={[
+              ...menuItems,
+              !user?._id
+                ? {
+                    key: "login",
+                    label: "Đăng nhập",
+                    icon: <UserOutlined />,
+                  }
+                : {
+                    key: "logout",
+                    label: <span onClick={handleLogout}>Đăng xuất</span>,
+                    icon: <LogoutOutlined />,
+                  },
+            ]}
+          />
+        </div>
+      )}
+
       <LoginPage
-        openModalLogin={modals.login}
-        setOpenModalLogin={(val) => setModals((m) => ({ ...m, login: val }))}
-      />
-      <UpdateBenhNhan
-        openUpdateBenhNhan={modals.updateProfile}
-        setOpenModalThongTinCaNhan={(val) =>
-          setModals((m) => ({ ...m, updateProfile: val }))
-        }
+        openModalLogin={openModalLogin}
+        setOpenModalLogin={setOpenModalLogin}
       />
       <ModalChangePassword
-        openModalChangePassword={modals.changePassword}
-        setOpenModalChangePassword={(val) =>
-          setModals((m) => ({ ...m, changePassword: val }))
-        }
+        openModalDoiMK={openModalDoiMK}
+        setOpenModalDoiMK={setOpenModalDoiMK}
       />
-
-      <ScrollToTop />
     </>
   );
 };

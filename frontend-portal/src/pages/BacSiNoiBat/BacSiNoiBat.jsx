@@ -4,7 +4,7 @@ import Header from "components/Header/Header";
 import { IoHomeSharp } from "react-icons/io5";
 import { UserOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
-import { fetchAllBacSi } from "services/patient/patient.services";
+import { fetchAllDoctor } from "services/patient/patient.services";
 import { useNavigate } from "react-router-dom";
 import SearchComponent from "components/SearchComponent/SearchComponent";
 
@@ -21,7 +21,7 @@ const BacSiNoiBat = () => {
 
   const fetchListDoctor = async (search = "", status = "tatca") => {
     try {
-      let res = await fetchAllBacSi(""); // Luôn lấy tất cả để lọc frontend
+      let res = await fetchAllDoctor(""); // Luôn lấy tất cả để lọc frontend
 
       console.log("res", res);
 
@@ -82,7 +82,6 @@ const BacSiNoiBat = () => {
 
   return (
     <>
-      <Header />
       <Row style={{ marginTop: "120px" }}></Row>
       <div
         className=""
@@ -238,7 +237,6 @@ const BacSiNoiBat = () => {
         </Col>
       </Row>
       <Row style={{ marginBottom: "150px" }}></Row>
-      <Footer />
     </>
   );
 };

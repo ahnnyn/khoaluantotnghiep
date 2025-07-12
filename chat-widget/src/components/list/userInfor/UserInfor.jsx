@@ -1,5 +1,5 @@
 import "./userInfor.css";
-import { getUserById, fetchBacSiByMaBS } from "../../../services/api";
+import { getUserById, fetchDoctorByID } from "../../../services/api";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
@@ -17,7 +17,7 @@ const Userinfor = () => {
         if (currentUserRole === "benhnhan") {
           res = await getUserById(currentUserID);
         } else if (currentUserRole === "bacsi") {
-          res = await fetchBacSiByMaBS(currentUserID);
+          res = await fetchDoctorByID(currentUserID);
         }
 
         if (res && res.data) {
@@ -37,7 +37,9 @@ const Userinfor = () => {
   const getAvatarUrl = () => {
     if (userData?.hinhAnh) {
       const folder = currentUserRole === "benhnhan" ? "benhnhan" : "bacsi";
-      return `${import.meta.env.VITE_BACKEND_URL}/public/${folder}/${userData.hinhAnh}`;
+      return `${import.meta.env.VITE_BACKEND_URL}/public/${folder}/${
+        userData.hinhAnh
+      }`;
     }
     return "./avatar.png"; // fallback nếu không có hình ảnh
   };
@@ -45,11 +47,7 @@ const Userinfor = () => {
   return (
     <div className="userInfo">
       <div className="user">
-        <img
-          src={getAvatarUrl()}
-          alt="avatar"
-          className="avatar"
-        />
+        <img src={getAvatarUrl()} alt="avatar" className="avatar" />
         <h3>{userData?.hoTen || "Người dùng"}</h3>
       </div>
       <div className="icons">

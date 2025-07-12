@@ -24,14 +24,15 @@ import LichHen from "pages/QuanLyLichHen/LichHen";
 import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
 import TaoHoSo from "pages/HoSoCuaToi/TaoHoSo";
 import BacSiNoiBat from "pages/BacSiNoiBat/BacSiNoiBat";
-import ChuyenKhoa from "pages/ChuyenKhoa/ChuyenKhoa";
 import LienHe from "pages/LienHe/LienHe";
 import ChuyenKhoaVaBacSi from "pages/ChuyenKhoa/ChuyenKhoaVaBacSi";
-import DichVuKham from "pages/DatLichHen/DichVuKham";
 import ThongBaoThanhToan from "pages/ThongBaoThanhToan/ThongBaoThanhToan";
 
 // CSS
 import "./index.css";
+import TuVan from "./pages/TuVan/TuVan";
+import BangGia from "./pages/BangGia/BangGia";
+import Dashboard from "./pages/Dashboard/Dashboard";
 
 // Router config
 const router = createBrowserRouter([
@@ -43,29 +44,49 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "chi-tiet-bac-si", element: <ChiTietBacSi /> },
       { path: "page-dat-lich-kham", element: <PageDatLichKham /> },
-      { path: "user/lich-hen", element: <LichHen /> },
-      { path: "user/ho-so-cua-toi", element: <HoSoCuaToi /> },
-      { path: "user/tao-ho-so", element: <TaoHoSo /> },
+      {
+        path: "user/dashboard",
+        element: (
+          <PrivateRoute allowedRoles={["PATIENT"]}>
+            <Dashboard />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "user/lich-hen",
+        element: (
+          <PrivateRoute allowedRoles={["PATIENT"]}>
+            <LichHen />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "user/ho-so-cua-toi",
+        element: (
+          <PrivateRoute allowedRoles={["PATIENT"]}>
+            <HoSoCuaToi />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "user/tao-ho-so",
+        element: (
+          <PrivateRoute allowedRoles={["PATIENT"]}>
+            <TaoHoSo />
+          </PrivateRoute>
+        ),
+      },
       { path: "bac-si-noi-bat", element: <BacSiNoiBat /> },
-      { path: "chuyen-khoa-kham", element: <ChuyenKhoa /> },
-      { path: "chi-tiet-chuyen-khoa", element: <ChuyenKhoaVaBacSi /> },
-      { path: "dich-vu-kham", element: <DichVuKham /> },
+      { path: "chuyen-khoa/:id", element: <ChuyenKhoaVaBacSi /> },
       { path: "lien-he", element: <LienHe /> },
+      { path: "tu-van", element: <TuVan /> },
+      { path: "bang-gia", element: <BangGia /> },
       { path: "user/thong-bao-thanh-toan", element: <ThongBaoThanhToan /> },
     ],
   },
-  {
-    path: "/user/login-benh-nhan",
-    element: <LoginPage />,
-  },
-  {
-    path: "/user/register-benh-nhan",
-    element: <RegisterPage />,
-  },
-  {
-    path: "*",
-    element: <ErrorPage />,
-  },
+  { path: "/user/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
+  { path: "*", element: <ErrorPage /> },
 ]);
 
 // Render app
