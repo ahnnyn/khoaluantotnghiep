@@ -86,7 +86,13 @@ const MedicalExaminationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    queueNumber: {
+      type: Number,
+      required: false, // hoặc true nếu bạn muốn bắt buộc
+      default: null,
+    },
   },
+
   {
     timestamps: true,
     collection: "medical_examinations",

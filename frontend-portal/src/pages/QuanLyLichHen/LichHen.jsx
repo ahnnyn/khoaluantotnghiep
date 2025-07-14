@@ -13,9 +13,7 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import {
-  ExclamationCircleOutlined
-} from "@ant-design/icons";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 import { BsCameraVideoFill } from "react-icons/bs";
 import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
@@ -28,7 +26,7 @@ import { RiEdit2Fill, RiDeleteBin5Line } from "react-icons/ri";
 import {
   fetchLichKham,
   deleteLichHen,
-  taoVnPayUrl,
+  createVnpayPaymentUrl,
 } from "services/patient/patient.services";
 
 import ModalXemChiTietLichHen from "./ModalXemChiTietLichHen";
@@ -117,7 +115,7 @@ const LichHenCard = () => {
 
   const handlePayment = async (record) => {
     try {
-      const res = await taoVnPayUrl(
+      const res = await createVnpayPaymentUrl(
         record.maLich,
         record.giaKham,
         record.hoTen

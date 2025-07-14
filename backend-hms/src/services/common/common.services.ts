@@ -5,6 +5,9 @@ import Department from "models/Departments";
 import Role from "models/Roles";
 import TimeSlot from "models/TimeSlot";
 import User from "models/Users";
+import PriceList from "models/PriceList";
+import ArticleTopic from "models/ArticleTopic";
+import Article from "models/Article";
 
 const getListDepartment = async () => {
   return await Department.find().lean();
@@ -58,10 +61,60 @@ const getListDoctor = async () => {
   return doctors;
 };
 
+const getPriceList = async () => {
+  const priceList = await PriceList.find()
+    .populate("departmentId")
+    .populate("doctorId")
+    .lean();
+
+  return priceList;
+};
+
+const getPriceListByDepartmentId = async (departmentId: string) => {
+  if (!mongoose.Types.ObjectId.isValid(departmentId)) {
+    throw new Error("Invalid department ID");
+  }
+
+  const priceList = await PriceList.find({
+    departmentId: new mongoose.Types.ObjectId(departmentId),
+  })
+    .populate("departmentId")
+    .populate("doctorId")
+    .lean();
+
+  return priceList;
+};
+
+const getPriceListByDoctorId = async (doctorId: string) => {
+  if (!mongoose.Types.ObjectId.isValid(doctorId)) {
+    throw new Error("Invalid doctor ID");
+  }
+  const priceList = await PriceList.find({
+    doctorId: new mongoose.Types.ObjectId(doctorId),
+  })
+    .populate("departmentId")
+    .populate("doctorId")
+    .lean();
+  return priceList;
+};
+
+const getArticle = async () => {
+  const articles = await Article.find()
+    .populate("author", "name")
+    .populate("relatedDoctorIds", "name")
+    .populate("relatedDepartmentId", "name")
+    .populate("topicId", "name")
+    .lean();
+  return articles;
+};
 export {
   getListDepartment,
   getAllTimeSlots,
   getDoctorsByDepartmentID,
   getDepartmentById,
   getListDoctor,
+  getPriceList,
+  getPriceListByDepartmentId,
+  getPriceListByDoctorId,
+  getArticle,
 };

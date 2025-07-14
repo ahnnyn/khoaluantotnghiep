@@ -19,20 +19,22 @@ import PrivateRoute from "pages/PrivatePage/PrivateRoutes";
 // Public Pages
 import Home from "pages/Home";
 import ChiTietBacSi from "pages/ViewDoctor/ChiTietBacSi";
-import PageDatLichKham from "pages/DatLichHen/DatLichKhamDoctor";
+import BookingAppointment from "pages/BookingAppointment/BookingAppointment";
 import LichHen from "pages/QuanLyLichHen/LichHen";
 import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
 import TaoHoSo from "pages/HoSoCuaToi/TaoHoSo";
 import BacSiNoiBat from "pages/BacSiNoiBat/BacSiNoiBat";
 import LienHe from "pages/LienHe/LienHe";
 import ChuyenKhoaVaBacSi from "pages/ChuyenKhoa/ChuyenKhoaVaBacSi";
-import ThongBaoThanhToan from "pages/ThongBaoThanhToan/ThongBaoThanhToan";
 
 // CSS
 import "./index.css";
 import TuVan from "./pages/TuVan/TuVan";
 import BangGia from "./pages/BangGia/BangGia";
 import Dashboard from "./pages/Dashboard/Dashboard";
+import PaymentNotificationPage from "./pages/PaymentNotificationPage/PaymentNotificationPage";
+import ArticlesPage from "./pages/Articles/ArticlesPage";
+import ArticleDetailPage from "./pages/Articles/ArticleDetailPage";
 
 // Router config
 const router = createBrowserRouter([
@@ -43,7 +45,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "chi-tiet-bac-si", element: <ChiTietBacSi /> },
-      { path: "page-dat-lich-kham", element: <PageDatLichKham /> },
+      { path: "page-dat-lich-kham", element: <BookingAppointment /> },
       {
         path: "user/dashboard",
         element: (
@@ -81,7 +83,12 @@ const router = createBrowserRouter([
       { path: "lien-he", element: <LienHe /> },
       { path: "tu-van", element: <TuVan /> },
       { path: "bang-gia", element: <BangGia /> },
-      { path: "user/thong-bao-thanh-toan", element: <ThongBaoThanhToan /> },
+      { path: "bai-viet", element: <ArticlesPage /> },
+      { path: "bai-viet/:slug", element: <ArticleDetailPage /> },
+      {
+        path: "user/thong-bao-thanh-toan",
+        element: <PaymentNotificationPage />,
+      },
     ],
   },
   { path: "/user/login", element: <LoginPage /> },

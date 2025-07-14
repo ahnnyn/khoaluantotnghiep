@@ -26,6 +26,19 @@
   align-items: center;
 }
 
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: 100px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-right: 100px;
+}
 .header-center {
   flex-grow: 1;
   display: flex;
@@ -38,7 +51,20 @@
   background: transparent;
   flex-grow: 1;
   justify-content: center;
+  font-size: 20px;
 }
+
+  .ant-menu-item,
+  .ant-menu-submenu-title {
+    font-size: 15px !important;
+    font-weight: 500;
+    padding: 0 16px;
+      &:hover {
+    color: #1677ff;
+    background-color: transparent;
+  }
+    
+  }
 
 .mobile-menu-icon {
   display: none;
@@ -96,7 +122,6 @@
     color: #333;
   }
 }
-
 
 /* Responsive styles */
 @media (max-width: 768px) {

@@ -1,0 +1,181 @@
+.txtTile {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px; // FIXED: tăng line-height lên để tránh lỗi
+  margin-left: 15px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.sticky-col {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #f6f6f6;
+  border-top: 1px solid rgba(228, 228, 221, 0.637);
+  border-bottom: 2px solid #eee;
+}
+
+.giaKhamdiv {
+  padding: 10px;
+  height: 80px;
+  width: 300px;
+  margin: auto;
+  border: 1px solid rgb(218, 218, 218);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.giaKhamdiv.active1 {
+  border-color: red;
+}
+
+.cac-the-input {
+  margin: auto;
+  width: 100%;
+}
+
+.ant-input::placeholder {
+  font-weight: 400;
+}
+
+.divTT {
+  background-color: rgb(250, 247, 247);
+  border-radius: 6px;
+}
+
+.txtTT {
+  padding: 0 20px;
+  font-size: 16px;
+  line-height: 20px; // FIXED
+}
+
+.txtTTT {
+  padding: 0 20px;
+  font-size: 16px;
+  line-height: 20px; // ADDED
+}
+
+.box-title-doctor {
+  position: relative;
+  top: 30px;
+}
+
+.txt-Title-doctor-noi-bat {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 24px;
+  color: rgb(134, 132, 132);
+}
+
+.title-nho {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  position: relative;
+  top: 5px;
+  color: rgb(179, 176, 176);
+}
+
+.view-body-xem-lich-ck {
+  background-color: rgb(247, 246, 246);
+}
+
+.txt-bacsi {
+  font-size: 18px;
+  padding-left: 10px;
+  line-height: 20px; // FIXED
+  color: rgb(69, 195, 210);
+  font-weight: 500;
+}
+
+.colors {
+  color: rgb(69, 195, 210);
+  font-weight: 500;
+}
+
+.custom-datepicker {
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  font-size: 15px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: #bfbfbf;
+    font-weight: 400;
+  }
+
+  &:hover {
+    border-color: #40a9ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #1890ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+  }
+}
+
+.react-datepicker__triangle {
+  display: none; // Ẩn mũi tên tam giác
+}
+
+.react-datepicker {
+  min-width: 320px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.react-datepicker__header {
+  background-color: #f0f8ff;
+  border-bottom: 1px solid #e6e6e6;
+  padding-top: 8px;
+  border-radius: 8px 8px 0 0;
+}
+
+.react-datepicker__day--selected {
+  background-color: #1890ff;
+  color: #fff;
+  border-radius: 50%;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #bae7ff;
+}
+
+// .react-datepicker__navigation-icon::before {
+//   border-width: 6px 6px 0 0;
+// }
+
+.payment-method-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .payment-option {
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9fc;
+    transition: all 0.3s;
+
+    &:hover {
+      border-color: #1890ff;
+      background-color: #f0f5ff;
+    }
+
+    &.ant-radio-button-wrapper-checked {
+      border-color: #1890ff;
+      background-color: #e6f7ff;
+    }
+  }
+}

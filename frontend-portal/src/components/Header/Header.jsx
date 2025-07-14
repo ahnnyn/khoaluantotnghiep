@@ -9,8 +9,11 @@ import {
   UserOutlined,
   LockOutlined,
   MenuOutlined,
-  DownOutlined
+  DownOutlined,
+  FileTextOutlined,
+  UserAddOutlined,
 } from "@ant-design/icons";
+import { FiUser } from "react-icons/fi";
 import { Menu, message, Avatar, Dropdown } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAllDepartments } from "services/patient/patient.services";
@@ -79,17 +82,17 @@ const Header = () => {
     {
       key: "home",
       label: <Link to="/">Trang chủ</Link>,
-      icon: <HomeOutlined />,
+      // icon: <HomeOutlined />,
     },
     {
       key: "consult",
       label: <Link to="/tu-van">Tư vấn</Link>,
-      icon: <SolutionOutlined />,
+      // icon: <SolutionOutlined />,
     },
     {
       key: "booking",
       label: "Đặt lịch",
-      icon: <CalendarOutlined />,
+      // icon: <CalendarOutlined />,
       children: departments.map((dept) => ({
         key: `dept-${dept._id}`,
         label: <Link to={`/chuyen-khoa/${dept._id}`}>{dept.name}</Link>,
@@ -98,7 +101,12 @@ const Header = () => {
     {
       key: "pricing",
       label: <Link to="/bang-gia">Bảng giá</Link>,
-      icon: <DollarOutlined />,
+      // icon: <DollarOutlined />,
+    },
+    {
+      key: "articles",
+      label: <Link to="/bai-viet">Bài viết</Link>,
+      // icon: <FileTextOutlined />,
     },
   ];
 
@@ -112,7 +120,9 @@ const Header = () => {
         },
         {
           key: "change-password",
-          label: <span onClick={() => setOpenModalDoiMK(true)}>Đổi mật khẩu</span>,
+          label: (
+            <span onClick={() => setOpenModalDoiMK(true)}>Đổi mật khẩu</span>
+          ),
           icon: <LockOutlined />,
         },
         {
@@ -159,16 +169,22 @@ const Header = () => {
           />
 
           {user?._id ? (
-          <Dropdown overlay={getDropdownMenu()} placement="bottomRight" arrow>
-            <div className="user-info-dropdown">
-              <Avatar src={user.avatar || undefined} icon={<UserOutlined />} size="large" />
-              <span className="user-name">{user.fullName || "Người dùng"}</span>
-              <DownOutlined style={{ marginLeft: 6 }} />
-            </div>
-          </Dropdown>
+            <Dropdown overlay={getDropdownMenu()} placement="bottomRight" arrow>
+              <div className="user-info-dropdown">
+                <Avatar
+                  src={user.avatar || undefined}
+                  icon={<UserOutlined />}
+                  size="large"
+                />
+                <span className="user-name">
+                  {user.fullName || "Người dùng"}
+                </span>
+                <DownOutlined style={{ marginLeft: 6 }} />
+              </div>
+            </Dropdown>
           ) : (
             <div className="login-btn" onClick={() => setOpenModalLogin(true)}>
-              <UserOutlined style={{ fontSize: "20px", marginRight: 6 }} />
+              <FiUser style={{ fontSize: "20px", marginRight: 6 }} />
               <span>Đăng nhập</span>
             </div>
           )}

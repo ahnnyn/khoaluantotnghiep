@@ -9,12 +9,14 @@ import {
   Button,
   Divider,
   Breadcrumb,
+  Input,
 } from "antd";
 import {
   MailOutlined,
   PhoneOutlined,
   UserOutlined,
   HomeOutlined,
+  CalendarOutlined,
 } from "@ant-design/icons";
 import { AiOutlineDownCircle } from "react-icons/ai";
 
@@ -30,7 +32,7 @@ import {
   getWorkScheduleByDoctor,
 } from "services/patient/patient.services";
 
-import "./chuyenkhoa.css";
+import "./ChuyenKhoa.css";
 import { Layout } from "antd";
 import SearchComponent from "components/SearchComponent/SearchComponent";
 const { Content } = Layout;
@@ -473,6 +475,17 @@ const ChuyenKhoaVaBacSi = () => {
                                 })()}
                                 placeholderText="Chọn ngày khám"
                                 className="custom-datepicker"
+                                showYearDropdown
+                                scrollableMonthYearDropdown
+                                showMonthDropdown
+                                dropdownMode="select"
+                                showPopperArrow={false}
+                                customInput={
+                                  <Input
+                                    prefix={<CalendarOutlined />}
+                                    style={{ width: "100%" }}
+                                  />
+                                }
                               />
                             </div>
                             <div onClick={(e) => e.stopPropagation()}>
@@ -484,6 +497,7 @@ const ChuyenKhoaVaBacSi = () => {
                                 }
                                 optionType="button"
                                 buttonStyle="solid"
+                                
                                 style={{ marginTop: 8 }}
                               />
                             </div>

@@ -6,6 +6,8 @@ import doctorRoutes from './doctor.routes';
 import patientRoutes from './patient.routes';
 import uploadRoutes from './file.upload.routes';
 import publicRoutes from './public.routes'; 
+import vnpayRoutes from './payment.routes';
+
 
 const webRoutes = (app: Express) => {
     
@@ -15,6 +17,7 @@ const webRoutes = (app: Express) => {
     patientRoutes(app);
     uploadRoutes(app);
     publicRoutes(app);
+    vnpayRoutes(app);
 };
 
 export default webRoutes;
