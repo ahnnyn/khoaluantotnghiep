@@ -1,6 +1,6 @@
 export const vnpayConfig = {
-  vnp_Url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
-  vnp_TmnCode: "6DZXKDIM",
-  vnp_HashSecret: "8DGNK4OJ7IJRF1V0ZWJFJH6MRD9EJPNJ",
-  vnp_ReturnUrl: "http://localhost:3000/user/thong-bao-thanh-toan",
+  vnp_Url: process.env.VNP_URL!,
+  vnp_TmnCode: process.env.VNP_TMN_CODE!,
+  vnp_HashSecret: process.env.VNP_HASH_SECRET!,
+  vnp_ReturnUrl: process.env.VNP_RETURN_URL!,
 };

@@ -33,6 +33,8 @@
     "lucide-react": "^0.503.0",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.46",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^7.0.5",
     "nprogress": "^0.2.0",
     "qrcode.react": "^4.2.0",
     "react": "18.2.0",
