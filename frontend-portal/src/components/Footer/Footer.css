@@ -1,146 +1,172 @@
 /* Footer Container */
 .footer-container {
-    background: #e6f7fb; /* Màu xanh nhạt hơn */
-    color: #333;
-    width: 100vw;
-  }
-  
-  /* Căn giữa nội dung */
-  .footer {
-    display: flex;
-    justify-content: space-between;
-    max-width: 1200px;
-    margin: 0 auto;
-    flex-wrap: wrap;
-  }
-  
-  /* Cột Footer */
-  .footer-col {
-    flex: 1;
-    margin: 20px;
-    min-width: 220px;
-    align-items: center;
-  }
-  
-  .footer-col h4 {
-    font-size: 18px;
-    color: #005580;
-    margin-bottom: 15px;
-    font-weight: bold;
-  }
-  
-  .footer-col ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .footer-col ul li {
-    color: #004466;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  
-  .footer-col ul li:hover {
-    color: #007a99;
-  }
-  
-  /* Logo & Description */
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #005580;
-  }
-  .about{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .description {
-    color: #004d66;
-    font-size: 14px;
-    line-height: 1.6;
+  background: #e6f7fb; /* Màu xanh nhạt hơn */
+  color: #333;
+  width: 100vw;
+}
 
-  }
-  
-  /* Liên hệ */
-  .contact p {
-    color: #ff6b6b;
-    font-weight: bold;
-    margin-top: 10px;
-  }
-  
-  .icon {
-    color: #ff6b6b;
-    margin-right: 5px;
-  }
-  
-  .phone {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-  }
+/* Căn giữa nội dung */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
 
-  .info{
-    align-items: center;
-  }
-  
-  /* Subscribe */
-  .subscribe {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .email-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #007a99;
-    border-radius: 5px;
-    margin-bottom: 10px;
-  }
-  
-  .subscribe-btn {
-    background: #6274e8;
-    color: white;
-    border: none;
-    padding: 10px;
-    width: 100%;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  .subscribe-btn:hover {
-    background: #de180a;
-  }
-  
-  /* Social Icons */
-  .social-icons {
-    margin-top: 10px;
-    align-items: center;
-  }
-  
-  .social-icons svg {
-    font-size: 20px;
-    margin-right: 10px;
-    color: #004466;
-    cursor: pointer;
-    transition: color 0.3s;
-  }
-  
-  .social-icons svg:hover {
-    color: #007a99;
-  }
-  
-  /* Footer Bottom */
-  .footer-bottom {
-    text-align: center;
-    padding: 12px;
-    background: #b3e0ea;
-    color: #005580;
-    margin-top: 20px;
-    font-weight: bold;
-  }
-  
+/* Cột Footer */
+.footer-col {
+  flex: 1;
+  margin: 20px;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.footer-col h4 {
+  font-size: 18px;
+  color: #005580;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.footer-col ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-col ul li {
+  color: #004466;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.footer-col ul li:hover {
+  color: #007a99;
+}
+
+/* Logo & Description */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #005580;
+}
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.description {
+  color: #004d66;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.contact {
+  margin-top: -20px;
+}
+/* Liên hệ */
+.contact p {
+  color: #ff6b6b;
+  font-weight: bold;
+}
+
+.icon {
+  color: #ff6b6b;
+  margin-right: 5px;
+}
+
+.phone-email {
+  display: flex;
+  align-items: center; /* căn giữa icon và text theo chiều dọc */
+  margin-top: -30px;
+}
+
+.phone {
+  font-size: 16px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.info {
+  align-items: center;
+}
+
+/* Subscribe */
+.subscribe {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.email-input {
+  width: 100%;
+  padding: 5px !important;
+  border: 1px solid #007a99 !important;
+  border-radius: 10px !important;
+  margin-bottom: 10px;
+  background-color: #ffffff !important;
+}
+
+/* Đảm bảo trạng thái focus vẫn trắng */
+.email-input:focus {
+  outline: none;
+  background-color: #ffffff;
+  border-color: #6274e8;
+}
+
+/* Fix autofill trên Chrome */
+.email-input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+}
+
+.subscribe-btn {
+  background: #6274e8;
+  color: white;
+  border: none;
+  padding: 10px;
+  width: 170px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.subscribe-btn:hover {
+  background: #de180a;
+}
+
+/* Social Icons */
+.social-icons {
+  margin-top: 10px;
+  align-items: center;
+}
+
+.social-icons svg {
+  width: 22px;
+  height: 22px;
+  margin: 0 10px;
+  color: #004466;
+  cursor: pointer;
+  transition: fill 0.3s;
+}
+
+
+.social-icons svg:hover {
+  color: #007a99;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  text-align: center;
+  padding: 12px;
+  background: #b3e0ea;
+  color: #005580;
+  margin-top: 20px;
+  font-weight: bold;
+}

@@ -74,7 +74,7 @@ const ArticlesPage = () => {
   }, [selectedCategory, selectedTag, selectedTime]);
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6" style={{margin: "50px"}}>
       <div
         style={{
           display: "flex",
@@ -144,7 +144,7 @@ const ArticlesPage = () => {
               cover={
                 <img
                   alt={article.title}
-                  src={article.thumbnail}
+                  src={`${import.meta.env.VITE_BACKEND_URL}/public/images/articles/${article.thumbnail}`}
                   style={{
                     height: 200,
                     width: "100%",

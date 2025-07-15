@@ -97,17 +97,37 @@ const ArticleDetailPage = () => {
       </div>
 
       {article.thumbnail && (
-        <Image
-          src={article.thumbnail}
-          alt="thumbnail"
-          width="100%"
+        <div
           style={{
-            maxHeight: 400,
-            objectFit: "cover",
-            borderRadius: 8,
-            marginTop: 24,
+            display: "flex",
+            justifyContent: "center",
+            margin: "24px 0",
+            width: "100%",
           }}
-        />
+        >
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 900,
+              borderRadius: 8,
+              overflow: "hidden",
+            }}
+          >
+            <Image
+              src={`${
+                import.meta.env.VITE_BACKEND_URL
+              }/public/images/articles/${article.thumbnail}`}
+              alt="thumbnail"
+              width="100%"
+              style={{
+                maxHeight: 620,
+                width: "100%",
+                objectFit: "cover",
+                display: "block",
+              }}
+            />
+          </div>
+        </div>
       )}
 
       <Divider />
@@ -123,21 +143,38 @@ const ArticleDetailPage = () => {
 
       {relatedArticles.length > 0 && (
         <>
-          <Title level={4}>
-            <FileTextOutlined style={{ marginRight: 8 }} />
-            Bài viết liên quan
-          </Title>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: 20,
+              gap: 8,
+            }}
+          >
+            <FileTextOutlined style={{ fontSize: 20, color: "#555" }} />
+            <Title level={4} style={{ margin: 0 }}>
+              Bài viết liên quan
+            </Title>
+          </div>
+
           <Row gutter={[16, 16]}>
             {relatedArticles.map((rel) => (
               <Col xs={24} sm={12} md={8} key={rel._id}>
                 <Card
                   hoverable
                   onClick={() => navigate(`/bai-viet/${rel.slug}`)}
+                  style={{ padding: "15px" }}
                   cover={
                     <img
                       alt={rel.title}
-                      src={rel.thumbnail || "/articles/default.jpg"}
-                      style={{ height: 160, objectFit: "cover" }}
+                      src={
+                        rel.thumbnail
+                          ? `${
+                              import.meta.env.VITE_BACKEND_URL
+                            }/public/images/articles/${rel.thumbnail}`
+                          : "/articles/default.jpg"
+                      }
+                      style={{ height: 160, width: "100%", objectFit: "cover" }}
                     />
                   }
                 >

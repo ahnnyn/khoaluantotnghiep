@@ -196,7 +196,7 @@ const Header = () => {
           <Menu
             onClick={onClick}
             selectedKeys={[current]}
-            mode="vertical"
+             mode="inline"
             items={[
               ...menuItems,
               !user?._id

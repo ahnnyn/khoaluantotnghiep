@@ -123,6 +123,18 @@
   }
 }
 
+ // 👇 Responsive
+  @media (max-width: 768px) {
+    .ant-avatar {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 16px;
+    }
+
+    .user-name {
+      display: none; // Ẩn tên trên mobile để gọn
+    }
+  }
 /* Responsive styles */
 @media (max-width: 768px) {
   .desktop-only {
@@ -134,7 +146,7 @@
   }
 
   .logo-img {
-    height: 40px;
+    height: 60px;
   }
 
   .header-modern {

@@ -59,7 +59,7 @@ const BangGia = () => {
     <>
       <div
         style={{
-          backgroundImage: `url('/Banner_2.jpg')`,
+          backgroundImage: `url('/public/assets/images/Banner_2.jpg')`,
           backgroundSize: "cover",
           height: "450px",
         }}
@@ -104,7 +104,7 @@ const BangGia = () => {
             style={{ display: "flex", justifyContent: "flex-end" }}
           >
             <img
-              src="/banner_1-removebg-preview.png"
+              src="/public/assets/images/banner_1-removebg-preview.png"
               alt="Banner doctor"
               style={{
                 maxHeight: "350px",
@@ -120,7 +120,7 @@ const BangGia = () => {
           style={{ margin: "40px", alignItems: "center", textAlign: "center" }}
         >
           <Title level={3} style={{ color: "#093b7b", marginBottom: 20 }}>
-            Chi tiết bảng giá theo từng chuyên khoa
+            CHI TIẾT BẢNG GIÁ THEO TỪNG CHUYÊN KHOA
           </Title>
 
           <Row gutter={[24, 24]}>
@@ -133,14 +133,16 @@ const BangGia = () => {
                       style={{ display: "flex", alignItems: "center", gap: 12 }}
                     >
                       <Image
-                        src={`/images/khoa/${group.image}`}
+                        src={`${
+                          import.meta.env.VITE_BACKEND_URL
+                        }/public/images/upload/${group.image}`}
                         alt={group.name}
-                        width={40}
-                        height={40}
+                        width={100}
+                        height={60}
                         preview={false}
                         style={{ borderRadius: 8 }}
                       />
-                      <span style={{paddingLeft: "10px"}}>{group.name}</span>
+                      <span style={{ paddingLeft: "10px" }}>{group.name}</span>
                     </div>
                   }
                   style={{ borderRadius: 12, margin: "10px" }}

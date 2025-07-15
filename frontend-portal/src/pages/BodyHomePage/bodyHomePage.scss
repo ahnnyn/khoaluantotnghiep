@@ -3,10 +3,49 @@
   overflow-x: hidden;
 }
 
+.hero-banner {
+  position: relative;
+  .banner-img {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    text-align: center;
+    color: #fff;
+    max-width: 90%;
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .hero-cta {
+      background-color: #0a69a3;
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      &:hover {
+        background-color: #084d80;
+      }
+    }
+  }
+}
+
 .content-wrapper {
   margin: 0 auto;
   width: 100%;
-  max-width: 1280px;
   padding: 0 20px;
   display: flex;
   flex-direction: column;
@@ -19,8 +58,9 @@
   align-items: center;
   justify-content: center;
   padding: 5vh 0 10vh;
-  margin: 40px 0;
-  background-color: #f9fbfd;
+  margin: 30px 0;
+  // background-color: #f0f9ff;
+  background-image: url("/public/assets/images/1743059582_ic_background_grid_item.b108f491.png");
   position: relative;
 
   @media (max-width: 768px) {
@@ -85,15 +125,14 @@
     justify-content: center;
     align-items: stretch;
     max-width: 100%;
-    height: auto;          
-    overflow: visible; 
+    height: auto;
+    overflow: visible;
     margin: 20px;
   }
 
-.slick-list {
-  overflow-x: hidden !important; 
-
-}
+  .slick-list {
+    overflow-x: hidden !important;
+  }
 }
 
 .slicer-banner {
@@ -101,7 +140,7 @@
 
   .banner-img {
     width: 100%;
-    max-height: 500px;       // giới hạn chiều cao
+    max-height: 500px; // giới hạn chiều cao
     object-fit: cover;
     object-position: center;
     border-radius: 0 0 20px 20px;
@@ -132,7 +171,7 @@
     height: 36px;
     background: #fff;
     border-radius: 50%;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     color: #333;
 
     &:hover {
@@ -152,5 +191,237 @@
   .slick-next:before {
     font-size: 24px;
     color: #1890ff;
+  }
+}
+
+.how-step {
+  height: 150px;
+  text-align: center;
+  padding: 20px;
+  background: #a0d3ec;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease;
+
+  .icon {
+    background-color: #e6f7ff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 15px;
+    font-weight: 500;
+    color: #093b7b;
+  }
+
+  &:hover {
+    transform: translateY(-6px);
+  }
+}
+
+.quick-search-container {
+  // background-color: #f0f9ff;
+  background-image: url("/public/assets/images/Banner_2.jpg");
+  width: 100%;
+  height: 200px;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.quick-search-box {
+  width: 100%;
+  max-width: 800px;
+  padding: 0 8px;
+}
+
+.quick-search-box input {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  background-color: transparent;
+  height: 48px;
+}
+
+.quick-search-box input::placeholder {
+  color: #999;
+}
+
+.quick-search-box button {
+  background-color: #0a69a3;
+  color: white;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-left: 1px solid #dbe6ef;
+  height: 100%;
+  height: 48px;
+
+  &:hover {
+    background-color: #084d80;
+  }
+}
+
+@media (max-width: 576px) {
+  .quick-search-box {
+    flex-direction: column;
+    border-radius: 10px;
+
+    input {
+      width: 100%;
+      border-bottom: 1px solid #eee;
+    }
+
+    button {
+      width: 100%;
+      border-left: none;
+      border-top: 1px solid #eee;
+    }
+  }
+}
+
+.danh-cho-ban.loi-ich-healio {
+  padding: 40px 0;
+  background-color: #f9f9f9;
+
+  .benefit-item {
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    .icon {
+      background-color: #e6f7ff;
+      border-radius: 50%;
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    p {
+      font-size: 15px;
+      font-weight: 500;
+      color: #093b7b;
+    }
+
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+
+      .icon {
+        background-color: #d4ecff;
+        transform: scale(1.1);
+      }
+    }
+  }
+}
+
+.testimonial-slider {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+
+  .testimonial-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    text-align: center;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .ant-avatar {
+      margin-bottom: 12px;
+      box-shadow: 0 0 0 3px #0a69a3;
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+
+    p {
+      font-size: 18px;
+      font-style: italic;
+      color: #333;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    h4 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0a69a3;
+    }
+  }
+}
+
+.cta-section {
+  color: #fff;
+  text-align: center;
+  padding: 60px 20px;
+  .cta-box h2 {
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  button {
+    background: white;
+    color: #0a69a3;
+    width: 200px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s ease;
+    &:hover {
+      background: #d6e9f9;
+    }
+  }
+}
+
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.how-step {
+  position: relative;
+  padding-top: 30px;
+
+  &::before {
+    content: attr(data-step);
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0a69a3;
+    color: white;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
   }
 }

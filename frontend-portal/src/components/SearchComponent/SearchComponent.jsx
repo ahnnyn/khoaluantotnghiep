@@ -38,6 +38,7 @@ const SearchComponent = ({ onSearch, placeholder }) => {
           borderRadius: "50px",
           paddingLeft: "12px",
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+           width: "100%",
         }}
       />
   );

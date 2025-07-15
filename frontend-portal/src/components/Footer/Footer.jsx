@@ -1,7 +1,12 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone,faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { faFacebook, faTwitter, faInstagram, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faPhone, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFacebook,
+  faTwitter,
+  faInstagram,
+  faLinkedin,
+} from "@fortawesome/free-brands-svg-icons";
 
 import "./Footer.css";
 
@@ -17,8 +22,10 @@ function Footer() {
           </p>
           <div className="contact">
             <p>Liên hệ với chúng tôi</p>
-            <FontAwesomeIcon icon={faPhone} className="icon" />
-            <span className="phone">+01 123 456 7890</span>
+            <div className="phone-email">
+              <FontAwesomeIcon icon={faPhone} className="icon" />
+              <span className="phone">+01 123 456 7890</span>
+            </div>
           </div>
         </div>
 
@@ -45,7 +52,11 @@ function Footer() {
         {/* Cột 4: Subscribe */}
         <div className="footer-col subscribe">
           <h4>Subscribe</h4>
-          <input type="email" placeholder="Email Address" className="email-input" />
+          <input
+            type="email"
+            placeholder="Email Address"
+            className="email-input"
+          />
           <button className="subscribe-btn">Đăng ký ngay</button>
           <div className="social-icons">
             <FontAwesomeIcon icon={faFacebook} />

@@ -260,7 +260,7 @@ const ChuyenKhoaVaBacSi = () => {
       <div
         className=""
         style={{
-          backgroundImage: `url('/Banner_2.jpg')`,
+          backgroundImage: `url('/public/assets/images/Banner_2.jpg')`,
           height: "450px",
         }}
       >
@@ -315,7 +315,7 @@ const ChuyenKhoaVaBacSi = () => {
 
           <Col xs={4} md={12} className="z-0 flex justify-end">
             <img
-              src="/banner_1-removebg-preview.png"
+              src="/public/assets/images/banner_1-removebg-preview.png"
               alt="Doctors illustration"
               className=""
               style={{
