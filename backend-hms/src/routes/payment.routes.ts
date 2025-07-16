@@ -10,7 +10,7 @@ const router = express.Router();
 const patientRoutes = (app: Express) => {
   router.use(authjwt([ACCOUNT_ROLE.PATIENT]));
 
-  router.post("/create", handleCreatePayment);
+  router.post("/create-payment", handleCreatePayment);
   router.post("/create-url", handleCreateVnPayUrl);
   app.use("/api/payment", router);
 };

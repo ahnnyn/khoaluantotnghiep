@@ -11,7 +11,10 @@ const ArticleSchema = new mongoose.Schema(
     category: { type: String, enum: ["Blog", "Tư vấn", "Tin tức"] },
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     relatedDoctorIds: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    relatedDepartmentId: { type: mongoose.Schema.Types.ObjectId, ref: "Department" },
+    relatedDepartmentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+    },
 
     topicId: {
       type: mongoose.Schema.Types.ObjectId,

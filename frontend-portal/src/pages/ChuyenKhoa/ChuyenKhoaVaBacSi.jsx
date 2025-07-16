@@ -86,6 +86,7 @@ const ChuyenKhoaVaBacSi = () => {
     getWorkScheduleByDoctor(doctorId)
       .then((res) => {
         const raw = res?.data || [];
+        console.log("Lịch làm việc của bác sĩ:", raw);
 
         // Lọc lịch đúng bác sĩ
         const filteredRaw = raw.filter((s) => s.doctorId === doctorId);
@@ -497,7 +498,6 @@ const ChuyenKhoaVaBacSi = () => {
                                 }
                                 optionType="button"
                                 buttonStyle="solid"
-                                
                                 style={{ marginTop: 8 }}
                               />
                             </div>
@@ -556,7 +556,25 @@ const ChuyenKhoaVaBacSi = () => {
                                       }))
                                     }
                                   >
-                                    {timeRange}
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        lineHeight: 1.2,
+                                      }}
+                                    >
+                                      <span>{timeRange}</span>
+                                      {slot.status === "booked" && (
+                                        <span
+                                          style={{
+                                            fontSize: "11px",
+                                            color: "red",
+                                          }}
+                                        >
+                                          Hết slot
+                                        </span>
+                                      )}
+                                    </div>
                                   </Button>
                                 );
                               })

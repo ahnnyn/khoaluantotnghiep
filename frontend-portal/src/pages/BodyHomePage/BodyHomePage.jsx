@@ -76,14 +76,14 @@ const BodyHomePage = () => {
   const services = [
     {
       icon: <FaClinicMedical size={40} color="blue" />,
-      txtP: "Đặt khám tại bệnh viện",
+      txtP: "Đặt lịch khám (tại bệnh viện hoặc trực tuyến)",
       redirect: "/chuyen-khoa-kham",
     },
-    {
-      icon: <FiVideo size={40} color="blue" />,
-      txtP: "Đặt khám trực tuyến",
-      redirect: "/chuyen-khoa-kham",
-    },
+    // {
+    //   icon: <FiVideo size={40} color="blue" />,
+    //   txtP: "Đặt khám trực tuyến",
+    //   redirect: "/chuyen-khoa-kham",
+    // },
     {
       icon: <FaBrain size={40} color="blue" />,
       txtP: "Tư vấn tâm lý trực tuyến",
@@ -245,8 +245,11 @@ const BodyHomePage = () => {
                 },
               ].map((step, idx) => (
                 <Col
-                  span={6}
                   key={idx}
+                  xs={24}
+                  sm={12}
+                  md={12}
+                  lg={6}
                   data-aos="zoom-in-up"
                   data-aos-duration="1000"
                   data-aos-easing="ease-in-out"

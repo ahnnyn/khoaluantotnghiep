@@ -128,34 +128,8 @@ const updateBenhNhan = (
   });
 };
 
-const handleCreateAppointment = (
-  patientId,
-  doctorId,
-  timeSlot,
-  patientName,
-  email,
-  phoneNumber,
-  consultationFee,
-  appointmentHour,
-  appointmentDate,
-  reasonForVisit,
-  paymentMethod,
-  consultationType
-) => {
-  return axios.post("/api/appointments.php?action=create", {
-    patientId,
-    doctorId,
-    timeSlot,
-    patientName,
-    email,
-    phoneNumber,
-    consultationFee,
-    appointmentHour,
-    appointmentDate,
-    reasonForVisit,
-    paymentMethod,
-    consultationType,
-  });
+const handleCreateAppointment = (payload) => {
+  return axios.post("/api/patient/create-medical-examination", payload);
 };
 
 const createVnpayPaymentUrl = (maLichKham, amount, tenNguoiDung) => {
@@ -166,13 +140,17 @@ const createVnpayPaymentUrl = (maLichKham, amount, tenNguoiDung) => {
   });
 };
 
-const getPaymentNotification = (data) => {
-  return axios.post(`/api/payment.php?action=notify`, data);
-};
 
-const updatePaymentStatus = (data) => {
-  return axios.post(`/api/appointments.php?action=update-payment-status`, data);
+const handleCreatePayment = (data) => {
+  return axios.post("/api/payment/create-payment", data, getAuthHeader());
 };
+// const getPaymentNotification = (data) => {
+//   return axios.post(`/api/payment.php?action=notify`, data);
+// };
+
+// const updatePaymentStatus = (data) => {
+//   return axios.post(`/api/appointments.php?action=update-payment-status`, data);
+// };
 
 // get lich kham
 const fetchLichKham = (maBenhNhan) => {
@@ -364,8 +342,6 @@ export {
   updateBenhNhan,
   handleCreateAppointment,
   createVnpayPaymentUrl,
-  getPaymentNotification,
-  updatePaymentStatus,
   fetchLichKham,
   handleHuyOrder,
   findAllLichHen,
@@ -388,4 +364,5 @@ export {
   getTimeSlotsByDoctorAndDate,
   fetchPriceList,
   fetchAllArticles,
+  handleCreatePayment,
 };

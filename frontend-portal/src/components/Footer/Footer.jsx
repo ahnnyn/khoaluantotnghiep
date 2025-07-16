@@ -16,7 +16,7 @@ function Footer() {
       <div className="footer">
         {/* Cột 1: Logo + Giới thiệu */}
         <div className="footer-col about">
-          <h3 className="logo">MediCare+</h3>
+          <h3 className="logo">Healio</h3>
           <p className="description">
             Healio - Chăm sóc sức khỏe của bạn mọi lúc mọi nơi
           </p>

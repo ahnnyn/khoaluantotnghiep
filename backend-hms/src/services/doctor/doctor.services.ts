@@ -155,7 +155,7 @@ const findWorkScheduleByDoctorID = async (id: string) => {
       select: "timeRange start end",
     })
     .populate({
-      path: "slots.examinationId",
+      path: "slots.examinationIds",
       select: "patientProfileId status",
       populate: {
         path: "patientProfileId",

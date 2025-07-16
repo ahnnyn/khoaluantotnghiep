@@ -1,27 +1,33 @@
-/* Footer Container */
+/* ========== BASE ========== */
 .footer-container {
-  background: #e6f7fb; /* Màu xanh nhạt hơn */
+  background: #e6f7fb;
   color: #333;
-  width: 100vw;
+  width: 100%;
+  padding: 20px 16px 0;
+  box-sizing: border-box;
 }
 
-/* Căn giữa nội dung */
 .footer {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   max-width: 1200px;
   margin: 0 auto;
-  flex-wrap: wrap;
+  padding: 20px;
+  gap: 24px;
+  align-items: stretch;
 }
 
-/* Cột Footer */
 .footer-col {
-  flex: 1;
-  margin: 20px;
-  min-width: 220px;
+  flex: 1 1 220px;
   display: flex;
-  align-items: center;
-  text-align: center;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  padding: 10px;
+  box-sizing: border-box;
+  min-width: 220px;
+  max-width: 300px;
 }
 
 .footer-col h4 {
@@ -34,6 +40,7 @@
 .footer-col ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .footer-col ul li {
@@ -47,7 +54,7 @@
   color: #007a99;
 }
 
-/* Logo & Description */
+/* ========== LOGO ========== */
 .logo {
   font-size: 24px;
   font-weight: bold;
@@ -63,26 +70,31 @@
   color: #004d66;
   font-size: 14px;
   line-height: 1.6;
+  text-align: center;
 }
 
+/* ========== CONTACT ========== */
 .contact {
-  margin-top: -20px;
+  margin-top: -10px;
 }
-/* Liên hệ */
 .contact p {
   color: #ff6b6b;
   font-weight: bold;
 }
 
+.phone-email {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+
 .icon {
   color: #ff6b6b;
   margin-right: 5px;
-}
-
-.phone-email {
-  display: flex;
-  align-items: center; /* căn giữa icon và text theo chiều dọc */
-  margin-top: -30px;
 }
 
 .phone {
@@ -92,11 +104,7 @@
   color: #333;
 }
 
-.info {
-  align-items: center;
-}
-
-/* Subscribe */
+/* ========== SUBSCRIBE ========== */
 .subscribe {
   display: flex;
   flex-direction: column;
@@ -112,14 +120,12 @@
   background-color: #ffffff !important;
 }
 
-/* Đảm bảo trạng thái focus vẫn trắng */
 .email-input:focus {
   outline: none;
   background-color: #ffffff;
   border-color: #6274e8;
 }
 
-/* Fix autofill trên Chrome */
 .email-input:-webkit-autofill {
   box-shadow: 0 0 0px 1000px white inset !important;
   -webkit-box-shadow: 0 0 0px 1000px white inset !important;
@@ -141,10 +147,13 @@
   background: #de180a;
 }
 
-/* Social Icons */
+/* ========== SOCIAL ICONS ========== */
 .social-icons {
   margin-top: 10px;
   align-items: center;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .social-icons svg {
@@ -156,12 +165,11 @@
   transition: fill 0.3s;
 }
 
-
 .social-icons svg:hover {
   color: #007a99;
 }
 
-/* Footer Bottom */
+/* ========== COPYRIGHT ========== */
 .footer-bottom {
   text-align: center;
   padding: 12px;
@@ -169,4 +177,68 @@
   color: #005580;
   margin-top: 20px;
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .footer-col {
+    align-items: center;
+    text-align: center;
+    padding: 8px 0;
+    margin: 0;
+    max-width: 90%;
+  }
+
+  .footer-col > *:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  .description {
+    text-align: center;
+  }
+
+  .phone-email {
+    gap: 4px;
+    margin-top: -8px;
+  }
+
+  .email-input,
+  .subscribe-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .subscribe {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-col {
+    max-width: 100%;
+  }
+
+  .footer {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .subscribe-btn {
+    font-size: 14px;
+  }
+
+  .social-icons svg {
+    margin: 4px;
+  }
 }

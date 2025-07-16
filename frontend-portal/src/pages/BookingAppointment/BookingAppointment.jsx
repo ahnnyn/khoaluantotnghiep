@@ -31,8 +31,7 @@ import { IoLocationSharp } from "react-icons/io5";
 import LoginPage from "../Login/Login";
 import {
   createVnpayPaymentUrl,
-  getPaymentNotification,
-  updatePaymentStatus,
+  handleCreateAppointment,
 } from "services/patient/patient.services";
 import { getUserById } from "services/auth.user/user.auth.services";
 
@@ -159,54 +158,55 @@ const BookingAppointment = () => {
   const handleDatLich = async (values) => {
     setLoadingSubmit(true);
     try {
-      // const amount = Math.floor(
-      //   (Number(values.soTienThanhToan) / 100) * giaKham
-      // );
-
-      const payload = {
-        maBenhNhan,
-        maBacSi: doctorId,
-        patientName: values.patientName,
-        email: values.email,
-        phone: values.phone,
-        giaKham,
-        khungGioKham,
-        ngayKham,
-        lyDoKham: values.lyDoKham,
-        hinhThucTT: values.hinhThucTT,
-        hinhThucKham,
-        soTienThanhToan: tongThanhToan,
-      };
-
-      console.log("Payload for booking:", payload);
-
       if (!values.hinhThucTT) {
         message.warning("Vui lòng chọn hình thức thanh toán");
         return;
       }
+
       if (!tongThanhToan || isNaN(tongThanhToan)) {
         message.error("Tổng thanh toán không hợp lệ");
         return;
       }
-      let res = null;
-      if (values.hinhThucTT === "VNPAY") {
-        res = await createVnpayPaymentUrl(
-          doctorId,
-          tongThanhToan,
-          values.patientName
-        );
-      } else if (values.hinhThucTT === "MOMO") {
-        message.warning("Hiện chưa hỗ trợ MOMO");
-        return;
-      } else {
-        message.warning("Hình thức thanh toán không hợp lệ");
+
+      const payload = {
+        patientId: acc?._id,
+        doctorId,
+        scheduledDate: ngayKham,
+        scheduledTimeSlot: khungGioKham,
+        reasonForVisit: values.lyDoKham,
+        paymentMethod: values.hinhThucTT,
+        paymentStatus: "PENDING",
+        fullName: values.patientName,
+        email: values.email,
+        phone: values.phone,
+        gender: values.gender,
+        address: values.address,
+        dateOfBirth: values.dateBenhNhan,
+      };
+
+      const resCreate = await handleCreateAppointment(payload);
+      const maPhieuKham = resCreate?.data?._id;
+
+      if (!maPhieuKham) {
+        message.error("Không tạo được phiếu khám");
         return;
       }
 
-      if (res?.data?.paymentUrl || res?.data?.payment_url) {
-        window.location.href = res.data.paymentUrl || res.data.payment_url;
+      if (values.hinhThucTT === "VNPAY") {
+        const res = await createVnpayPaymentUrl(
+          maPhieuKham,
+          tongThanhToan,
+          values.patientName
+        );
+        if (res?.data?.paymentUrl || res?.data?.payment_url) {
+          window.location.href = res.data.paymentUrl || res.data.payment_url;
+        } else {
+          message.error("Không lấy được link thanh toán");
+        }
+      } else if (values.hinhThucTT === "MOMO") {
+        message.warning("Hiện chưa hỗ trợ MOMO");
       } else {
-        message.error("Không lấy được link thanh toán");
+        message.warning("Hình thức thanh toán không hợp lệ");
       }
     } catch (err) {
       console.error("Đặt lịch lỗi:", err);

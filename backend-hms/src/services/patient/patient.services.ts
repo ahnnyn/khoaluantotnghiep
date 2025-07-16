@@ -87,9 +87,7 @@ const findMedicalExaminationByPatientID = async (patientId: string) => {
     .lean();
 };
 
-const cancelMedicalExamination = async (id: string, status: string) => {
-  
-};
+const cancelMedicalExamination = async (id: string, status: string) => {};
 
 //fetch doctor
 const getListDoctor = async () => {
@@ -111,6 +109,37 @@ const getListDoctor = async () => {
   return doctors;
 };
 
+const createMedicalExamination = async (data: any) => {
+  const {
+    patientId,
+    doctorId,
+    scheduledDate,
+    scheduledTimeSlot,
+    reasonForVisit,
+    paymentMethod,
+    price,
+  } = data;
+
+
+  const parsedDate = new Date(`${scheduledDate}T00:00:00.000Z`);
+  if (isNaN(parsedDate.getTime())) {
+    throw new Error("Ngày khám không hợp lệ");
+  }
+
+  const newExam = await MedicalExamination.create({
+    patientId,
+    doctorId,
+    scheduledDate: parsedDate,
+    scheduledTimeSlot,
+    reasonForVisit,
+    paymentMethod: paymentMethod?.toLowerCase(), // enum fix
+    price,
+    paymentStatus: "pending",
+  });
+
+  return newExam;
+};
+
 export {
   findMedicalExaminationByPatientID,
   cancelMedicalExamination,
@@ -118,4 +147,5 @@ export {
   createPatientProfile,
   updatePatientProfile,
   getListDoctor,
+  createMedicalExamination,
 };

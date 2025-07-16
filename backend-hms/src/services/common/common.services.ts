@@ -100,8 +100,8 @@ const getPriceListByDoctorId = async (doctorId: string) => {
 
 const getArticle = async () => {
   const articles = await Article.find()
-    .populate("author", "name")
-    .populate("relatedDoctorIds", "name")
+    .populate("author", "fullName")
+    .populate("relatedDoctorIds", "fullName")
     .populate("relatedDepartmentId", "name")
     .populate("topicId", "name")
     .lean();

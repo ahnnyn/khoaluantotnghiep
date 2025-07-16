@@ -6,7 +6,7 @@ const MedicalExaminationSchema = new mongoose.Schema(
     patientProfileId: {
       type: mongoose.Types.ObjectId,
       ref: "PatientProfile",
-      required: true,
+      required: false,
     },
 
     // Tham chiếu đến bệnh nhân (giúp truy nhanh, tránh phải populate 2 lớp)
@@ -31,7 +31,7 @@ const MedicalExaminationSchema = new mongoose.Schema(
     // Tiền sử bệnh (đợt khám này khai báo lại)
     passMedicalHistory: {
       type: String,
-      required: true,
+      required: false,
     },
 
     // Chẩn đoán của bác sĩ
@@ -60,14 +60,14 @@ const MedicalExaminationSchema = new mongoose.Schema(
     // Trạng thái thanh toán
     paymentStatus: {
       type: String,
-      enum: ["unpaid", "paid", "refunded"],
+      enum: ["pending", "unpaid", "paid", "refunded"],
       default: "unpaid",
     },
 
     // Phương thức thanh toán (nếu có)
     paymentMethod: {
       type: String,
-      enum: ["cash", "momo", "banking", "vnPay", null],
+      enum: ["cash", "momo", "banking", "vnpay", null],
       default: null,
     },
 

@@ -3,6 +3,7 @@ import { vnpayConfig } from "config/payment.config";
 import crypto from "crypto";
 import qs from "qs";
 import MedicalExamination from "models/MedicalExaminations";
+
 const createPayment = async (paymentData: any) => {
   const { maLichKham, method, amount, status, payDate, gatewayResponse } =
     paymentData;
@@ -39,10 +40,16 @@ const createPayment = async (paymentData: any) => {
     gatewayResponse: gatewayResponse || {},
   });
 
-  await newPayment.save();
+  try {
+    await newPayment.save();
+  } catch (error) {
+    console.error("Lỗi khi save Payment:", error);
+    throw error;
+  }
 
   return newPayment;
 };
+
 const createVnPayUrl = ({
   maLichKham,
   amount,

@@ -7,13 +7,15 @@ import {
 
 const handleCreatePayment = async (req: Request, res: Response) => {
   try {
-    const { maLichKham, method, amount, status, payDate, gatewayResponse } = req.body;
+    const { maLichKham, method, amount, status, payDate, gatewayResponse } =
+      req.body;
 
     if (!maLichKham || !method || !amount) {
       res.status(400).json({
         success: false,
         message: "Missing required fields: maLichKham, method, or amount.",
       });
+      return;
     }
 
     const payment = await createPayment({
@@ -26,7 +28,14 @@ const handleCreatePayment = async (req: Request, res: Response) => {
     });
 
     const appointment = await MedicalExamination.findById(maLichKham)
-      .populate("doctorId", "fullName positionId departmentId")
+      .populate({
+        path: "doctorId",
+        select: "fullName positionId departmentId",
+        populate: [
+          { path: "positionId", select: "name" },
+          { path: "departmentId", select: "name" },
+        ],
+      })
       .populate("patientId", "fullName gender dateOfBirth");
 
     if (!appointment) {
@@ -34,14 +43,19 @@ const handleCreatePayment = async (req: Request, res: Response) => {
         success: false,
         message: "Không tìm thấy lịch khám sau khi tạo thanh toán.",
       });
+      return;
     }
 
     const doctor: any = appointment.doctorId;
 
     const resultData = {
       doctorName: doctor?.fullName || "N/A",
-      department: doctor?.departmentId || "N/A",
-      position: doctor?.positionId || "N/A",
+      department: Array.isArray(doctor?.departmentId)
+        ? doctor.departmentId.map((d: any) => d.name).join(", ")
+        : "N/A",
+      position: Array.isArray(doctor?.positionId)
+        ? doctor.positionId.map((p: any) => p.name).join(", ")
+        : "N/A",
       appointmentDate: appointment.scheduledDate,
       appointmentTime: appointment.scheduledTimeSlot,
       consultationType: appointment.paymentMethod,
@@ -50,6 +64,7 @@ const handleCreatePayment = async (req: Request, res: Response) => {
           ? "Phòng khám A1, Bệnh viện XYZ"
           : "Khám trực tuyến",
       queueNumber: appointment.queueNumber || "Đang cập nhật",
+      maLichKham: appointment._id,
     };
 
     res.status(201).json({
@@ -72,9 +87,10 @@ const handleCreateVnPayUrl = (req: Request, res: Response) => {
     const { maLichKham, amount, tenNguoiDung } = req.body;
 
     if (!maLichKham || !amount || !tenNguoiDung) {
-       res.status(400).json({
+      res.status(400).json({
         success: false,
-        message: "Missing required fields: maLichKham, amount, or tenNguoiDung.",
+        message:
+          "Missing required fields: maLichKham, amount, or tenNguoiDung.",
       });
     }
 
@@ -88,10 +104,13 @@ const handleCreateVnPayUrl = (req: Request, res: Response) => {
       ipAddr: Array.isArray(ip) ? ip[0] : ip,
     });
 
-     res.json({ success: true, ...result });
+    res.json({ success: true, ...result });
   } catch (err: any) {
     console.error("handleCreateVnPayUrl error:", err);
-    res.status(500).json({ success: false, message: err.message || "Internal server error" });
+    res.status(500).json({
+      success: false,
+      message: err.message || "Internal server error",
+    });
   }
 };
 

@@ -1,16 +1,20 @@
-/* ServiceCard.scss */
 .service-card-wrapper {
   display: flex;
   justify-content: center;
   cursor: pointer;
+  padding: 10px;
+
+  @media (max-width: 576px) {
+    padding: 6px;
+  }
 }
 
 .service-card {
   width: 100%;
-  max-width: 200px;
-  max-height: 250px;
+  max-width: 250px;
+  min-height: 180px;
   border-radius: 12px;
-  padding: 10px;
+  // padding: 16px 12px;
   text-align: center;
   transition: transform 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -21,13 +25,22 @@
 
   .icon-wrapper {
     margin-bottom: 12px;
-    font-size: 32px;
+    font-size: 36px;
     color: #1890ff;
+
+    @media (max-width: 576px) {
+      font-size: 30px;
+    }
   }
 
   .service-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     color: #093b7b;
+    line-height: 1.4;
+
+    @media (max-width: 576px) {
+      font-size: 14px;
+    }
   }
 }
