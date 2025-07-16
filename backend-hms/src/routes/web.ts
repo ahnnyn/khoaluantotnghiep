@@ -7,6 +7,7 @@ import patientRoutes from './patient.routes';
 import uploadRoutes from './file.upload.routes';
 import publicRoutes from './public.routes'; 
 import vnpayRoutes from './payment.routes';
+import mailRoutes from './email.routes';
 
 
 const webRoutes = (app: Express) => {
@@ -18,6 +19,7 @@ const webRoutes = (app: Express) => {
     uploadRoutes(app);
     publicRoutes(app);
     vnpayRoutes(app);
+    mailRoutes(app);
 };
 
 export default webRoutes;

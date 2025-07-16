@@ -118,4 +118,9 @@ const createVnPayUrl = ({
   };
 };
 
-export { createPayment, createVnPayUrl };
+const checkPaymentExist = async (maLichKham: string): Promise<boolean> => {
+  const payment = await Payment.findOne({ maLichKham });
+  return !!payment;
+};
+
+export { createPayment, createVnPayUrl, checkPaymentExist };

@@ -4,6 +4,7 @@ import {
   cancelMedicalExamination,
   createMedicalExamination,
   findMedicalExaminationByPatientID,
+  updatePaymentStatus,
 } from "services/patient/patient.services";
 import { getListDoctor } from "services/admin/admin.services";
 import WorkSchedule from "models/WorkSchedules";
@@ -109,6 +110,17 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
   }
 };
 
+const putUpdatePaymentStatus = async (req: Request, res: Response) => {
+  const { id, status } = req.body;
+  try {
+    const updatedExam = await updatePaymentStatus(id, status);
+    res.status(200).json({ data: updatedExam });
+  } catch (error) {
+    console.error("Error updating payment status:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 const getMedicalExaminationsByPatient = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
@@ -147,4 +159,5 @@ export {
   getMedicalExaminationsByPatient,
   putCancelMedicalExamination,
   getAllDoctors,
+  putUpdatePaymentStatus,
 };

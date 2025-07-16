@@ -19,8 +19,8 @@ import { useEffect, useState } from "react";
 import { getUserById, logoutUser } from "services/auth.user/user.auth.services";
 import { doLogoutAction } from "@redux/account/accountSlice";
 
-import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
-import PhieuKhamTable from "components/PhieuKhamBenh/PhieuKhamBenh";
+// import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
+// import PhieuKhamTable from "components/PhieuKhamBenh/PhieuKhamBenh";
 import ModalUpdateThongTin from "components/ThongTinNguoiDung/ModalUpdateThongTin";
 import ModalChangePassword from "components/ModalChangePassword/ModalChangePassword";
 
@@ -134,8 +134,8 @@ const Dashboard = () => {
 
         <Content style={{ padding: 24, background: "#fff" }}>
           <Routes>
-            <Route path="profile" element={<HoSoCuaToi />} />
-            <Route path="examination" element={<PhieuKhamTable />} />
+            {/* <Route path="profile" element={<HoSoCuaToi />} /> */}
+            {/* <Route path="examination" element={<PhieuKhamTable />} /> */}
             <Route path="userinfo" element={<ModalUpdateThongTin />} />
             <Route path="changepassword" element={<ModalChangePassword />} />
           </Routes>

@@ -5,11 +5,16 @@ import QRCode from "react-qr-code";
 
 import Header from "components/Header/Header";
 import Footer from "components/Footer/Footer";
-import { handleCreatePayment } from "services/patient/patient.services";
+import {
+  handleCreatePayment,
+  sendAppointmentConfirmationEmail,
+  updatePaymentStatus,
+} from "services/patient/patient.services";
 import { Card, Button, Spin, notification, Row, Col, Descriptions } from "antd";
 import dayjs from "dayjs";
 
 import "./ThongBao.css";
+import { handleCheckPaymentExist } from "../../services/patient/patient.services";
 
 // Hàm parse vnp_PayDate về kiểu Date
 const parseVNPayDate = (raw) => {
@@ -55,37 +60,76 @@ const PaymentNotificationPage = () => {
     });
 
     const handleSuccess = async () => {
-      setMessage("Đang lưu thông tin thanh toán...");
-
-      const payload = {
-        maLichKham: vnp_TxnRef,
-        method: "vnpay",
-        amount: Number(vnp_Amount) / 100,
-        status: "SUCCESS",
-        payDate: parseVNPayDate(vnp_PayDate),
-        gatewayResponse,
-      };
+      setMessage("Đang kiểm tra trạng thái giao dịch...");
 
       try {
-        const res = await handleCreatePayment(payload);
-        console.log("RES FROM CREATE PAYMENT:", res);
+        const response = await handleCheckPaymentExist(vnp_TxnRef);
+        console.log("Payment exists:", response);
 
-        if (res?.success) {
+        if (response?.data?.exists) {
           setStatus(true);
-          setMessage("Thanh toán thành công!");
-          setAppointmentInfo(res.appointmentInfo || null);
-        } else {
-          setStatus(false);
-          setMessage(res?.message || "Không lưu được thanh toán.");
-          notification.warning({
-            message: "Thanh toán chưa hoàn tất",
-            description: res?.message || "Hệ thống không thể lưu thanh toán.",
+          setMessage("Thanh toán đã được xác nhận trước đó.");
+          notification.info({
+            message: "Thông báo",
+            description: "Bạn đã thanh toán và xác nhận trước đó.",
           });
+          return;
+        } else {
+          setMessage("Đang lưu thông tin thanh toán...");
+
+          const payload = {
+            maLichKham: vnp_TxnRef,
+            method: "vnpay",
+            amount: Number(vnp_Amount) / 100,
+            status: "SUCCESS",
+            payDate: parseVNPayDate(vnp_PayDate),
+            gatewayResponse,
+          };
+
+          const res = await handleCreatePayment(payload);
+          if (res?.success) {
+            setStatus(true);
+            setMessage("Thanh toán thành công!");
+            setAppointmentInfo(res.appointmentInfo || null);
+
+            await updatePaymentStatus(vnp_TxnRef, "paid");
+
+            notification.success({
+              message: "Thanh toán thành công",
+              description: "Thông tin thanh toán đã được lưu thành công.",
+            });
+
+            await sendAppointmentConfirmationEmail({
+              email: res.appointmentInfo.patientEmail,
+              hoTen: res.appointmentInfo.patientName,
+              ngayKham: dayjs(res.appointmentInfo.appointmentDate).format(
+                "DD/MM/YYYY"
+              ),
+              gioKham: res.appointmentInfo.appointmentTime,
+              hinhThucKham:
+                res.appointmentInfo.consultationType === "ONLINE"
+                  ? "Khám trực tuyến"
+                  : "Khám tại cơ sở",
+              tenBacSi: res.appointmentInfo.doctorName,
+              khoa: res.appointmentInfo.department,
+              diaChi: res.appointmentInfo.location,
+              soThuTu: res.appointmentInfo.queueNumber,
+            });
+          } else {
+            setStatus(false);
+            setMessage(res?.message || "Không lưu được thanh toán.");
+            notification.warning({
+              message: "Thanh toán chưa hoàn tất",
+              description: res?.message || "Hệ thống không thể lưu thanh toán.",
+            });
+          }
         }
       } catch (err) {
         console.error("Lỗi khi lưu thanh toán:", err);
         setStatus(false);
-        setMessage("Thanh toán thất bại! Vui lòng thử lại hoặc liên hệ hỗ trợ.");
+        setMessage(
+          "Thanh toán thất bại! Vui lòng thử lại hoặc liên hệ hỗ trợ."
+        );
         notification.error({
           message: "Lỗi xử lý thanh toán",
           description:
@@ -99,17 +143,17 @@ const PaymentNotificationPage = () => {
       handleSuccess();
     } else {
       setStatus(false);
-      setMessage(`Thanh toán không thành công. Mã phản hồi: ${vnp_ResponseCode}`);
+      setMessage(
+        `Thanh toán không thành công. Mã phản hồi: ${vnp_ResponseCode}`
+      );
     }
   }, [location]);
 
-
   //DECODE MÃ QR:
-//   const base64 = "eyJtYUxpY2hLaGFtIjoiNjg3NzRhMzcyODM3NGJjYzQ1NDgyMTAzIiwicGF0aWVudCI6IiIsImRlcGFydG1lbnQiOiJLaG9hIE7hu5lpIiwiZG9jdG9yIjoiVHLhuqduIFRo4buLIEtow6FuaCBMaW5oIiwiZGF0ZSI6IjIyLzA3LzIwMjUiLCJ0aW1lIjoiMDg6MzAtMDk6MDAiLCJsb2NhdGlvbiI6Iktow6FtIHRy4buxYyB0dXnhur9uIiwicXVldWVOdW1iZXIiOjMwfQ==";
+  //   const base64 = "eyJtYUxpY2hLaGFtIjoiNjg3NzRhMzcyODM3NGJjYzQ1NDgyMTAzIiwicGF0aWVudCI6IiIsImRlcGFydG1lbnQiOiJLaG9hIE7hu5lpIiwiZG9jdG9yIjoiVHLhuqduIFRo4buLIEtow6FuaCBMaW5oIiwiZGF0ZSI6IjIyLzA3LzIwMjUiLCJ0aW1lIjoiMDg6MzAtMDk6MDAiLCJsb2NhdGlvbiI6Iktow6FtIHRy4buxYyB0dXnhur9uIiwicXVldWVOdW1iZXIiOjMwfQ==";
 
-// const decoded = JSON.parse(decodeURIComponent(escape(window.atob(base64))));
-// console.log(decoded);
-
+  // const decoded = JSON.parse(decodeURIComponent(escape(window.atob(base64))));
+  // console.log(decoded);
 
   return (
     <>
@@ -174,7 +218,9 @@ const PaymentNotificationPage = () => {
                     {appointmentInfo.position}
                   </Descriptions.Item>
                   <Descriptions.Item label="Ngày khám">
-                    {dayjs(appointmentInfo.appointmentDate).format("DD/MM/YYYY")}
+                    {dayjs(appointmentInfo.appointmentDate).format(
+                      "DD/MM/YYYY"
+                    )}
                   </Descriptions.Item>
                   <Descriptions.Item label="Khung giờ">
                     {appointmentInfo.appointmentTime}
@@ -202,7 +248,9 @@ const PaymentNotificationPage = () => {
                       patient: appointmentInfo.patientName || "",
                       department: appointmentInfo.department || "",
                       doctor: appointmentInfo.doctorName,
-                      date: dayjs(appointmentInfo.appointmentDate).format("DD/MM/YYYY"),
+                      date: dayjs(appointmentInfo.appointmentDate).format(
+                        "DD/MM/YYYY"
+                      ),
                       time: appointmentInfo.appointmentTime,
                       location: appointmentInfo.location || "",
                       queueNumber: appointmentInfo.queueNumber || "",

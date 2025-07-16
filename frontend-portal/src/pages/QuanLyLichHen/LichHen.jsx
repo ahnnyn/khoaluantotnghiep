@@ -24,13 +24,11 @@ import Header from "components/Header/Header";
 import Footer from "components/Footer/Footer";
 import { RiEdit2Fill, RiDeleteBin5Line } from "react-icons/ri";
 import {
-  fetchLichKham,
-  deleteLichHen,
   createVnpayPaymentUrl,
 } from "services/patient/patient.services";
 
 import ModalXemChiTietLichHen from "./ModalXemChiTietLichHen";
-import ModalCapNhatLichHen from "./ModalCapNhatLichHen";
+// import ModalCapNhatLichHen from "./ModalCapNhatLichHen";
 
 const LichHenCard = () => {
   const navigate = useNavigate();
@@ -447,12 +445,12 @@ const LichHenCard = () => {
       />
 
       {/* Modal cập nhật lịch hẹn */}
-      <ModalCapNhatLichHen
+      {/*<ModalCapNhatLichHen
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         data={editingRecord}
         onReload={fetchOrders}
-      />
+      />*/}
     </>
   );
 };

@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import authjwt from "middleware/auth.jwt";
 import { ACCOUNT_ROLE } from "config/constants";
 import {
+  checkPaymentExists,
   handleCreatePayment,
   handleCreateVnPayUrl,
 } from "controllers/payment/payment.controller";
@@ -12,6 +13,7 @@ const patientRoutes = (app: Express) => {
 
   router.post("/create-payment", handleCreatePayment);
   router.post("/create-url", handleCreateVnPayUrl);
+  router.get("/check-payment-exist/:maLichKham", checkPaymentExists);
   app.use("/api/payment", router);
 };
 

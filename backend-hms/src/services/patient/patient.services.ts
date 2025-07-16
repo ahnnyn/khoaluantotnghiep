@@ -140,6 +140,21 @@ const createMedicalExamination = async (data: any) => {
   return newExam;
 };
 
+const updatePaymentStatus = async (id: string, status: string) => {
+  const validStatuses = ["pending", "paid", "cancelled"];
+  if (!validStatuses.includes(status)) {
+    throw new Error("Trạng thái thanh toán không hợp lệ");
+  }
+  const result = await MedicalExamination.updateOne(
+    { _id: id },
+    { paymentStatus: status }
+  );
+  if (result.modifiedCount === 0) {
+    throw new Error("Cập nhật trạng thái thanh toán không thành công");
+  }
+  return result;
+}
+
 export {
   findMedicalExaminationByPatientID,
   cancelMedicalExamination,
@@ -148,4 +163,5 @@ export {
   updatePatientProfile,
   getListDoctor,
   createMedicalExamination,
+  updatePaymentStatus,
 };

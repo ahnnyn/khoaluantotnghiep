@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phiếu khám bệnh</title>
+</head>
+<body style="font-family: Roboto, Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
+  <div style="max-width: 700px; margin: auto; background: white; border-radius: 10px; overflow: hidden;">
+    <div style="background-color: #009688; color: white; padding: 20px; text-align: center;">
+      <h2 style="margin: 0;">PHIẾU KHÁM BỆNH</h2>
+      <p style="margin: 0;">Hệ thống chăm sóc sức khỏe Medicareplus</p>
+    </div>
+    <div style="padding: 20px; background-color: #fafafa;">
+      <p>Chào <strong>{{hoTenBN}}</strong>,</p>
+      <p>Dưới đây là thông tin chi tiết phiếu khám bệnh của bạn:</p>
+      <ul style="list-style: none; padding-left: 0;">
+        <li><strong>👨‍⚕️ Bác sĩ:</strong> {{tenBacSi}}</li>
+        <li><strong>📅 Ngày khám:</strong> {{ngayKham}}</li>
+        <li><strong>🕒 Khung giờ:</strong> {{gioKham}}</li>
+      </ul>
+      <p><strong>📝 Lý do khám:</strong> {{lyDoKham}}</p>
+      <p><strong>📚 Tiền sử bệnh:</strong> {{tienSu}}</p>
+      <p><strong>🩺 Chẩn đoán:</strong> {{chuanDoan}}</p>
+
+      <h3 style="color: #009688;">💊 ĐƠN THUỐC</h3>
+      {{thuocHTML}}
+
+      <p style="margin-top: 30px;">Nếu bạn có bất kỳ câu hỏi nào, vui lòng liên hệ với chúng tôi qua email hoặc tổng đài hỗ trợ.</p>
+      <p style="margin-top: 20px;">Trân trọng,<br><strong>Medicareplus</strong></p>
+    </div>
+    <div style="background-color: #eeeeee; text-align: center; padding: 10px; font-size: 12px; color: #555;">
+      © {{namHienTai}} Medicareplus. Mọi quyền được bảo lưu.
+    </div>
+  </div>
+</body>
+</html>

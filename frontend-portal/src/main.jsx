@@ -18,12 +18,12 @@ import PrivateRoute from "pages/PrivatePage/PrivateRoutes";
 
 // Public Pages
 import Home from "pages/Home";
-import ChiTietBacSi from "pages/ViewDoctor/ChiTietBacSi";
+// import ChiTietBacSi from "pages/ViewDoctor/ChiTietBacSi";
 import BookingAppointment from "pages/BookingAppointment/BookingAppointment";
-import LichHen from "pages/QuanLyLichHen/LichHen";
-import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
-import TaoHoSo from "pages/HoSoCuaToi/TaoHoSo";
-import BacSiNoiBat from "pages/BacSiNoiBat/BacSiNoiBat";
+// import LichHen from "pages/QuanLyLichHen/LichHen";
+// import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
+// import TaoHoSo from "pages/HoSoCuaToi/TaoHoSo";
+// import BacSiNoiBat from "pages/BacSiNoiBat/BacSiNoiBat";
 import LienHe from "pages/LienHe/LienHe";
 import ChuyenKhoaVaBacSi from "pages/ChuyenKhoa/ChuyenKhoaVaBacSi";
 
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
-      { path: "chi-tiet-bac-si", element: <ChiTietBacSi /> },
+      // { path: "chi-tiet-bac-si", element: <ChiTietBacSi /> },
       { path: "page-dat-lich-kham", element: <BookingAppointment /> },
       {
         path: "user/dashboard",
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         path: "user/lich-hen",
         element: (
           <PrivateRoute allowedRoles={["PATIENT"]}>
-            <LichHen />
+            {/* <LichHen /> */}
           </PrivateRoute>
         ),
       },
@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         path: "user/ho-so-cua-toi",
         element: (
           <PrivateRoute allowedRoles={["PATIENT"]}>
-            <HoSoCuaToi />
+            {/* <HoSoCuaToi /> */}
           </PrivateRoute>
         ),
       },
@@ -74,11 +74,11 @@ const router = createBrowserRouter([
         path: "user/tao-ho-so",
         element: (
           <PrivateRoute allowedRoles={["PATIENT"]}>
-            <TaoHoSo />
+            {/* <TaoHoSo /> */}
           </PrivateRoute>
         ),
       },
-      { path: "bac-si-noi-bat", element: <BacSiNoiBat /> },
+      // { path: "bac-si-noi-bat", element: <BacSiNoiBat /> },
       { path: "chuyen-khoa/:id", element: <ChuyenKhoaVaBacSi /> },
       { path: "lien-he", element: <LienHe /> },
       { path: "tu-van", element: <TuVan /> },

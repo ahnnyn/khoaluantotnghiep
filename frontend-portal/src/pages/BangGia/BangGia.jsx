@@ -17,7 +17,7 @@ const BangGia = () => {
     })();
   }, []);
 
-  // ✅ Gom theo chuyên khoa (group by departmentId)
+  //  Gom theo chuyên khoa (group by departmentId)
   const grouped = priceList.reduce((acc, item) => {
     const depId = item.departmentId._id;
     if (!acc[depId]) {
@@ -92,9 +92,9 @@ const BangGia = () => {
                   lineHeight: 1.8,
                 }}
               >
-                <li>✅ Giá niêm yết từ bệnh viện</li>
-                <li>✅ Phân loại theo hình thức ONLINE / OFFLINE</li>
-                <li>✅ Cập nhật mới nhất theo từng khoa</li>
+                <li> Giá niêm yết từ bệnh viện</li>
+                <li> Phân loại theo hình thức ONLINE / OFFLINE</li>
+                <li> Cập nhật mới nhất theo từng khoa</li>
               </ul>
             </div>
           </Col>

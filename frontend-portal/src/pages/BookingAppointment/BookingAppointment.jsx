@@ -77,6 +77,14 @@ const BookingAppointment = () => {
   const [acceptPolicy, setAcceptPolicy] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState(null);
+  const [tongThanhToan, setTongThanhToan] = useState(0);
+
+  useEffect(() => {
+    const percent = Number(selectedSoTienTT);
+    if (!isNaN(percent)) {
+      setTongThanhToan(Math.floor((percent / 100) * giaKham));
+    }
+  }, [selectedSoTienTT, giaKham]);
 
   const maBenhNhan = acc?._id;
 
@@ -182,6 +190,7 @@ const BookingAppointment = () => {
         gender: values.gender,
         address: values.address,
         dateOfBirth: values.dateBenhNhan,
+        price: tongThanhToan,
       };
 
       const resCreate = await handleCreateAppointment(payload);
@@ -230,9 +239,9 @@ const BookingAppointment = () => {
     }
   };
 
-  const tongThanhToan = Math.floor(
-    (Number(selectedSoTienTT || "30") / 100) * giaKham
-  );
+  // const tongThanhToan = Math.floor(
+  //   (Number(selectedSoTienTT || "30") / 100) * giaKham
+  // );
 
   const notificationContent = () => (
     <div>
@@ -271,11 +280,22 @@ const BookingAppointment = () => {
                 <Form.Item
                   label="Họ tên bệnh nhân"
                   name="patientName"
-                  rules={[{ required: true }]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng nhập họ tên bệnh nhân",
+                    },
+                  ]}
                 >
                   <Input prefix={<UserOutlined />} />
                 </Form.Item>
-                <Form.Item label="Giới tính" name="gender">
+                <Form.Item
+                  label="Giới tính"
+                  name="gender"
+                  rules={[
+                    { required: true, message: "Vui lòng chọn giới tính" },
+                  ]}
+                >
                   <Radio.Group>
                     <Radio value="0">Nam</Radio>
                     <Radio value="1">Nữ</Radio>
@@ -285,7 +305,13 @@ const BookingAppointment = () => {
                 <Form.Item
                   label="Số điện thoại"
                   name="phone"
-                  rules={[{ required: true }]}
+                  rules={[
+                    { required: true, message: "Vui lòng nhập số điện thoại" },
+                    {
+                      pattern: /^(0|\+84)[0-9]{9,10}$/,
+                      message: "Số điện thoại không hợp lệ",
+                    },
+                  ]}
                 >
                   <Input prefix={<PhoneOutlined />} />
                 </Form.Item>
@@ -328,14 +354,16 @@ const BookingAppointment = () => {
                 <Form.Item
                   label="Địa chỉ"
                   name="address"
-                  rules={[{ required: true }]}
+                  rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
                 >
                   <Input prefix={<IoLocationSharp />} />
                 </Form.Item>
                 <Form.Item
                   label="Lý do khám"
                   name="lyDoKham"
-                  rules={[{ required: true }]}
+                  rules={[
+                    { required: true, message: "Vui lòng nhập lý do khám" },
+                  ]}
                 >
                   <TextArea />
                 </Form.Item>
@@ -344,8 +372,10 @@ const BookingAppointment = () => {
                   valuePropName="checked"
                   rules={[
                     {
-                      required: true,
-                      message: "Bạn phải đồng ý với điều khoản để tiếp tục",
+                      validator: (_, value) =>
+                        value
+                          ? Promise.resolve()
+                          : Promise.reject("Bắt buộc đồng ý điều khoản"),
                     },
                   ]}
                 >
@@ -423,6 +453,7 @@ const BookingAppointment = () => {
                         ]}
                       >
                         <Radio.Group
+                          onChange={(e) => setSelectedSoTienTT(e.target.value)}
                           style={{
                             display: "flex",
                             flexDirection: "column",

@@ -123,17 +123,17 @@ const BacSiNoiBat = () => {
                 }}
               >
                 <li>
-                  ✅ Chủ động chọn bác sĩ tin tưởng, đặt càng sớm, càng có cơ
-                  hội có số thứ tự thấp nhất, tránh hết số
+                  Chủ động chọn bác sĩ tin tưởng, đặt càng sớm, càng có cơ hội
+                  có số thứ tự thấp nhất, tránh hết số
                 </li>
                 <li>
-                  ✅ Đặt khám theo giờ, không cần chờ lấy số thứ tự, chờ thanh
-                  toán (đối với cơ sở mở thanh toán online)
+                  Đặt khám theo giờ, không cần chờ lấy số thứ tự, chờ thanh toán
+                  (đối với cơ sở mở thanh toán online)
                 </li>
-                <li>✅ Được hoàn phí khám nếu hủy phiếu</li>
+                <li> Được hoàn phí khám nếu hủy phiếu</li>
                 <li>
-                  ✅ Được hưởng chính sách hoàn tiền khi đặt lịch trên Medpro
-                  (đối với các cơ sở tư có áp dụng)
+                  Được hưởng chính sách hoàn tiền khi đặt lịch trên Medpro (đối
+                  với các cơ sở tư có áp dụng)
                 </li>
               </ul>
             </div>

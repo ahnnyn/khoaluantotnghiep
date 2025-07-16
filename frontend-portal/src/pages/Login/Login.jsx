@@ -66,7 +66,7 @@ const LoginPage = ({ openModalLogin, setOpenModalLogin }) => {
         duration: 3,
       });
 
-      // ✅ Đóng modal login sau đăng nhập
+      //  Đóng modal login sau đăng nhập
       setOpenModalLogin(false);
 
       setTimeout(() => {

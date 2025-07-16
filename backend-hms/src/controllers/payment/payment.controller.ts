@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import MedicalExamination from "models/MedicalExaminations";
+import WorkSchedule from "models/WorkSchedules";
 import {
+  checkPaymentExist,
   createPayment,
   createVnPayUrl,
 } from "services/payment/payment.services";
@@ -36,7 +38,7 @@ const handleCreatePayment = async (req: Request, res: Response) => {
           { path: "departmentId", select: "name" },
         ],
       })
-      .populate("patientId", "fullName gender dateOfBirth");
+      .populate("patientId", "fullName gender dateOfBirth email phone");
 
     if (!appointment) {
       res.status(404).json({
@@ -48,7 +50,19 @@ const handleCreatePayment = async (req: Request, res: Response) => {
 
     const doctor: any = appointment.doctorId;
 
+    const examinationType = await getExaminationType(
+      appointment._id,
+      appointment.scheduledDate,
+      appointment.doctorId
+    );
+
+    const patient = appointment.patientId as {
+      fullName: string;
+      email: string;
+    };
     const resultData = {
+      patientName: patient.fullName,
+      patientEmail: patient.email || "N/A",
       doctorName: doctor?.fullName || "N/A",
       department: Array.isArray(doctor?.departmentId)
         ? doctor.departmentId.map((d: any) => d.name).join(", ")
@@ -58,15 +72,18 @@ const handleCreatePayment = async (req: Request, res: Response) => {
         : "N/A",
       appointmentDate: appointment.scheduledDate,
       appointmentTime: appointment.scheduledTimeSlot,
-      consultationType: appointment.paymentMethod,
+      consultationType: examinationType,
+      paymentMethod: method,
+      amount: payment.amount,
       location:
-        appointment.paymentMethod === "offline"
+        examinationType === "OFFLINE"
           ? "Phòng khám A1, Bệnh viện XYZ"
-          : "Khám trực tuyến",
+          : examinationType === "ONLINE"
+          ? "Khám trực tuyến"
+          : "Chưa rõ",
       queueNumber: appointment.queueNumber || "Đang cập nhật",
       maLichKham: appointment._id,
     };
-
     res.status(201).json({
       success: true,
       message: "Tạo thanh toán và cập nhật lịch khám thành công.",
@@ -82,6 +99,26 @@ const handleCreatePayment = async (req: Request, res: Response) => {
   }
 };
 
+const getExaminationType = async (appointmentId, date, doctorId) => {
+  const workSchedule = await WorkSchedule.findOne({
+    "slots.examinationIds": appointmentId,
+    date,
+    doctorId,
+  });
+
+  if (workSchedule) {
+    for (const slot of workSchedule.slots) {
+      if (
+        slot.examinationIds.some(
+          (examId: any) => examId.toString() === appointmentId.toString()
+        )
+      ) {
+        return slot.examinationType;
+      }
+    }
+  }
+  return "N/A";
+};
 const handleCreateVnPayUrl = (req: Request, res: Response) => {
   try {
     const { maLichKham, amount, tenNguoiDung } = req.body;
@@ -114,4 +151,19 @@ const handleCreateVnPayUrl = (req: Request, res: Response) => {
   }
 };
 
-export { handleCreatePayment, handleCreateVnPayUrl };
+const checkPaymentExists = async (req: Request, res: Response) => {
+  const { maLichKham } = req.params;
+
+  try {
+    const exists = await checkPaymentExist(maLichKham);
+     res.status(200).json({ success: true, exists });
+  } catch (error) {
+    console.error("Lỗi khi kiểm tra thanh toán:", error);
+     res.status(500).json({
+      success: false,
+      message: "Đã xảy ra lỗi khi kiểm tra thông tin thanh toán",
+    });
+  }
+};
+
+export { handleCreatePayment, handleCreateVnPayUrl, getExaminationType, checkPaymentExists };
