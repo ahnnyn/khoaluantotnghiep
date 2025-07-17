@@ -6,7 +6,7 @@ import { CalendarOutlined } from "@ant-design/icons";
 const DoctorCard = ({ imageSrc, title, description, onClick }) => {
   return (
     <div className="doctor-card-wrapper">
-      <Card className="doctor-card" hoverable>
+      <Card className="doctor-card" hoverable onClick={onClick}>
         <div className="doctor-image-wrapper">
           <img src={imageSrc} alt={title} className="doctor-image" />
         </div>

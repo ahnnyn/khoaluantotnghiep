@@ -21,12 +21,15 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
       reasonForVisit,
       paymentMethod,
       price,
+      amountPaid,
+      consultationType,
     } = req.body;
 
     if (!patientId || !doctorId || !scheduledDate || !scheduledTimeSlot) {
       res
         .status(400)
         .json({ success: false, message: "Thiếu thông tin bắt buộc" });
+      return;
     }
 
     const timeSlot = await TimeSlot.findOne({ timeRange: scheduledTimeSlot });
@@ -35,6 +38,7 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
         success: false,
         message: "Không tìm thấy khung giờ phù hợp",
       });
+      return;
     }
 
     // Lấy lịch làm việc và kiểm tra số lượng hiện tại trong examinationIds
@@ -47,6 +51,7 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
       res
         .status(404)
         .json({ success: false, message: "Không tìm thấy lịch làm việc" });
+      return;
     }
 
     const slotIndex = workSchedule.slots.findIndex((slot) =>
@@ -54,12 +59,11 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
     );
 
     if (slotIndex === -1) {
-      res
-        .status(404)
-        .json({
-          success: false,
-          message: "Không tìm thấy khung giờ trong lịch làm việc",
-        });
+      res.status(404).json({
+        success: false,
+        message: "Không tìm thấy khung giờ trong lịch làm việc",
+      });
+      return;
     }
 
     const slot = workSchedule.slots[slotIndex];
@@ -68,6 +72,7 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
       res
         .status(400)
         .json({ success: false, message: "Khung giờ này đã đủ 3 lượt đặt" });
+      return;
     }
 
     // Tạo phiếu khám
@@ -79,6 +84,8 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
       reasonForVisit,
       paymentMethod,
       price,
+      amountPaid,
+      consultationType,
     });
 
     // Cập nhật mảng examinationIds trong slot tương ứng
@@ -101,12 +108,14 @@ const postCreateMedicalExamination = async (req: Request, res: Response) => {
     await WorkSchedule.updateOne({ _id: workSchedule._id }, updateData);
 
     res.status(201).json({ success: true, data: newExam });
+    return;
   } catch (err: any) {
     console.error("Create examination error:", err);
     res.status(500).json({
       success: false,
       message: err.message || "Tạo phiếu khám thất bại",
     });
+    return;
   }
 };
 
@@ -115,20 +124,24 @@ const putUpdatePaymentStatus = async (req: Request, res: Response) => {
   try {
     const updatedExam = await updatePaymentStatus(id, status);
     res.status(200).json({ data: updatedExam });
+    return;
   } catch (error) {
     console.error("Error updating payment status:", error);
     res.status(500).json({ message: "Internal server error" });
+    return;
   }
-}
+};
 
 const getMedicalExaminationsByPatient = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const examinations = await findMedicalExaminationByPatientID(id);
     res.status(200).json({ data: examinations });
+    return;
   } catch (error) {
     console.error("Error fetching medical examinations:", error);
     res.status(500).json({ message: "Internal server error" });
+    return;
   }
 };
 
@@ -137,9 +150,11 @@ const putCancelMedicalExamination = async (req: Request, res: Response) => {
   try {
     const updatedExam = await cancelMedicalExamination(id, status);
     res.status(200).json({ data: updatedExam });
+    return;
   } catch (error) {
     console.error("Error updating medical examination status:", error);
     res.status(500).json({ message: "Internal server error" });
+    return;
   }
 };
 
@@ -148,9 +163,11 @@ const getAllDoctors = async (req: Request, res: Response) => {
   try {
     const doctors = await getListDoctor(); // Lấy danh sách bác sĩ từ service
     res.status(200).json({ data: doctors }); // Gửi response về client
+    return;
   } catch (error) {
     console.error("Error viewing doctors:", error);
     res.status(500).send("Internal Server Error");
+    return;
   }
 };
 

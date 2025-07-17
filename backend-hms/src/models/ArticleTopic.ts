@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import getConnection from "config/connect.mongo";
 
 const ArticleTopicSchema = new mongoose.Schema(
   {

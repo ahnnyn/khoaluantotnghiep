@@ -11,6 +11,7 @@ import {
   seedVaiTro,
   seedChuVu,
   seedDepartment,
+  seedTopics,
   seedMultipleUsers,
   seedMultiplePatientProfiles,
   seedMedicalExamination,
@@ -19,7 +20,6 @@ import {
   seedWorkSchedule,
   seedAdditionalUsers,
   seedPriceList,
-  seedTopics,
   seedArticles,
 } from "./seed";
 
@@ -28,6 +28,7 @@ import "models/Users";
 import "models/Roles";
 import "models/Position";
 import "models/Departments";
+import "models/ArticleTopic";
 import "models/PatientProfile";
 import "models/MedicalExaminations";
 import "models/Medication";
@@ -35,8 +36,7 @@ import "models/Prescription";
 import "models/PrescriptionItem";
 import "models/WorkSchedules";
 import "models/Payments";
-import ArticleTopic from "./models/ArticleTopic";
-import Article from "./models/Article";
+import "models/Article";
 
 import TimeSlot from "./models/TimeSlot";
 import MedicalExamination from "./models/MedicalExaminations";

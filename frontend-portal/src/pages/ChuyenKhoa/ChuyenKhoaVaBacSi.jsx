@@ -8,15 +8,16 @@ import {
   Radio,
   Button,
   Divider,
-  Breadcrumb,
   Input,
 } from "antd";
 import {
   MailOutlined,
   PhoneOutlined,
   UserOutlined,
-  HomeOutlined,
   CalendarOutlined,
+  ContainerOutlined,
+  AppstoreOutlined,
+  MedicineBoxOutlined,
 } from "@ant-design/icons";
 import { AiOutlineDownCircle } from "react-icons/ai";
 
@@ -30,11 +31,13 @@ import {
   fetchDoctorByDepartment,
   fetchDepartmentByID,
   getWorkScheduleByDoctor,
+  fetchPriceByDepartment,
 } from "services/patient/patient.services";
 
-import "./ChuyenKhoa.css";
+import "./ChuyenKhoaBacSi.css";
 import { Layout } from "antd";
 import SearchComponent from "components/SearchComponent/SearchComponent";
+import BreadcrumbCustom from "../../components/Breadcum/BreadcrumbCustom";
 const { Content } = Layout;
 
 const { Meta } = Card;
@@ -53,6 +56,7 @@ const ChuyenKhoaVaBacSi = () => {
   const [dataSearch, setDataSearch] = useState("");
   const [allDoctors, setAllDoctors] = useState([]);
   const [khoaName, setKhoaName] = useState("");
+  const [priceList, setPriceList] = useState([]);
 
   useEffect(() => {
     if (!id) return;
@@ -71,6 +75,14 @@ const ChuyenKhoaVaBacSi = () => {
         const data = res?.data || [];
         setAllDoctors(data);
         setDoctors(data);
+      })
+      .catch(console.error);
+
+    fetchPriceByDepartment(id)
+      .then((res) => {
+        const prices = res?.data || [];
+        setPriceList(prices);
+        console.log("Giá khám:", prices);
       })
       .catch(console.error);
   }, [id]);
@@ -230,21 +242,30 @@ const ChuyenKhoaVaBacSi = () => {
       },
     }));
   };
-
   const handleBook = (doctor) => {
     const data = expandedData[doctor._id];
+    const hinhThuc = data.selected.hinhThuc;
+    const khoaId = id;
     const khoa =
-      doctor.departmentId?.find((dep) => String(dep._id) === String(id))
+      doctor.departmentId?.find((dep) => String(dep._id) === String(khoaId))
         ?.name || "";
+
+    const matchedPrice = priceList.find(
+      (p) =>
+        p.examinationType === hinhThuc &&
+        String(p.departmentId?._id) === String(khoaId)
+    );
+
     const q = {
       id: doctor._id,
       fullName: doctor.fullName,
       ngayKham: data.selected.date?.format("YYYY-MM-DD"),
-      hinhThuc: data.selected.hinhThuc,
+      hinhThuc: hinhThuc,
       gioKham: data.selected.timeSlot,
-      giaKham: doctor.price,
+      giaKham: matchedPrice?.price || 0,
       chuyenkhoa: encodeURIComponent(khoa),
     };
+
     window.location.href = `/page-dat-lich-kham?` + new URLSearchParams(q);
   };
 
@@ -329,45 +350,24 @@ const ChuyenKhoaVaBacSi = () => {
           </Col>
         </Row>
       </div>
-      <Row style={{ marginTop: "20px" }}></Row>
+      <Row style={{ marginTop: "30px" }}></Row>
       <Row justify="center">
         <Col xs={22} sm={20} md={16}>
-          <Row justify="center">
+          <Row>
             <Col xs={22} sm={20} md={16}>
-              <Breadcrumb
-                style={{
-                  margin: "16px 0",
-                  fontWeight: 500,
-                  fontSize: 16,
-                }}
+              <BreadcrumbCustom
                 items={[
                   {
-                    title: (
-                      <Link
-                        to="/"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 6,
-                          color: "#1890ff",
-                        }}
-                      >
-                        <HomeOutlined />
-                        <span>Trang chủ</span>
-                      </Link>
-                    ),
+                    title: "Đặt khám",
+                    icon: <MedicineBoxOutlined />,
                   },
                   {
-                    title: (
-                      <Link to="/dat-kham" style={{ color: "#1890ff" }}>
-                        Đặt khám
-                      </Link>
-                    ),
+                    title: "Chuyên khoa",
+                    icon: <AppstoreOutlined />,
                   },
                   {
-                    title: (
-                      <strong style={{ color: "#1890ff" }}>{khoaName}</strong>
-                    ),
+                    title: khoaName,
+                    icon: <ContainerOutlined />,
                   },
                 ]}
               />
@@ -375,6 +375,8 @@ const ChuyenKhoaVaBacSi = () => {
           </Row>
         </Col>
       </Row>
+      <Divider style={{ margin: "16px 100px" }} />
+
       <Row justify="center" style={{ marginTop: "20px", marginBottom: "20px" }}>
         <Col xs={22} sm={18} md={12}>
           <SearchComponent
@@ -383,6 +385,8 @@ const ChuyenKhoaVaBacSi = () => {
           />
         </Col>
       </Row>
+      <Divider style={{ margin: "16px 100px" }} />
+
       <Content style={{ padding: "50px 50px 100px 50px" }}>
         <div className="grid-container">
           <Row gutter={[16, 16]}>
@@ -437,7 +441,17 @@ const ChuyenKhoaVaBacSi = () => {
                         </p>
                         <p>
                           <strong>Giá khám:</strong>{" "}
-                          {doc.price?.toLocaleString()} VND
+                          {(() => {
+                            const hinhThuc =
+                              expandedData?.[doc._id]?.selected?.hinhThuc ||
+                              "OFFLINE";
+                            const matchedPrice = priceList?.find(
+                              (p) => p.examinationType === hinhThuc
+                            );
+                            return matchedPrice
+                              ? `${matchedPrice.price?.toLocaleString()} VND`
+                              : "Chưa có giá";
+                          })()}
                         </p>
                       </div>
                       {expandedId !== doc._id && (

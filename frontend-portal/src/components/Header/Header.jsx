@@ -138,7 +138,12 @@ const Header = () => {
     setCurrent(e.key);
     localStorage.setItem("selectedMenuKey", e.key);
 
-    if (e.key === "login") setOpenModalLogin(true);
+    if (e.key === "login") {
+      const currentPath = location.pathname + location.search;
+      localStorage.setItem("redirectAfterLogin", currentPath);
+      setOpenModalLogin(true);
+    }
+
     if (e.key === "change-password") setOpenModalDoiMK(true);
     setShowMobileMenu(false);
   };
@@ -183,7 +188,14 @@ const Header = () => {
               </div>
             </Dropdown>
           ) : (
-            <div className="login-btn" onClick={() => setOpenModalLogin(true)}>
+            <div
+              className="login-btn"
+              onClick={() => {
+                const currentPath = location.pathname + location.search;
+                localStorage.setItem("redirectAfterLogin", currentPath);
+                setOpenModalLogin(true);
+              }}
+            >
               <FiUser style={{ fontSize: "20px", marginRight: 6 }} />
               <span>Đăng nhập</span>
             </div>
@@ -196,7 +208,7 @@ const Header = () => {
           <Menu
             onClick={onClick}
             selectedKeys={[current]}
-             mode="inline"
+            mode="inline"
             items={[
               ...menuItems,
               !user?._id

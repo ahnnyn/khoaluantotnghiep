@@ -90,12 +90,14 @@ const handleCreatePayment = async (req: Request, res: Response) => {
       data: payment,
       appointmentInfo: resultData,
     });
+    return;
   } catch (err: any) {
     console.error("handleCreatePayment error:", err);
     res.status(500).json({
       success: false,
       message: err.message || "Lỗi hệ thống khi tạo thanh toán.",
     });
+    return;
   }
 };
 
@@ -129,6 +131,7 @@ const handleCreateVnPayUrl = (req: Request, res: Response) => {
         message:
           "Missing required fields: maLichKham, amount, or tenNguoiDung.",
       });
+      return;
     }
 
     const ip =
@@ -142,12 +145,14 @@ const handleCreateVnPayUrl = (req: Request, res: Response) => {
     });
 
     res.json({ success: true, ...result });
+    return;
   } catch (err: any) {
     console.error("handleCreateVnPayUrl error:", err);
     res.status(500).json({
       success: false,
       message: err.message || "Internal server error",
     });
+    return;
   }
 };
 
@@ -157,12 +162,14 @@ const checkPaymentExists = async (req: Request, res: Response) => {
   try {
     const exists = await checkPaymentExist(maLichKham);
      res.status(200).json({ success: true, exists });
+     return;
   } catch (error) {
     console.error("Lỗi khi kiểm tra thanh toán:", error);
      res.status(500).json({
       success: false,
       message: "Đã xảy ra lỗi khi kiểm tra thông tin thanh toán",
     });
+    return;
   }
 };
 

@@ -428,6 +428,41 @@ export const seedPriceList = async () => {
   console.log("PriceList seeding completed!");
 };
 
+export async function seedTopics() {
+  const topics = [
+    {
+      name: "Da liễu",
+      slug: "da-lieu",
+      description: "Các bài viết liên quan đến chăm sóc và điều trị da.",
+      image: "/topics/da-lieu.jpg",
+    },
+    {
+      name: "Nhi khoa",
+      slug: "nhi-khoa",
+      description: "Thông tin sức khỏe trẻ em.",
+      image: "/topics/nhi-khoa.jpg",
+    },
+    {
+      name: "Tin tức y tế",
+      slug: "tin-tuc-y-te",
+      description: "Cập nhật tình hình ngành y.",
+    },
+    {
+      name: "Chăm sóc tại nhà",
+      slug: "cham-soc-tai-nha",
+      description: "Hướng dẫn chăm sóc bệnh nhân tại nhà.",
+    },
+    {
+      name: "Phòng ngừa bệnh",
+      slug: "phong-ngua-benh",
+      description: "Các mẹo và hướng dẫn phòng bệnh.",
+    },
+  ];
+
+  await ArticleTopic.insertMany(topics);
+  console.log("Seeded Article Topics");
+}
+
 export const seedMedication = async () => {
   const meds = await Medication.create([
     { name: "Paracetamol", unit: "viên", price: 2000 },
@@ -495,9 +530,10 @@ export const seedMedicalExamination = async (
     conclusion: "Nghỉ ngơi, uống thuốc đúng giờ",
     prescriptionId: prescription?._id ?? null,
     status: "pending",
-    paymentStatus: "unpaid",
+    paymentStatus: "paid",
     paymentMethod: null,
     price: 300000,
+    amountPaid: 300000, // Giả sử đã thanh toán
     scheduledDate: new Date("2025-07-22"),
     scheduledTimeSlot: "08:30 - 09:00",
   });
@@ -547,40 +583,6 @@ export const seedWorkSchedule = async (doctor: any, examination: any) => {
   console.log("WorkSchedule seeded for doctor:", doctor._id);
 };
 
-export async function seedTopics() {
-  const topics = [
-    {
-      name: "Da liễu",
-      slug: "da-lieu",
-      description: "Các bài viết liên quan đến chăm sóc và điều trị da.",
-      image: "/topics/da-lieu.jpg",
-    },
-    {
-      name: "Nhi khoa",
-      slug: "nhi-khoa",
-      description: "Thông tin sức khỏe trẻ em.",
-      image: "/topics/nhi-khoa.jpg",
-    },
-    {
-      name: "Tin tức y tế",
-      slug: "tin-tuc-y-te",
-      description: "Cập nhật tình hình ngành y.",
-    },
-    {
-      name: "Chăm sóc tại nhà",
-      slug: "cham-soc-tai-nha",
-      description: "Hướng dẫn chăm sóc bệnh nhân tại nhà.",
-    },
-    {
-      name: "Phòng ngừa bệnh",
-      slug: "phong-ngua-benh",
-      description: "Các mẹo và hướng dẫn phòng bệnh.",
-    },
-  ];
-
-  await ArticleTopic.insertMany(topics);
-  console.log("Seeded Article Topics");
-}
 
 export async function seedArticles() {
   const [daLieu, nhiKhoa, yTe, chamSoc, phongNgu] = await Promise.all([

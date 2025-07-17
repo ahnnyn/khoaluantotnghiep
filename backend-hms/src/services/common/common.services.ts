@@ -71,15 +71,13 @@ const getPriceList = async () => {
 };
 
 const getPriceListByDepartmentId = async (departmentId: string) => {
-  if (!mongoose.Types.ObjectId.isValid(departmentId)) {
-    throw new Error("Invalid department ID");
-  }
-
   const priceList = await PriceList.find({
-    departmentId: new mongoose.Types.ObjectId(departmentId),
+    departmentId,
+    doctorId: { $exists: false },
+    active: true,
   })
-    .populate("departmentId")
-    .populate("doctorId")
+    .sort({ effectiveDate: -1 })
+    .populate("departmentId", "name description")
     .lean();
 
   return priceList;
@@ -99,6 +97,7 @@ const getPriceListByDoctorId = async (doctorId: string) => {
 };
 
 const getArticle = async () => {
+  getConnection();
   const articles = await Article.find()
     .populate("author", "fullName")
     .populate("relatedDoctorIds", "fullName")

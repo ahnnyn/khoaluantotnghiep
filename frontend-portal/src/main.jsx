@@ -18,13 +18,13 @@ import PrivateRoute from "pages/PrivatePage/PrivateRoutes";
 
 // Public Pages
 import Home from "pages/Home";
-// import ChiTietBacSi from "pages/ViewDoctor/ChiTietBacSi";
+import DoctorDetail from "pages/DoctorDetail/DoctorDetail";
 import BookingAppointment from "pages/BookingAppointment/BookingAppointment";
 // import LichHen from "pages/QuanLyLichHen/LichHen";
 // import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
 // import TaoHoSo from "pages/HoSoCuaToi/TaoHoSo";
-// import BacSiNoiBat from "pages/BacSiNoiBat/BacSiNoiBat";
 import LienHe from "pages/LienHe/LienHe";
+import ChuyenKhoa from "./pages/ChuyenKhoa/ChuyenKhoa";
 import ChuyenKhoaVaBacSi from "pages/ChuyenKhoa/ChuyenKhoaVaBacSi";
 
 // CSS
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Home /> },
-      // { path: "chi-tiet-bac-si", element: <ChiTietBacSi /> },
+      { path: "doctor/:id", element: <DoctorDetail /> },
       { path: "page-dat-lich-kham", element: <BookingAppointment /> },
       {
         path: "user/dashboard",
@@ -78,7 +78,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-      // { path: "bac-si-noi-bat", element: <BacSiNoiBat /> },
+      { path: "chuyen-khoa-kham", element: <ChuyenKhoa /> },
       { path: "chuyen-khoa/:id", element: <ChuyenKhoaVaBacSi /> },
       { path: "lien-he", element: <LienHe /> },
       { path: "tu-van", element: <TuVan /> },

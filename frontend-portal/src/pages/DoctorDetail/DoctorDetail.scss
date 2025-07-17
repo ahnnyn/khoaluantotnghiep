@@ -1,0 +1,127 @@
+.doctor-detail {
+  padding: 24px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.profile-card {
+  margin-bottom: 24px;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 16px;
+  width: 100%;
+  max-width: 700px;
+  min-height: 350px;
+  margin: 0 auto 50px auto;
+
+  .ant-row {
+    align-items: center;
+  }
+
+  .ant-col {
+    padding: 8px;
+  }
+
+  .ant-avatar {
+    width: 100px !important;
+    height: 100px !important;
+    border: 2px solid #e6f4ff;
+    margin: auto;
+  }
+
+  .ant-typography {
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+}
+
+.doctor-info {
+  margin-top: 8px;
+
+  @media (min-width: 768px) {
+    margin-left: 20px;
+  }
+}
+
+.form-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: flex-end;
+
+  .form-item {
+    flex: 1;
+    min-width: 220px;
+  }
+}
+
+.booking-button {
+  margin-top: 12px;
+  font-size: 14px;
+  padding: 6px 16px;
+  width: 120px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.custom-datepicker {
+  width: 100%;
+}
+
+.slots-grid {
+  margin-top: 16px;
+}
+
+.slot-button {
+  border-radius: 8px;
+  padding: 8px 8px;
+  font-size: 15px;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .doctor-detail {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .form-section {
+    flex-direction: column;
+  }
+
+  .doctor-info {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .slot-button {
+    font-size: 12px;
+  }
+
+  .booking-button {
+    width: 100%;
+  }
+
+  .ant-avatar {
+    margin-bottom: 12px;
+  }
+
+  .profile-card {
+    padding: 12px;
+    width: 100%;
+    max-width: 100%;
+  }
+}

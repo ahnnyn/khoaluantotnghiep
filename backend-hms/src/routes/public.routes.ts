@@ -20,7 +20,7 @@ const publicRoutes = (app: Express) => {
   router.get("/get-work-schedule-by-doctorID/:id", getWorkScheduleByDoctor);
   router.get("/get-all-doctors", getAllDoctors);
   router.get("/get-price-list", getAllPriceLists);
-  router.get("/get-price-list-by-department/:id", getPriceByDepartmentId);
+  router.get("/get-price-by-department/:id", getPriceByDepartmentId);
   router.get("/get-price-list-by-doctor/:id", getPriceByDoctorId);
   router.get("/get-list-articles", getListArticles);
   app.use("/api/public", router);

@@ -24,6 +24,7 @@ import {
   PhoneOutlined,
   DollarOutlined,
   CalendarOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 import { HiOutlineMailOpen } from "react-icons/hi";
 import { IoLocationSharp } from "react-icons/io5";
@@ -79,6 +80,7 @@ const BookingAppointment = () => {
   const [dateOfBirth, setDateOfBirth] = useState(null);
   const [tongThanhToan, setTongThanhToan] = useState(0);
 
+  console.log(hinhThucKham);
   useEffect(() => {
     const percent = Number(selectedSoTienTT);
     if (!isNaN(percent)) {
@@ -190,7 +192,9 @@ const BookingAppointment = () => {
         gender: values.gender,
         address: values.address,
         dateOfBirth: values.dateBenhNhan,
-        price: tongThanhToan,
+        price: giaKham,
+        amountPaid: tongThanhToan,
+        consultationType: hinhThucKham,
       };
 
       const resCreate = await handleCreateAppointment(payload);
@@ -375,7 +379,9 @@ const BookingAppointment = () => {
                       validator: (_, value) =>
                         value
                           ? Promise.resolve()
-                          : Promise.reject("Bắt buộc đồng ý điều khoản"),
+                          : Promise.reject(
+                              "Vui lòng đồng ý điều khoản và chính sách đặt lịch"
+                            ),
                     },
                   ]}
                 >
@@ -394,6 +400,9 @@ const BookingAppointment = () => {
                       style={{
                         display: "flex",
                         alignItems: "center",
+                        marginBottom: 16,
+                        textAlign: "center",
+                        // justifyContent: "center",
                       }}
                     >
                       <Avatar
@@ -402,12 +411,12 @@ const BookingAppointment = () => {
                         }/public/images/upload/${dataBacSi.avatar}`}
                         size={64}
                       />
-                      <div>
-                        <Typography.Text strong>
+                      <div style={{ marginLeft: 16 }}>
+                        <Typography.Text strong style={{ fontSize: 16 }}>
                           {dataBacSi.fullName}
                         </Typography.Text>{" "}
                         {" - "}
-                        <Typography.Text strong>
+                        <Typography.Text strong style={{ fontSize: 16 }}>
                           {decodeURIComponent(chuyenkhoa)}
                         </Typography.Text>
                       </div>
@@ -482,7 +491,12 @@ const BookingAppointment = () => {
                     <Form.Item
                       label="Phương thức thanh toán"
                       name="hinhThucTT"
-                      rules={[{ required: true }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Vui lòng chọn phương thức thanh toán",
+                        },
+                      ]}
                     >
                       <Radio.Group
                         className="payment-method-group"
@@ -531,6 +545,39 @@ const BookingAppointment = () => {
                         </Radio>
                       </Radio.Group>
                     </Form.Item>
+                    <Typography.Paragraph
+                      type="secondary"
+                      style={{
+                        marginTop: 8,
+                        display: "inline-flex",
+                        verticalAlign: "top",
+                        textAlign: "justify",
+                      }}
+                    >
+                      <ExclamationCircleOutlined
+                        style={{
+                          marginRight: 8,
+                          color: "#faad14",
+                          fontSize: 18,
+                          lineHeight: "1.4",
+                          verticalAlign: "text-top", //  canh hàng đầu
+                        }}
+                      />
+                      <span>
+                        Quý khách vui lòng thanh toán trước <strong>30%</strong>{" "}
+                        phí khám (phí đặt lịch) để hoàn tất xác nhận lịch khám.
+                        {hinhThucKham === "ONLINE" && (
+                          <>
+                            {" "}
+                            Riêng đối với <strong>Khám trực tuyến</strong>, quý
+                            khách có thể chọn thanh toán trước{" "}
+                            <strong>30%</strong> hoặc thanh toán{" "}
+                            <strong>toàn bộ</strong> phí khám.
+                          </>
+                        )}
+                      </span>
+                    </Typography.Paragraph>
+
                     <Form.Item>
                       <Button
                         type="primary"
@@ -544,7 +591,7 @@ const BookingAppointment = () => {
                       >
                         Xác nhận đặt lịch
                       </Button>
-                      <Button
+                      {/* <Button
                         type="primary"
                         block
                         size="large"
@@ -554,7 +601,7 @@ const BookingAppointment = () => {
                         }}
                       >
                         Test
-                      </Button>
+                      </Button> */}
                     </Form.Item>
                   </>
                 )}

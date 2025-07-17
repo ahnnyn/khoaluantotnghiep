@@ -76,6 +76,11 @@ const MedicalExaminationSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    // Số tiền đã thanh toán (VNĐ)
+    amountPaid: {
+      type: Number,
+      default: 0,
+    },
 
     scheduledDate: {
       type: Date,
@@ -86,6 +91,13 @@ const MedicalExaminationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    consultationType: {
+      type: String,
+      enum: ["ONLINE", "OFFLINE"],
+      required: true,
+    },
+    
     queueNumber: {
       type: Number,
       required: false, // hoặc true nếu bạn muốn bắt buộc

@@ -69,8 +69,24 @@ const LoginPage = ({ openModalLogin, setOpenModalLogin }) => {
       //  Đóng modal login sau đăng nhập
       setOpenModalLogin(false);
 
+      const redirectPath = localStorage.getItem("redirectAfterLogin");
+      let finalPath = "/";
+
+      if (redirectPath) {
+        const match = redirectPath.match(/dept-(\w{24})/);
+        const deptId = match?.[1];
+
+        if (deptId) {
+          finalPath = `/chuyen-khoa/${deptId}`;
+        } else {
+          finalPath = redirectPath;
+        }
+
+        localStorage.removeItem("redirectAfterLogin");
+      }
+
       setTimeout(() => {
-        navigate("/");
+        navigate(finalPath);
       }, 800);
     } catch (err) {
       const msg =

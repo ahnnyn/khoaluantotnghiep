@@ -72,6 +72,9 @@ const fetchPriceList = () => {
   return axios.get(`/api/public/get-price-list`);
 };
 
+const fetchPriceByDepartment = (departmentId) => {
+  return axios.get(`/api/public/get-price-by-department/${departmentId}`);
+}
 const fetchAllArticles = () => {
   return axios.get(`/api/public/get-list-articles`);
 };
@@ -90,4 +93,5 @@ export {
   updatePaymentStatus,
   sendAppointmentConfirmationEmail,
   handleCheckPaymentExist,
+  fetchPriceByDepartment,
 };

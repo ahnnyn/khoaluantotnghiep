@@ -118,8 +118,9 @@ const createMedicalExamination = async (data: any) => {
     reasonForVisit,
     paymentMethod,
     price,
+    amountPaid = 0, // Mặc định là 0 nếu không có giá trị
+    consultationType,
   } = data;
-
 
   const parsedDate = new Date(`${scheduledDate}T00:00:00.000Z`);
   if (isNaN(parsedDate.getTime())) {
@@ -134,6 +135,8 @@ const createMedicalExamination = async (data: any) => {
     reasonForVisit,
     paymentMethod: paymentMethod?.toLowerCase(), // enum fix
     price,
+    amountPaid, // Sử dụng giá trị đã truyền vào
+    consultationType,
     paymentStatus: "pending",
   });
 
@@ -153,7 +156,7 @@ const updatePaymentStatus = async (id: string, status: string) => {
     throw new Error("Cập nhật trạng thái thanh toán không thành công");
   }
   return result;
-}
+};
 
 export {
   findMedicalExaminationByPatientID,

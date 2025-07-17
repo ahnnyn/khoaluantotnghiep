@@ -7,7 +7,6 @@ import "slick-carousel/slick/slick-theme.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-import { FiVideo } from "react-icons/fi";
 import {
   FaClinicMedical,
   FaBrain,
@@ -31,10 +30,11 @@ import ServiceCard from "components/Shapes/ServiceCard";
 import DoctorCard from "components/Shapes/DoctorCard";
 import ArticleCard from "components/Shapes/ArticleCard";
 import CardSkeleton from "components/Skeletons/CardSkeleton";
-import SearchComponent from "../../components/SearchComponent/SearchComponent";
-import HeroBanner from "../../components/HeroBanner/HeroBanner";
+import SearchComponent from "components/SearchComponent/SearchComponent";
+import HeroBanner from "components/HeroBanner/HeroBanner";
 
 const BodyHomePage = () => {
+  
   const [dataChuyenKhoa, setDataChuyenKhoa] = useState([]);
   const [dataBacSi, setDataBacSi] = useState([]);
   const [articles, setArticles] = useState([]);
@@ -304,11 +304,9 @@ const BodyHomePage = () => {
                       title={item.txtP}
                       description={item.txtB}
                       onClick={() =>
-                        handleRedirect(
-                          "/chi-tiet-chuyen-khoa",
-                          item.id,
-                          "maKhoa"
-                        )
+                        navigate(`/chuyen-khoa/${item.id}`, {
+                          state: { specialtyId: item.id },
+                        })
                       }
                     />
                   </div>
@@ -338,7 +336,7 @@ const BodyHomePage = () => {
               <h2 className="section-title">Bác sĩ nổi bật</h2>
               <button
                 className="see-more-btn"
-                onClick={() => navigate("/chi-tiet-bacsi")}
+                onClick={() => navigate("/doctor/")}
               >
                 Xem thêm
               </button>
@@ -361,12 +359,11 @@ const BodyHomePage = () => {
                 formatItems(dataBacSi, "doctor").map((item) => (
                   <div key={item.id} className="slider-item">
                     <DoctorCard
+                      key={item.id}
                       imageSrc={item.src}
                       title={item.txtP}
                       description={item.txtB}
-                      onClick={() =>
-                        handleRedirect("/chi-tiet-bacsi", item.id, "maBacSi")
-                      }
+                      onClick={() => navigate(`/doctor/${item.id}`)}
                       type="doctor"
                     />
                   </div>

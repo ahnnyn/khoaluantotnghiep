@@ -208,7 +208,7 @@ const ModalUpdateThongTin = ({
       diaChi: values.diaChi,
       hinhAnh: hinhAnh,
     });
-    console.log("VALUES GỬI LÊN:", values); // 👈 Thêm dòng này
+    console.log("VALUES GỬI LÊN:", values); //  Thêm dòng này
 
     try {
       // setLoading(true);

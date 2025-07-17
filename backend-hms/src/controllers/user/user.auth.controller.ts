@@ -95,12 +95,14 @@ const getViewUserByID = async (req: Request, res: Response) => {
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
+      return;
     }
 
     res.status(200).json({data: user}); // Gửi response về client
   } catch (error) {
     console.error("Error viewing user:", error);
     res.status(500).send("Internal Server Error");
+    return;
   }
 };
 
@@ -140,6 +142,7 @@ const putUpdateUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error updating user:", error);
     res.status(500).json({ message: "Lỗi cập nhật người dùng" });
+    return;
   }
 };
 
@@ -150,17 +153,21 @@ const putUpdatePassword = async (req: Request, res: Response) => {
 
     if (!id) {
       res.status(400).json({ message: "Thiếu ID người dùng." });
+      return;
     }
 
     if (!oldPassword && !newPassword && !newUsername) {
       res.status(400).json({ message: "Không có thông tin cần cập nhật." });
+      return;
     }
 
     await handleUpdatePassword(id, oldPassword, newPassword, newUsername);
     res.status(200).json({ message: "Cập nhật tài khoản thành công." });
+    return;
   } catch (error: any) {
     console.error("Error:", error);
     res.status(500).json({ message: error.message || "Lỗi cập nhật tài khoản." });
+    return;
   }
 };
 
@@ -173,11 +180,13 @@ const loginAPI = async (req: Request, res: Response) => {
     res.status(200).json({
       data: access_token,
     });
+    return;
   } catch (error: any) {
     res.status(401).json({
       data: null,
       message: error.message || "Login failed",
     });
+    return;
   }
 };
 
@@ -187,13 +196,16 @@ const postLogout = async (req: Request, res: Response) => {
 
   if (!token) {
     res.status(401).json({ message: "Access token missing" });
+    return;
   }
 
   try {
     const result = await handleUserLogout(token); 
     res.status(200).json(result); // { success: true, message: "Logout successful" }
+    return;
   } catch (error: any) {
     res.status(401).json({ message: error.message || "Logout failed" });
+    return;
   }
 };
 // ------------------------- Export -------------------------

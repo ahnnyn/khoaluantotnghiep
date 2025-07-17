@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Row, Typography, Table, Tabs, Image } from "antd";
+import { Card, Col, Row, Typography, Table, Tabs, Image, Divider } from "antd";
 import { fetchPriceList } from "services/patient/patient.services";
+import BreadcrumbCustom from "../../components/Breadcum/BreadcrumbCustom";
+import { FileTextOutlined } from "@ant-design/icons";
 const { Title, Text } = Typography;
 
 const BangGia = () => {
@@ -115,6 +117,19 @@ const BangGia = () => {
           </Col>
         </Row>
       </div>
+      <Row justify="center" style={{ marginTop: 24 }}>
+        <Col xs={24} sm={22} md={20} lg={16}>
+          <BreadcrumbCustom
+            items={[
+              {
+                title: "Bảng giá khám",
+                icon: <FileTextOutlined />,
+              },
+            ]}
+          />
+        </Col>
+      </Row>
+      <Divider style={{ margin: "16px 0" }} />
       <div className="container mx-auto px-4 py-6">
         <div
           style={{ margin: "40px", alignItems: "center", textAlign: "center" }}
