@@ -42,6 +42,36 @@ const updateMedicalExaminationStatus = (id, status) => {
   );
 };
 
+const sendCancellationEmailToPatient = async ({
+  email,
+  hoTen,
+  ngayKham,
+  gioKham,
+  hinhThucKham,
+  tenBacSi,
+  khoa,
+  diaChi,
+  soThuTu,
+  lyDoHuy,
+}) => {
+  return axios.post(
+    "/api/email/cancel-appointment",
+    {
+      email,
+      hoTen,
+      ngayKham,
+      gioKham,
+      hinhThucKham,
+      tenBacSi,
+      khoa,
+      diaChi,
+      soThuTu,
+      lyDoHuy,
+    },
+    getAuthHeader()
+  );
+};
+
 // Cập nhật kết quả khám bệnh
 const updateMedicalExaminationResult = (id, result) => {
   return axios.put(
@@ -55,7 +85,10 @@ const updateMedicalExaminationResult = (id, result) => {
 
 // Lấy lịch làm việc của bác sĩ
 const fetchWorkScheduleByDoctor = (doctorId) => {
-  return axios.get(`/api/doctor/view-work-schedule/${doctorId}`, getAuthHeader());
+  return axios.get(
+    `/api/doctor/view-work-schedule/${doctorId}`,
+    getAuthHeader()
+  );
 };
 
 // Lấy lịch làm việc của bác sĩ theo ngày
@@ -74,9 +107,9 @@ const fetchAllPositons = () => {
   return axios.get(`/api/doctor/get-all-positions`, getAuthHeader());
 };
 
-const fetchAllTimeSlots = () =>{
+const fetchAllTimeSlots = () => {
   return axios.get(`/api/doctor/get/time-slots`, getAuthHeader());
-}
+};
 
 const createWorkSchedule = (data) => {
   return axios.post(`/api/doctor/create-work-schedule`, data, getAuthHeader());
@@ -87,6 +120,7 @@ export {
   fetchMedicalExaminationsByDoctor,
   fetchMedicalExaminationsByPatient,
   fetchMedicalExaminationById,
+  sendCancellationEmailToPatient,
   updateMedicalExaminationStatus,
   updateMedicalExaminationResult,
   fetchWorkScheduleByDoctor,

@@ -95,7 +95,7 @@ const MedicalExaminationSchema = new mongoose.Schema(
     consultationType: {
       type: String,
       enum: ["ONLINE", "OFFLINE"],
-      required: true,
+      required: false,
     },
     
     queueNumber: {

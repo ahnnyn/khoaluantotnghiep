@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { fetchMedicalExaminationsByDoctor } from "services/doctor/doctors.services";
 import ModalPatientProfile from "./ModalPatientProfile";
 import SearchComponent from "../Search/SearchComponent";
-
 const PatientProfile = () => {
   const [openView, setOpenView] = useState(false);
   const [dataView, setDataView] = useState([]);
@@ -138,45 +137,52 @@ const PatientProfile = () => {
 
   return (
     <>
-    <Row>
-      <Col span={24} style={{ padding: "10px 0 30px", fontSize: "20px", textAlign: "center" }}>
-              <span style={{ fontWeight: "550", color: "#2A95BF" }}>
-                HỒ SƠ BỆNH NHÂN ĐÃ KHÁM
-              </span>
-      </Col>
-    </Row>
-    <Row gutter={[20, 10]}>
-      <Col xs={24} style={{ display: "flex", justifyContent: "center" }}>
-        <div style={{ width: "800px", maxWidth: "100%" }}>
-          <SearchComponent
-            onSearch={handleSearch}
-            style={{ width: "100%", height: "38px", marginBottom: "20px" }}
-            placeholder="Tìm bệnh nhân theo tên, email hoặc số điện thoại"
+      <Row>
+        <Col
+          span={24}
+          style={{
+            padding: "10px 0 30px",
+            fontSize: "20px",
+            textAlign: "center",
+          }}
+        >
+          <span style={{ fontWeight: "550", color: "#2A95BF" }}>
+            HỒ SƠ BỆNH NHÂN ĐÃ KHÁM
+          </span>
+        </Col>
+      </Row>
+      <Row gutter={[20, 10]}>
+        <Col xs={24} style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ width: "800px", maxWidth: "100%" }}>
+            <SearchComponent
+              onSearch={handleSearch}
+              placeholder="Tìm bệnh nhân theo tên, email hoặc số điện thoại"
+              className="search-patient"
+            />
+          </div>
+        </Col>
+        <Col xs={24} sm={12} md={24}>
+          <Table
+            pagination={{ current, pageSize, total, onChange: setCurrent }}
+            loading={loadingOrder}
+            columns={columns}
+            dataSource={dataOrder}
+            rowKey={(record) => record.patientId}
+            locale={
+              dataOrder.length === 0
+                ? { emptyText: "Không có hồ sơ bệnh nhân phù hợp" }
+                : {}
+            }
           />
-        </div>
-      </Col>
-      <Col xs={24} sm={12} md={24}>
-        <Table
-          pagination={{ current, pageSize, total, onChange: setCurrent }}
-          loading={loadingOrder}
-          columns={columns}
-          dataSource={dataOrder}
-          rowKey={(record) => record.patientId}
-          locale={
-            dataOrder.length === 0
-              ? { emptyText: "Không có hồ sơ bệnh nhân phù hợp" }
-              : {}
-          }
+        </Col>
+        <ModalPatientProfile
+          openView={openView}
+          setOpenView={setOpenView}
+          dataView={dataView}
+          setDataView={setDataView}
         />
-      </Col>
-      <ModalPatientProfile
-        openView={openView}
-        setOpenView={setOpenView}
-        dataView={dataView}
-        setDataView={setDataView}
-      />
-    </Row>
-  </>
+      </Row>
+    </>
   );
 };
 

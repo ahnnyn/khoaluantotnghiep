@@ -13,13 +13,14 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail = async (to, subject, htmlContent) => {
+const sendMail = async (to, subject, htmlContent, options = {}) => {
   const mailOptions = {
     from: '"Healio" <no-reply@healio.vn>',
     to,
     subject,
     text: "Vui lòng sử dụng email hỗ trợ HTML để xem nội dung.",
     html: htmlContent,
+    ...options, // ⬅ Hỗ trợ cc, bcc, attachments, v.v.
   };
 
   try {

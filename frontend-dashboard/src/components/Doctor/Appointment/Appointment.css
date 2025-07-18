@@ -1,0 +1,45 @@
+.custom-modal .ant-modal-footer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.search-patient {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.search-patient .ant-input {
+  border-radius: 10px;
+  padding: 5px 10px;
+  border: 1px solid #c0c0c0;
+}
+
+.search-patient .ant-input:hover {
+  border-color: rgb(92, 162, 248);
+}
+.custom-select-height .ant-select-selector {
+  height: 40px !important; 
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0 11px;
+}
+
+.custom-select-height .ant-select-selection-item {
+  line-height: 40px; 
+}
+
+.ant-input-search-button {
+  height: 40px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 0 12px;
+}
+
+/* Icon trong nút */
+.ant-input-search-button .anticon-search {
+  font-size: 18px;
+}

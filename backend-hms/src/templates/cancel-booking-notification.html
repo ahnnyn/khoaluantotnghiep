@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lịch khám với bác sĩ {{tenBacSi}} đã bị hủy</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f6f9fc;
+        padding: 20px;
+        color: #333;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+      }
+
+      .header {
+        background-color: #ff4d4f;
+        color: white;
+        padding: 16px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      .content {
+        padding: 24px;
+      }
+
+      .content p {
+        margin: 12px 0;
+        line-height: 1.6;
+      }
+
+      .info-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+      }
+
+      .info-table td {
+        padding: 8px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .info-table td.label {
+        font-weight: 600;
+        width: 40%;
+        color: #555;
+      }
+
+      .reason-box {
+        background-color: #fff1f0;
+        border-left: 4px solid #ff4d4f;
+        padding: 12px;
+        margin: 16px 0;
+        font-style: italic;
+        color: #a8071a;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 16px;
+        font-size: 12px;
+        color: #888;
+        background-color: #fafafa;
+      }
+
+      .btn {
+        display: inline-block;
+        background-color: #2db7f5;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        margin-top: 24px;
+      }
+
+      @media (max-width: 600px) {
+        .content,
+        .header,
+        .footer {
+          padding: 16px;
+        }
+
+        .content p {
+          font-size: 14px;
+          line-height: 1.8;
+        }
+
+        .info-table td {
+          display: block;
+          width: 100%;
+        }
+
+        .info-table td.label {
+          font-weight: bold;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>Thông báo hủy lịch khám</h1>
+      </div>
+
+      <div class="content">
+        <p>Kính gửi <strong>{{hoTen}}</strong>,</p>
+
+        <p>
+          Lịch hẹn khám bệnh với bác sĩ <strong>{{tenBacSi}}</strong> của bạn
+          vào ngày <strong>{{ngayKham}}</strong> lúc
+          <strong>{{gioKham}}</strong> theo hình thức
+          <strong>{{hinhThucKham}}</strong> đã bị
+          <span style="color: #ff4d4f"><strong>hủy</strong></span
+          >.
+        </p>
+
+        <table class="info-table">
+          <tr>
+            <td class="label">Bác sĩ:</td>
+            <td>{{tenBacSi}}</td>
+          </tr>
+          <tr>
+            <td class="label">Chuyên khoa:</td>
+            <td>{{khoa}}</td>
+          </tr>
+          <tr>
+            <td class="label">Ngày khám:</td>
+            <td>{{ngayKham}}</td>
+          </tr>
+          <tr>
+            <td class="label">Giờ khám:</td>
+            <td>{{gioKham}}</td>
+          </tr>
+          <tr>
+            <td class="label">Hình thức khám:</td>
+            <td>{{hinhThucKham}}</td>
+          </tr>
+          <tr>
+            <td class="label">Địa chỉ:</td>
+            <td>{{diaChi}}</td>
+          </tr>
+          <tr>
+            <td class="label">Số thứ tự:</td>
+            <td>{{soThuTu}}</td>
+          </tr>
+        </table>
+
+        <div class="reason-box">
+          <strong>Lý do hủy lịch:</strong><br />
+          {{lyDoHuy}}
+        </div>
+
+        <p>
+          Nếu bạn muốn đặt lại lịch khám, vui lòng truy cập hệ thống của chúng
+          tôi hoặc liên hệ tổng đài <strong>1900 123 456</strong> để được hỗ
+          trợ.
+        </p>
+
+        <p style="text-align: center">
+          <a href="{{linkDatLich}}" class="btn">Đặt lịch khám mới</a>
+        </p>
+      </div>
+
+      <div class="footer">
+        Trân trọng,<br />
+        Đội ngũ Healio
+      </div>
+    </div>
+  </body>
+</html>

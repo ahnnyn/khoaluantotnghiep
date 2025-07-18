@@ -1,9 +1,11 @@
+import { NextFunction, Request, Response } from "express";
+import "dotenv/config"; // sử dụng dotenv để quản lý biến môi trường
 import path from "path";
 import fs from "fs";
 import mailer from "utils/mailer";
-import { sendAppointmentConfirmationEmail } from "services/email/email.services";
+import { sendAppointmentCancellationEmail, sendAppointmentConfirmationEmail } from "services/email/email.services";
 
-const sendEmail = async (req, res) => {
+const sendEmail = async (req: Request, res: Response) => {
   try {
     const { email, subject, message } = req.body;
     await mailer.sendMail(email, subject, message);
@@ -17,7 +19,7 @@ const sendEmail = async (req, res) => {
   }
 };
 
-const sendEmailLichKham = async (req, res) => {
+const sendEmailLichKham = async (req: Request, res: Response) => {
   try {
     const { email, hoTen, ngayKham, gioKham, hinhThucKham , tenBacSi, khoa, diaChi, soThuTu} = req.body;
     await sendAppointmentConfirmationEmail({
@@ -38,4 +40,15 @@ const sendEmailLichKham = async (req, res) => {
   }
 };
 
-export { sendEmail, sendEmailLichKham };
+const sendCancellationEmail = async (req: Request, res: Response) => {
+  try {
+    await sendAppointmentCancellationEmail(req.body);
+    res.status(200).send("Email hủy lịch khám đã được gửi!");
+  } catch (err) {
+    console.error("Lỗi gửi email hủy lịch:", err);
+    res.status(500).send("Không gửi được email hủy lịch.");
+  }
+};
+
+
+export { sendEmail, sendEmailLichKham, sendCancellationEmail };
