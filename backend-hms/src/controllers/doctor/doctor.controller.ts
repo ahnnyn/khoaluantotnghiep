@@ -72,9 +72,9 @@ const updateMedicalExaminationResult = async (req: Request, res: Response) => {
 };
 
 const getWorkScheduleByDoctor = async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const { doctorId } = req.params;
   try {
-    const schedules = await findWorkScheduleByDoctorID(id);
+    const schedules = await findWorkScheduleByDoctorID(doctorId );
     res.status(200).json({data: schedules});
     return;
   } catch (error) {

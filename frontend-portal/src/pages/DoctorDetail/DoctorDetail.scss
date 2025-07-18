@@ -1,127 +1,156 @@
 .doctor-detail {
-  padding: 24px;
+  padding: 24px 16px;
   margin: 0 auto;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.profile-card {
-  margin-bottom: 24px;
-  border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  padding: 16px;
-  width: 100%;
-  max-width: 700px;
-  min-height: 350px;
-  margin: 0 auto 50px auto;
-
-  .ant-row {
-    align-items: center;
-  }
-
-  .ant-col {
-    padding: 8px;
-  }
-
-  .ant-avatar {
-    width: 100px !important;
-    height: 100px !important;
-    border: 2px solid #e6f4ff;
-    margin: auto;
-  }
-
-  .ant-typography {
-    margin-bottom: 4px;
-  }
-
-  p {
-    margin-bottom: 6px;
-    font-size: 14px;
-  }
-}
-
-.doctor-info {
-  margin-top: 8px;
-
-  @media (min-width: 768px) {
-    margin-left: 20px;
-  }
-}
-
-.form-section {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 16px;
-  align-items: flex-end;
-
-  .form-item {
-    flex: 1;
-    min-width: 220px;
-  }
-}
-
-.booking-button {
-  margin-top: 12px;
-  font-size: 14px;
-  padding: 6px 16px;
-  width: 120px;
-  height: 40px;
-  border-radius: 8px;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.custom-datepicker {
-  width: 100%;
-}
-
-.slots-grid {
-  margin-top: 16px;
-}
-
-.slot-button {
-  border-radius: 8px;
-  padding: 8px 8px;
-  font-size: 15px;
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-/* Responsive mobile */
-@media (max-width: 768px) {
-  .doctor-detail {
-    flex-direction: column;
-    padding: 16px;
-  }
-
-  .form-section {
-    flex-direction: column;
-  }
-
-  .doctor-info {
-    margin-left: 0;
-    text-align: center;
-  }
-
-  .slot-button {
-    font-size: 12px;
-  }
-
-  .booking-button {
-    width: 100%;
-  }
-
-  .ant-avatar {
-    margin-bottom: 12px;
-  }
 
   .profile-card {
-    padding: 12px;
     width: 100%;
-    max-width: 100%;
+    max-width: 1200px;
+    border-radius: 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    margin-bottom: 50px;
+
+    .ant-row {
+      align-items: stretch;
+    }
+
+    .ant-col {
+      padding: 8px;
+    }
+
+
+    .doctor-info-box {
+      height: 100%;
+
+      .doctor-header {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .ant-avatar {
+          width: 100px !important;
+          height: 100px !important;
+          border: 2px solid #e6f4ff;
+        }
+      }
+
+      .info-group {
+        p {
+          display: flex;
+          align-items: center;
+          margin-bottom: 10px;
+          font-size: 14px;
+
+          span {
+            margin-left: 6px;
+          }
+
+          svg {
+            color: #1677ff;
+          }
+        }
+      }
+    }
+  }
+
+  .booking-section {
+    .schedule-group {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .ant-row {
+        align-items: flex-end;
+      }
+
+      .custom-datepicker {
+        width: 100%;
+      }
+
+      .slots-grid {
+
+        .slot-button {
+          width: 100%;
+          height: 40px;
+          padding: 8px;
+          font-size: 14px;
+          border-radius: 8px;
+          white-space: normal;
+
+          &.active {
+            font-weight: 600;
+            border: 2px solid #1677ff;
+          }
+        }
+      }
+    }
+
+    .booking-button {
+      margin-top: 16px;
+      width: 100%;
+      max-width: 200px;
+      height: 40px;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 16px;
+
+    .profile-card {
+      padding: 16px;
+    }
+
+    .doctor-info-box .doctor-header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .ant-avatar {
+        margin-bottom: 12px;
+      }
+    }
+
+    .booking-button {
+      width: 100%;
+    }
+
+    .slot-button {
+      font-size: 12px;
+    }
+  }
+}
+
+.doctor-detail {
+  .profile-card {
+    .ant-row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .doctor-info {
+      border-right: 1px solid #e0e0e0;
+
+      @media (max-width: 768px) {
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+        margin-bottom: 24px;
+        padding-right: 0;
+        padding-bottom: 24px;
+      }
+    }
+
+    .booking-section {
+      padding-left: 24px;
+
+      @media (max-width: 768px) {
+        padding-left: 0;
+      }
+    }
   }
 }

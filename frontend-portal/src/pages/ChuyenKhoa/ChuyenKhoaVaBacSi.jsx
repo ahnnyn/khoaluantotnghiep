@@ -9,6 +9,7 @@ import {
   Button,
   Divider,
   Input,
+  notification,
 } from "antd";
 import {
   MailOutlined,
@@ -38,6 +39,9 @@ import "./ChuyenKhoaBacSi.css";
 import { Layout } from "antd";
 import SearchComponent from "components/SearchComponent/SearchComponent";
 import BreadcrumbCustom from "../../components/Breadcum/BreadcrumbCustom";
+import { useSelector } from "react-redux";
+import LoginPage from "../Login/Login";
+import { User } from "lucide-react";
 const { Content } = Layout;
 
 const { Meta } = Card;
@@ -57,6 +61,15 @@ const ChuyenKhoaVaBacSi = () => {
   const [allDoctors, setAllDoctors] = useState([]);
   const [khoaName, setKhoaName] = useState("");
   const [priceList, setPriceList] = useState([]);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+  const [openModalLogin, setOpenModalLogin] = useState(false);
+  const [pendingBookingInfo, setPendingBookingInfo] = useState(null);
+
+  const isAuthenticated = useSelector(
+    (state) => state.account.isUserAuthenticated
+  );
+
+  const user = useSelector((state) => state.account.user);
 
   useEffect(() => {
     if (!id) return;
@@ -242,7 +255,24 @@ const ChuyenKhoaVaBacSi = () => {
       },
     }));
   };
-  const handleBook = (doctor) => {
+
+  const handleBooking = (doctor) => {
+    const dataBooking = expandedData[doctor._id];
+
+    if (!user?._id) {
+      // Chưa đăng nhập, lưu lại thông tin đặt lịch
+      setPendingBookingInfo({
+        doctor,
+        selected: dataBooking.selected,
+      });
+      handleClickSubmit(); // Mở modal login
+      return;
+    }
+
+    proceedToBooking(doctor, dataBooking.selected);
+
+    setLoadingSubmit(true);
+
     const data = expandedData[doctor._id];
     const hinhThuc = data.selected.hinhThuc;
     const khoaId = id;
@@ -269,6 +299,40 @@ const ChuyenKhoaVaBacSi = () => {
     window.location.href = `/page-dat-lich-kham?` + new URLSearchParams(q);
   };
 
+  const proceedToBooking = (doctor, selected) => {
+    const hinhThuc = selected.hinhThuc;
+    const khoaId = id;
+    const khoa =
+      doctor.departmentId?.find((dep) => String(dep._id) === String(khoaId))
+        ?.name || "";
+
+    const matchedPrice = priceList.find(
+      (p) =>
+        p.examinationType === hinhThuc &&
+        String(p.departmentId?._id) === String(khoaId)
+    );
+
+    const q = {
+      id: doctor._id,
+      fullName: doctor.fullName,
+      ngayKham: selected.date?.format("YYYY-MM-DD"),
+      hinhThuc,
+      gioKham: selected.timeSlot,
+      giaKham: matchedPrice?.price || 0,
+      chuyenkhoa: encodeURIComponent(khoa),
+    };
+
+    window.location.href = `/page-dat-lich-kham?` + new URLSearchParams(q);
+  };
+
+  useEffect(() => {
+    if (user?._id && pendingBookingInfo) {
+      // Người dùng vừa đăng nhập xong và có pending booking
+      proceedToBooking(pendingBookingInfo.doctor, pendingBookingInfo.selected);
+      setPendingBookingInfo(null); // Clear sau khi xử lý
+    }
+  }, [user, pendingBookingInfo]);
+
   const onSearch = (value) => {
     const keyword = value.toLowerCase().trim();
     const filtered = allDoctors.filter((doc) => {
@@ -277,6 +341,22 @@ const ChuyenKhoaVaBacSi = () => {
     });
     setDoctors(filtered);
   };
+
+  const handleClickSubmit = () => {
+    notification.warning({
+      message: "Cảnh báo",
+      description: notificationContent(),
+    });
+  };
+
+  const notificationContent = () => (
+    <div>
+      <span>Vui lòng đăng nhập trước khi đặt lịch!</span>
+      <Button type="link" onClick={() => setOpenModalLogin(true)}>
+        Tiến hành đăng nhập
+      </Button>
+    </div>
+  );
   return (
     <>
       <div
@@ -404,7 +484,7 @@ const ChuyenKhoaVaBacSi = () => {
                       hoverable
                       onClick={() => handleCardClick(doc._id)}
                       className={expandedId === doc._id ? "expanded" : ""}
-                      style={{ maxWidth: 500, margin: "0 auto" }}
+                      style={{ maxWidth: 550, margin: "0 auto" }}
                     >
                       <Meta
                         avatar={
@@ -421,24 +501,26 @@ const ChuyenKhoaVaBacSi = () => {
                           doc.departmentId?.[0]?.name || ""
                         }`}
                       />
+                      <Divider style={{ margin: "16px 0" }} />
                       <div className="info">
-                        <p>
-                          <strong>Giới thiệu:</strong>{" "}
-                          {doc.description || "Chưa có mô tả"}
+                        <p className="icon-text phone">
+                          <PhoneOutlined />
+                          <span>{doc.phone}</span>
                         </p>
                         <p className="icon-text email">
                           <MailOutlined />
                           <span>{doc.email}</span>
                         </p>
-                        <p className="icon-text phone">
-                          <PhoneOutlined />
-                          <span>{doc.phone}</span>
-                        </p>
-
                         <p>
                           <strong>Địa chỉ:</strong>{" "}
                           {doc.address || "Chưa cập nhật"}
                         </p>
+
+                        <p>
+                          <strong>Giới thiệu:</strong>{" "}
+                          {doc.description || "Chưa có mô tả"}
+                        </p>
+                        <Divider style={{ margin: "16px 0" }} />
                         <p>
                           <strong>Giá khám:</strong>{" "}
                           {(() => {
@@ -454,6 +536,7 @@ const ChuyenKhoaVaBacSi = () => {
                           })()}
                         </p>
                       </div>
+
                       {expandedId !== doc._id && (
                         <div className="select-schedule-icon">
                           <span>Chọn lịch khám</span>
@@ -463,6 +546,7 @@ const ChuyenKhoaVaBacSi = () => {
 
                       {expandedId === doc._id && (
                         <>
+                          <Divider />
                           <div className="schedule-section">
                             <div onClick={(e) => e.stopPropagation()}>
                               <DatePicker
@@ -498,13 +582,14 @@ const ChuyenKhoaVaBacSi = () => {
                                 customInput={
                                   <Input
                                     prefix={<CalendarOutlined />}
-                                    style={{ width: "100%" }}
+                                    style={{ width: "80%" }}
                                   />
                                 }
                               />
                             </div>
                             <div onClick={(e) => e.stopPropagation()}>
                               <Radio.Group
+                                className="hinh-thuc-radio"
                                 options={HINH_THUC}
                                 value={selected.hinhThuc}
                                 onChange={(e) =>
@@ -512,31 +597,17 @@ const ChuyenKhoaVaBacSi = () => {
                                 }
                                 optionType="button"
                                 buttonStyle="solid"
-                                style={{ marginTop: 8 }}
                               />
                             </div>
                           </div>
+                          <Divider style={{ margin: "16px 0" }} />
                           <div
                             className="times"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {slots.length === 0 ? (
-                              <div
-                                className="no-slot"
-                                style={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  height: "20px",
-                                  width: "100%",
-                                }}
-                              >
-                                <p
-                                  style={{
-                                    color: "red",
-                                    margin: 0,
-                                  }}
-                                >
+                              <div className="no-slot">
+                                <p className="no-slot-text">
                                   Không có khung giờ khám nào
                                 </p>
                               </div>
@@ -544,19 +615,19 @@ const ChuyenKhoaVaBacSi = () => {
                               slots.map((slot) => {
                                 const timeRange =
                                   slot?.timeSlotId?.timeRange || "Chưa có giờ";
-                                const disabled =
-                                  slot.status === "booked" ||
-                                  slot.status !== "available";
-                                const selectedSlot =
+                                const isBooked = slot.status === "booked";
+                                const isAvailable = slot.status === "available";
+                                const isSelected =
                                   selected.timeSlot === timeRange;
 
                                 return (
                                   <Button
                                     key={slot._id}
                                     className={`time-btn ${
-                                      selectedSlot ? "selected" : ""
+                                      isSelected ? "selected" : ""
                                     }`}
-                                    disabled={disabled}
+                                    type={isSelected ? "primary" : "default"}
+                                    disabled={!isAvailable}
                                     onClick={() =>
                                       setExpandedData((prev) => ({
                                         ...prev,
@@ -570,21 +641,10 @@ const ChuyenKhoaVaBacSi = () => {
                                       }))
                                     }
                                   >
-                                    <div
-                                      style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        lineHeight: 1.2,
-                                      }}
-                                    >
+                                    <div className="time-slot-content">
                                       <span>{timeRange}</span>
-                                      {slot.status === "booked" && (
-                                        <span
-                                          style={{
-                                            fontSize: "11px",
-                                            color: "red",
-                                          }}
-                                        >
+                                      {isBooked && (
+                                        <span className="slot-full-text">
                                           Hết slot
                                         </span>
                                       )}
@@ -595,12 +655,17 @@ const ChuyenKhoaVaBacSi = () => {
                             )}
                           </div>
 
+                          <Divider style={{ margin: "16px 0" }} />
                           <div onClick={(e) => e.stopPropagation()}>
                             <Button
                               type="primary"
                               disabled={!selected.timeSlot}
                               className="book-btn"
-                              onClick={() => handleBook(doc)}
+                              loading={loadingSubmit}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleBooking(doc);
+                              }}
                             >
                               Đặt lịch
                             </Button>
@@ -614,6 +679,10 @@ const ChuyenKhoaVaBacSi = () => {
           </Row>
         </div>
       </Content>
+      <LoginPage
+        openModalLogin={openModalLogin}
+        setOpenModalLogin={setOpenModalLogin}
+      />
     </>
   );
 };

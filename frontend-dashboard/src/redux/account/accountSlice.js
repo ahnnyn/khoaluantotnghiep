@@ -1,13 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const isUserAuthenticatedFromStorage =
-  localStorage.getItem("isUserAuthenticated") === "true";
-const userFromStorage = JSON.parse(localStorage.getItem("user")) || {};
-
+// Khởi tạo state từ localStorage
 const initialState = {
-  isUserAuthenticated: isUserAuthenticatedFromStorage,
+  isUserAuthenticated: !!localStorage.getItem("access_token"),
   isLoading: true,
-  user: userFromStorage,
+  user: JSON.parse(localStorage.getItem("user")) || {},
+  access_token: localStorage.getItem("access_token") || null,
 };
 
 export const accountSlice = createSlice({

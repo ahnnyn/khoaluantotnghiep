@@ -1,13 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-const isUserAuthenticatedFromStorage =
-  localStorage.getItem("isUserAuthenticated") === "true";
-const userFromStorage = JSON.parse(localStorage.getItem("user")) || {};
-
+// Khởi tạo state từ localStorage
 const initialState = {
-  isUserAuthenticated: isUserAuthenticatedFromStorage,
-  isLoading: false,
-  user: userFromStorage,
+  isUserAuthenticated: false,
+  isLoading: true,
+  user: {
+    _id: "",
+    fullName: "",
+    gender: "",
+    email: "",
+    address: "",
+    phone: "",
+    avatar: "",
+    role: "",
+  },
+  access_token: null,
 };
 
 export const accountSlice = createSlice({
@@ -20,9 +26,9 @@ export const accountSlice = createSlice({
       state.isLoading = false;
       state.user = {
         ...user,
-        role: user.roleId?.roleName || user.role, // ép kiểu chuẩn
+        role: user.roleId?.roleName || user.role,
       };
-
+      state.access_token = token;
       localStorage.setItem("isUserAuthenticated", "true");
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("access_token", token);
@@ -55,7 +61,10 @@ export const accountSlice = createSlice({
       state.user = {
         ...state.user,
         ...action.payload,
-        role: action.payload.roleId?.roleName || action.payload.role || state.user.role,
+        role:
+          action.payload.roleId?.roleName ||
+          action.payload.role ||
+          state.user.role,
       };
       localStorage.setItem("user", JSON.stringify(state.user));
     },

@@ -19,6 +19,7 @@ import PrivateRoute from "pages/PrivatePage/PrivateRoutes";
 // Public Pages
 import Home from "pages/Home";
 import DoctorDetail from "pages/DoctorDetail/DoctorDetail";
+import DoctorsList from "pages/DoctorsList/DoctorsList";
 import BookingAppointment from "pages/BookingAppointment/BookingAppointment";
 // import LichHen from "pages/QuanLyLichHen/LichHen";
 // import HoSoCuaToi from "pages/HoSoCuaToi/HoSoCuaToi";
@@ -78,6 +79,7 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
+      { path: "doctor", element: <DoctorsList /> },
       { path: "chuyen-khoa-kham", element: <ChuyenKhoa /> },
       { path: "chuyen-khoa/:id", element: <ChuyenKhoaVaBacSi /> },
       { path: "lien-he", element: <LienHe /> },

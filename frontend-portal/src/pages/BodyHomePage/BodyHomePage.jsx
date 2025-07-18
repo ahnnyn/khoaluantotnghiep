@@ -336,7 +336,7 @@ const BodyHomePage = () => {
               <h2 className="section-title">Bác sĩ nổi bật</h2>
               <button
                 className="see-more-btn"
-                onClick={() => navigate("/doctor/")}
+                onClick={() => navigate("/doctor")}
               >
                 Xem thêm
               </button>

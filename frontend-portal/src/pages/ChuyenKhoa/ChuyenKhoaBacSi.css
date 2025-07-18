@@ -13,6 +13,7 @@
 .schedule-section {
   margin-top: 16px;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   gap: 12px;
   align-items: center;
@@ -24,15 +25,13 @@
     align-items: stretch;
   }
   .times {
-    justify-content: flex-start;
+    justify-content: center;
   }
 }
 
-/* Nút chọn giờ khám */
 .time-btn {
   padding: 10px 12px;
-  margin: 4px 8px;
-  width: 110px;
+  width: 100%; /* Quan trọng để nút chiếm toàn bộ cell trong grid */
   height: 44px;
   text-align: center;
   font-size: 15px;
@@ -64,14 +63,12 @@
   cursor: not-allowed;
 }
 
-/* Container chứa khung giờ */
 .times {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
   margin-top: 12px;
 }
-
 /* Nút đặt lịch */
 .book-btn {
   margin: 16px auto 0;
@@ -186,6 +183,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   font-weight: 500;
 }
+
 @media (max-width: 480px) {
   .select-schedule-icon {
     font-size: 13px;
@@ -194,7 +192,7 @@
   }
 }
 
-/* Responsive */
+/* Responsive card spacing */
 @media (max-width: 768px) {
   .ant-card {
     margin-bottom: 16px;
@@ -211,4 +209,24 @@
 }
 .icon-text.phone svg {
   color: red;
+}
+
+/* Radio nhóm hình thức */
+.hinh-thuc-radio .ant-radio-button-wrapper {
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+.hinh-thuc-radio .ant-radio-button-wrapper-checked {
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .hinh-thuc-radio .ant-radio-button-wrapper {
+    font-size: 14px;
+    height: 35px;
+    margin-right: 6px;
+  }
 }

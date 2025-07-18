@@ -148,8 +148,8 @@ const updateResultMedicalExamination = async (
 };
 
 
-const findWorkScheduleByDoctorID = async (id: string) => {
-  return await WorkSchedule.find({ id })
+const findWorkScheduleByDoctorID = async (doctorId: string) => {
+  return await WorkSchedule.find({ doctorId }) 
     .populate({
       path: "slots.timeSlotId",
       select: "timeRange start end",
@@ -161,11 +161,11 @@ const findWorkScheduleByDoctorID = async (id: string) => {
         path: "patientProfileId",
         select: "fullName",
         model: "PatientProfile",
-        match: {}, // bắt buộc populate kể cả khi `examinationId` null
       },
     })
     .lean();
 };
+
 
 
 const findWorkScheduleByDate = async (doctorId: string, date: Date) => {
