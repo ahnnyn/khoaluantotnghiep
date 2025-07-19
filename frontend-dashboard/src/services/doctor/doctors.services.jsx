@@ -115,6 +115,9 @@ const createWorkSchedule = (data) => {
   return axios.post(`/api/doctor/create-work-schedule`, data, getAuthHeader());
 };
 
+const sendEmailSchedule = (data) => {
+  return axios.post("/api/email/send-schedule", data, getAuthHeader());
+};
 // ==================== EXPORT ====================
 export {
   fetchMedicalExaminationsByDoctor,
@@ -129,5 +132,6 @@ export {
   fetchAllPositons,
   fetchAllTimeSlots,
   createWorkSchedule,
+  sendEmailSchedule,
   getAuthHeader,
 };

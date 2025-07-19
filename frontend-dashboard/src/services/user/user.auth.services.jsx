@@ -1,5 +1,13 @@
 import axios from "utils/axios-customize"
 
+const getAuthHeader = () => {
+  const token = localStorage.getItem("access_token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+};
 // Đăng nhập
 const loginUser = (username, password) => {
   const URL = "/api/user/auth/login";
@@ -69,6 +77,10 @@ const updateUserInfo = ({
   });
 };
 
+const getAllCoordinators = () => {
+  return axios.get("/api/user/info-coordinators", getAuthHeader());
+};
+
 // Upload ảnh bác sĩ
 const uploadFile = (file) => {
   const formData = new FormData();
@@ -82,6 +94,10 @@ const uploadFile = (file) => {
   });
 };
 
+const fectchListUser = () => {
+  return axios.get("/api/user/user-list");
+}
+
 export {
   loginUser,
   logoutUser,
@@ -90,5 +106,7 @@ export {
   getUserById,
   updateUserInfo,
   uploadFile,
+  getAllCoordinators,
+  fectchListUser
 };
 

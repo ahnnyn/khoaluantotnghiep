@@ -206,6 +206,18 @@ const handleUserLogout = async (token: string) => {
   }
 };
 
+const getCoordinators = async () => {
+  const coordinatorRole = await Role.findOne({ roleName: "COORDINATOR" });
+  if (!coordinatorRole) throw new Error("Role COORDINATOR not found");
+
+  const coordinators = await User.find({ roleId: coordinatorRole._id })
+    .populate("roleId", "roleName")
+    .lean();
+
+  return coordinators;
+};
+
+
 export {
   handleCreateUser,
   getAllUsers,
@@ -217,5 +229,6 @@ export {
   comparePassword,
   isEmailExist,
   handleUserLogout,
-  handleUpdatePassword
+  handleUpdatePassword,
+  getCoordinators
 };

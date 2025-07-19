@@ -13,6 +13,7 @@ import {
   KeyOutlined,
   ProfileOutlined,
   IdcardOutlined,
+  MailOutlined,
 } from "@ant-design/icons";
 import { FaSun, FaMoon } from "react-icons/fa";
 
@@ -36,9 +37,9 @@ import DoctorUpdate from "components/Doctor/DoctorInformation/DoctorUpdate";
 import DoctorWorkSchedule from "components/Doctor/DoctorWorkSchedule/DoctorWorkSchedule";
 import ChangePasswordModal from "components/Doctor/ChangePasswordModal/ChangePasswordModal";
 import HeaderDashboard from "components/Doctor/Header/Header.Dashboard";
+import BroadcastEmail from "../../components/Doctor/BroadcastEmail/BroadcastEmail";
 import "./DoctorDashboard.css";
-
-const {Sider, Content } = Layout;
+const { Sider, Content } = Layout;
 
 const DoctorDashboard = () => {
   const navigate = useNavigate();
@@ -73,43 +74,39 @@ const DoctorDashboard = () => {
 
   if (!isUserAuthenticated) return <Navigate to="/login" replace />;
 
-useEffect(() => {
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") {
-    setDarkMode(true);
-    document.body.setAttribute("data-theme", "dark");
-  }
-}, []);
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setDarkMode(true);
+      document.body.setAttribute("data-theme", "dark");
+    }
+  }, []);
 
-useEffect(() => {
-  const theme = localStorage.getItem("theme");
-  const root = document.getElementById("root");
-  if (theme === "dark") {
-    document.body.setAttribute("data-theme", "dark");
-    root.classList.add("dark-theme");
-  } else {
-    document.body.removeAttribute("data-theme");
-    root.classList.remove("dark-theme");
-  }
-}, [darkMode]);
+  useEffect(() => {
+    const theme = localStorage.getItem("theme");
+    const root = document.getElementById("root");
+    if (theme === "dark") {
+      document.body.setAttribute("data-theme", "dark");
+      root.classList.add("dark-theme");
+    } else {
+      document.body.removeAttribute("data-theme");
+      root.classList.remove("dark-theme");
+    }
+  }, [darkMode]);
 
-const toggleTheme = (checked) => {
-  setDarkMode(checked);
-  const theme = checked ? "dark" : "light";
-  localStorage.setItem("theme", theme);
-  document.body.setAttribute("data-theme", theme);
-};
-
+  const toggleTheme = (checked) => {
+    setDarkMode(checked);
+    const theme = checked ? "dark" : "light";
+    localStorage.setItem("theme", theme);
+    document.body.setAttribute("data-theme", theme);
+  };
 
   const menuItems = [
     {
       type: "group",
       label: "Overview",
       children: [
-        { label: "Dashboard", 
-          key: "dashboard", 
-          icon: <DashboardOutlined /> 
-        },
+        { label: "Dashboard", key: "dashboard", icon: <DashboardOutlined /> },
         {
           label: "Calendar",
           key: "calendar",
@@ -125,27 +122,33 @@ const toggleTheme = (checked) => {
               key: "appointment",
               icon: <SolutionOutlined />,
             },
-            {
-              label: "Messages",
-              key: "messages",
-              icon: <MessageOutlined />,
-            },
           ],
+        },
+        {
+          label: "Send Email",
+          key: "send-email",
+          icon: <MailOutlined />,
+        },
+        {
+          label: "Messages",
+          key: "messages",
+          icon: <MessageOutlined />,
+        },
+
+        {
+          label: "Patients",
+          key: "patient",
+          icon: <IdcardOutlined />,
         },
         {
           label: "Medical Report",
           key: "medical-report",
           icon: <FileTextOutlined />,
         },
-        { 
-          label: "Patients", 
-          key: "patient", 
-          icon: <IdcardOutlined /> 
-        },
-        { 
-          label: "Statistics", 
-          key: "statistics", 
-          icon: <BarChartOutlined /> 
+        {
+          label: "Statistics",
+          key: "statistics",
+          icon: <BarChartOutlined />,
         },
       ],
     },
@@ -153,26 +156,27 @@ const toggleTheme = (checked) => {
       type: "group",
       label: "Preference",
       children: [
-        { label: "Account",
+        {
+          label: "Account",
           key: "account",
           icon: <UserOutlined />,
-          children:[
+          children: [
             {
               label: "Information",
-              key: "doctorinfo", 
-              icon: <ProfileOutlined /> 
+              key: "doctorinfo",
+              icon: <ProfileOutlined />,
             },
             {
               label: "Change Password",
               key: "changepassword",
               icon: <KeyOutlined />,
-            }
-          ]
+            },
+          ],
         },
-        { 
-          label: "Settings", 
-          key: "settings", 
-          icon: <SettingOutlined /> 
+        {
+          label: "Settings",
+          key: "settings",
+          icon: <SettingOutlined />,
         },
         {
           label: "Log out",
@@ -190,15 +194,16 @@ const toggleTheme = (checked) => {
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "90vh" }}>
       <HeaderDashboard collapsed={collapsed} setCollapsed={setCollapsed} />
-      <Layout>
+      <Layout style={{ marginTop: -20 }}>
         <Sider
           width={240}
-           theme={darkMode ? "dark" : "light"}
+          theme={darkMode ? "dark" : "light"}
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
+          breakpoint="md"
           className="sidebar-menu"
         >
           <div className="sidebar-scroll-wrapper">
@@ -223,16 +228,21 @@ const toggleTheme = (checked) => {
           </div>
         </Sider>
 
-        <Content style={{ padding: 24, background: "#fff" }}>
-          <Routes>
-            <Route path="dashboard" element={<DashboardOverview />} />
-            <Route path="appointment" element={<Appointment />} />
-            <Route path="patient" element={<PatientProfile />} />
-            <Route path="schedule" element={<DoctorWorkSchedule />} />
-            <Route path="doctorinfo" element={<DoctorUpdate />} />
-            <Route path="changepassword" element={<ChangePasswordModal />} />
-            <Route path="*" element={<Navigate to="dashboard" replace />} />
-          </Routes>
+        <Content
+          style={{ background: "#f0f2f5", marginLeft: collapsed ? 80 : 240 }}
+        >
+          <div className="dashboard-content-wrapper">
+            <Routes>
+              <Route path="dashboard" element={<DashboardOverview />} />
+              <Route path="appointment" element={<Appointment />} />
+              <Route path="patient" element={<PatientProfile />} />
+              <Route path="schedule" element={<DoctorWorkSchedule />} />
+              <Route path="send-email" element={<BroadcastEmail />} />
+              <Route path="doctorinfo" element={<DoctorUpdate />} />
+              <Route path="changepassword" element={<ChangePasswordModal />} />
+              <Route path="*" element={<Navigate to="dashboard" replace />} />
+            </Routes>
+          </div>
         </Content>
       </Layout>
     </Layout>

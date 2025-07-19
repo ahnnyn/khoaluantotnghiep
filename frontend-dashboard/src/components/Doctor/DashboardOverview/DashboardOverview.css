@@ -4,6 +4,8 @@
   padding: 24px;
   background-color: #f0f2f5;
   min-height: 100vh;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 /* Statistic Cards */
@@ -39,9 +41,17 @@
   fill: #595959;
 }
 
-/* Responsive */
+/* Responsive Tweaks */
 @media (max-width: 768px) {
   .dashboard-overview {
     padding: 12px;
+  }
+
+  .chart-card {
+    padding: 0;
+  }
+
+  .statistic-card {
+    text-align: center;
   }
 }

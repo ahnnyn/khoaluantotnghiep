@@ -1,7 +1,18 @@
 // File: DashboardOverview.tsx
 import { Card, Col, Row, Statistic, Typography } from "antd";
-import { BarChartOutlined, CalendarOutlined, UserOutlined } from "@ant-design/icons";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  BarChartOutlined,
+  CalendarOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import "./DashboardOverview.css";
 
 const { Title } = Typography;
@@ -18,8 +29,8 @@ const DashboardOverview = () => {
   return (
     <div className="dashboard-overview">
       <Row gutter={[16, 16]}>
-        <Col span={8}>
-          <Card>
+        <Col xs={24} sm={12} md={8}>
+          <Card className="statistic-card">
             <Statistic
               title="Appointments"
               value={28}
@@ -27,8 +38,8 @@ const DashboardOverview = () => {
             />
           </Card>
         </Col>
-        <Col span={8}>
-          <Card>
+        <Col xs={24} sm={12} md={8}>
+          <Card className="statistic-card">
             <Statistic
               title="Patients"
               value={134}
@@ -36,8 +47,8 @@ const DashboardOverview = () => {
             />
           </Card>
         </Col>
-        <Col span={8}>
-          <Card>
+        <Col xs={24} sm={24} md={8}>
+          <Card className="statistic-card">
             <Statistic
               title="Reports"
               value={19}
@@ -49,7 +60,7 @@ const DashboardOverview = () => {
 
       <Row style={{ marginTop: 32 }} gutter={[16, 16]}>
         <Col span={24}>
-          <Card title="Monthly Patient Visits">
+          <Card title="Monthly Patient Visits" className="chart-card">
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData}>
                 <XAxis dataKey="name" />

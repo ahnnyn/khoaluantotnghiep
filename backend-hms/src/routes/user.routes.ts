@@ -9,6 +9,8 @@ import {
   putUpdateUser,
   putUpdatePassword,
   postCreateUser,
+  getInfoCoordinators,
+  getUserList,
 } from "controllers/user/user.auth.controller";
 
 import { ACCOUNT_ROLE } from "config/constants"; // Import ACCOUNT_ROLE nếu cần
@@ -19,11 +21,11 @@ const userRoutes = (app: Express) => {
   //Route public (Không cần auth)
   router.post("/auth/login", loginAPI);
   router.get("/view-user/:id", getViewUserByID);
-
+  router.get("/user-list", getUserList);
 
   //Gắn auth cho các route còn lại
   // Tạo middleware cho các role được phép
-  const authorizeUser= authjwt([
+  const authorizeUser = authjwt([
     ACCOUNT_ROLE.ADMIN,
     ACCOUNT_ROLE.DOCTOR,
     ACCOUNT_ROLE.PATIENT,
@@ -36,6 +38,7 @@ const userRoutes = (app: Express) => {
   router.post("/create-user", postCreateUser);
   router.put("/update-user", putUpdateUser);
   router.put("/update-account", putUpdatePassword);
+  router.get("/info-coordinators", getInfoCoordinators);
   // router.post("/handle-create-user", fileUploadMiddleware("avatar"), postCreateUser);
   // router.post("/handle-delete-user/:id", postDeleteUser);
   // router.get("/handle-view-detail-user/:id", getViewUser);

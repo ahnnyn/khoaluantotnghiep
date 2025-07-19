@@ -8,7 +8,8 @@ import {
   handleUserLogin,
   isEmailExist,
   handleUserLogout,
-  handleUpdatePassword
+  handleUpdatePassword,
+  getCoordinators,
 } from "services/user/user.services";
 
 import "dotenv/config";
@@ -44,9 +45,13 @@ const checkEmailExist = async (req: Request, res: Response) => {
   try {
     const user = await isEmailExist(email);
     if (user) {
-      return res.status(200).json({ exists: true, message: "Email already exists" });
+      return res
+        .status(200)
+        .json({ exists: true, message: "Email already exists" });
     } else {
-      return res.status(200).json({ exists: false, message: "Email is available" });
+      return res
+        .status(200)
+        .json({ exists: false, message: "Email is available" });
     }
   } catch (error) {
     console.error("Error checking email:", error);
@@ -61,7 +66,14 @@ const postCreateUser = async (req: Request, res: Response) => {
     const file = req.file;
     const avatar = file ? file.filename : "";
 
-    await handleCreateUser(fullname, username, password, email, phoneNumber, avatar);
+    await handleCreateUser(
+      fullname,
+      username,
+      password,
+      email,
+      phoneNumber,
+      avatar
+    );
     res.status(201).json({ message: "Tạo user thành công" });
   } catch (error: any) {
     console.error("Error creating user:", error);
@@ -73,7 +85,6 @@ const postCreateUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 // Xóa user
 const postDeleteUser = async (req: Request, res: Response) => {
@@ -98,14 +109,13 @@ const getViewUserByID = async (req: Request, res: Response) => {
       return;
     }
 
-    res.status(200).json({data: user}); // Gửi response về client
+    res.status(200).json({ data: user }); // Gửi response về client
   } catch (error) {
     console.error("Error viewing user:", error);
     res.status(500).send("Internal Server Error");
     return;
   }
 };
-
 
 // Cập nhật user
 const putUpdateUser = async (req: Request, res: Response) => {
@@ -121,13 +131,17 @@ const putUpdateUser = async (req: Request, res: Response) => {
       avatar, // file upload sẽ được xử lý riêng
       price,
       positionId,
-      departmentId
+      departmentId,
     } = req.body;
-    
+
     await handleUpdateUser(
       id,
       fullName,
-      gender === "true" || gender === true ? true : gender === "false" || gender === false ? false : undefined,
+      gender === "true" || gender === true
+        ? true
+        : gender === "false" || gender === false
+        ? false
+        : undefined,
       dateOfBirth ? new Date(dateOfBirth) : undefined,
       phone,
       email,
@@ -135,7 +149,11 @@ const putUpdateUser = async (req: Request, res: Response) => {
       avatar,
       price !== undefined && price !== null ? Number(price) : undefined,
       Array.isArray(positionId) ? positionId : positionId ? [positionId] : [],
-      Array.isArray(departmentId) ? departmentId : departmentId ? [departmentId] : []
+      Array.isArray(departmentId)
+        ? departmentId
+        : departmentId
+        ? [departmentId]
+        : []
     );
 
     res.status(200).json({ message: "Cập nhật thông tin thành công" });
@@ -145,7 +163,6 @@ const putUpdateUser = async (req: Request, res: Response) => {
     return;
   }
 };
-
 
 const putUpdatePassword = async (req: Request, res: Response) => {
   try {
@@ -166,11 +183,12 @@ const putUpdatePassword = async (req: Request, res: Response) => {
     return;
   } catch (error: any) {
     console.error("Error:", error);
-    res.status(500).json({ message: error.message || "Lỗi cập nhật tài khoản." });
+    res
+      .status(500)
+      .json({ message: error.message || "Lỗi cập nhật tài khoản." });
     return;
   }
 };
-
 
 // Đăng nhập (API)
 const loginAPI = async (req: Request, res: Response) => {
@@ -190,6 +208,17 @@ const loginAPI = async (req: Request, res: Response) => {
   }
 };
 
+
+const getUserList = async (req: Request, res: Response) => {
+  try {
+    const users = await getAllUsers();
+    res.status(200).json({ data: users });
+  } catch (error) {
+    console.error("Error fetching user list:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 const postLogout = async (req: Request, res: Response) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // lấy token sau "Bearer"
@@ -200,12 +229,22 @@ const postLogout = async (req: Request, res: Response) => {
   }
 
   try {
-    const result = await handleUserLogout(token); 
+    const result = await handleUserLogout(token);
     res.status(200).json(result); // { success: true, message: "Logout successful" }
     return;
   } catch (error: any) {
     res.status(401).json({ message: error.message || "Logout failed" });
     return;
+  }
+};
+
+const getInfoCoordinators = async (req: Request, res: Response) => {
+  try {
+    const coordinators = await getCoordinators();
+    res.status(200).json({ data: coordinators });
+  } catch (error) {
+    console.error("Error fetching coordinators:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 // ------------------------- Export -------------------------
@@ -220,5 +259,7 @@ export {
   putUpdateUser,
   putUpdatePassword,
   loginAPI,
-  postLogout
+  postLogout,
+  getInfoCoordinators,
+  getUserList,
 };

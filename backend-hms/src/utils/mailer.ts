@@ -13,7 +13,12 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendMail = async (to, subject, htmlContent, options = {}) => {
+const sendMail = async (
+  to: string,
+  subject: string,
+  htmlContent: string,
+  options = {}
+) => {
   const mailOptions = {
     from: '"Healio" <no-reply@healio.vn>',
     to,
@@ -27,6 +32,7 @@ const sendMail = async (to, subject, htmlContent, options = {}) => {
     await transporter.sendMail(mailOptions);
   } catch (error) {
     console.error(`Failed to send email to ${to}:`, error.message);
+    throw error;
   }
 };
 

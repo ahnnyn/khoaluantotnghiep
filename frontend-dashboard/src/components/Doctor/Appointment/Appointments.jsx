@@ -102,6 +102,7 @@ const Appointment = () => {
   const [customDate, setCustomDate] = useState(null); // moment object
   const today = moment().startOf("day");
   const sevenDaysAgo = moment().subtract(7, "days").startOf("day");
+  const [isloading, setIsLoading] = useState(false);
 
   const reloadMedicalData = useSelector(
     (state) => state.global.reloadMedicalData
@@ -264,9 +265,9 @@ const Appointment = () => {
     }
 
     setUpdatingId(record._id);
+    setIsLoading(true);
 
     try {
-      // 1. Gửi mail (gọi API gửi mail tùy bạn đặt)
       await sendCancellationEmailToPatient({
         email: record.patientProfileId?.email,
         hoTen: record.patientProfileId?.fullName,
@@ -562,6 +563,7 @@ const Appointment = () => {
         onOk={confirmCancelAndSendMail}
         okText="Xác nhận hủy và gửi mail"
         cancelText="Hủy bỏ"
+        confirmLoading={isloading || updatingId === cancelModal.record?._id}
         okButtonProps={{
           style: {
             backgroundColor: "#1677ff", // hoặc dùng token màu chính của AntD
