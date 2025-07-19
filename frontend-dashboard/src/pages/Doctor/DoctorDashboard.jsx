@@ -38,6 +38,7 @@ import DoctorWorkSchedule from "components/Doctor/DoctorWorkSchedule/DoctorWorkS
 import ChangePasswordModal from "components/Doctor/ChangePasswordModal/ChangePasswordModal";
 import HeaderDashboard from "components/Doctor/Header/Header.Dashboard";
 import BroadcastEmail from "../../components/Doctor/BroadcastEmail/BroadcastEmail";
+import ChatPage from "../ChatBox/ChatPage";
 import "./DoctorDashboard.css";
 const { Sider, Content } = Layout;
 
@@ -194,9 +195,9 @@ const DoctorDashboard = () => {
   };
 
   return (
-    <Layout style={{ minHeight: "90vh" }}>
+    <Layout>
       <HeaderDashboard collapsed={collapsed} setCollapsed={setCollapsed} />
-      <Layout style={{ marginTop: -20 }}>
+      <Layout>
         <Sider
           width={240}
           theme={darkMode ? "dark" : "light"}
@@ -204,6 +205,7 @@ const DoctorDashboard = () => {
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
           breakpoint="md"
+          collapsedWidth={90}
           className="sidebar-menu"
         >
           <div className="sidebar-scroll-wrapper">
@@ -229,7 +231,7 @@ const DoctorDashboard = () => {
         </Sider>
 
         <Content
-          style={{ background: "#f0f2f5", marginLeft: collapsed ? 80 : 240 }}
+          style={{ background: "#f0f2f5", marginLeft: collapsed ? 0 : 240 }}
         >
           <div className="dashboard-content-wrapper">
             <Routes>
@@ -238,6 +240,7 @@ const DoctorDashboard = () => {
               <Route path="patient" element={<PatientProfile />} />
               <Route path="schedule" element={<DoctorWorkSchedule />} />
               <Route path="send-email" element={<BroadcastEmail />} />
+              <Route path="messages" element={<ChatPage />} />
               <Route path="doctorinfo" element={<DoctorUpdate />} />
               <Route path="changepassword" element={<ChangePasswordModal />} />
               <Route path="*" element={<Navigate to="dashboard" replace />} />

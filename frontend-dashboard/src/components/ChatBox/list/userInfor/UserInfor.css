@@ -1,0 +1,40 @@
+.userInfo {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #dddddd35;
+
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    img {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      object-fit: cover;
+      transform: rotate(-90deg);
+    }
+    .avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      transform: rotate(-90deg);
+    }
+  }
+
+  .icons {
+    display: flex;
+    gap: 10px;
+
+    img {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      transform: rotate(-90deg);
+    }
+  }
+}

@@ -1,10 +1,10 @@
 /* ===== GLOBAL RESET ===== */
-body {
+html, body, #root, .ant-layout {
+  height: 100%;
   margin: 0;
-  font-family: "Segoe UI", "Roboto", sans-serif;
-  background-color: #f4f6f9;
-  color: #1e1e1e;
+  padding: 0;
 }
+
 
 /* ===== LOGO ===== */
 .logo,
@@ -135,11 +135,13 @@ body {
   height: 100vh;
   position: fixed;
   overflow: hidden;
+  overflow-x: hidden;
 }
 .ant-layout-sider .ant-layout-sider-children {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
   padding-bottom: 100px;
   scroll-behavior: smooth;
 }
@@ -183,24 +185,30 @@ body {
 }
 
 /* ===== MAIN CONTENT ===== */
+
+
 .ant-layout-content {
-  margin: 16px;
-  padding: 24px;
+  padding: 20px;
   background: #fff;
-  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow-y: auto;
-  max-height: calc(100vh - 64px);
-  transition: width 0.3s ease;
+  height: calc(100vh - 64px); /* hoặc flex: 1 nếu trong flexbox */
+  box-sizing: border-box;
 }
+.ant-layout-content .ant-row {
+  width: 100%;
+}
+/* Wrapper nội dung dashboard */
 .dashboard-content-wrapper {
-  max-width: 1300px;
   margin: 0 auto;
-  padding: 24px;
-  min-height: calc(100vh - 64px);
+  padding: 20px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  min-height: 100%; /* hoặc min-height: calc(100vh - 64px); nếu cần */
+  width: 100%;
+  max-width: 1300px;
 }
 
 /* ===== DASHBOARD CARD ===== */
@@ -244,6 +252,10 @@ body {
   padding: 16px 0;
 }
 
+.ant-layout-sider-collapsed {
+  width: 80px;
+  overflow: hidden;
+}
 /* ===== DARK MODE ===== */
 body[data-theme="dark"] {
   --bg-color: #1f1f1f;
@@ -291,9 +303,15 @@ body[data-theme="dark"] {
   .ant-layout {
     background: var(--menu-bg) !important;
   }
+
+  .ant-layout-content {
+    background: var(--bg-color) !important;
+    color: var(--text-color) !important;
+  }
+
   .dashboard-card,
   .dashboard-content-wrapper {
-    background: #202020 !important;
+    background: #e9f0f2 !important;
     color: #f0f0f0 !important;
   }
   .custom-search-input {
@@ -312,6 +330,27 @@ body[data-theme="dark"] {
   }
   .theme-toggle span {
     color: #fadb14;
+  }
+
+  .ant-form-item-label > label {
+    color: #151515 !important;
+  }
+
+  /* Nền trắng, chữ đen, viền xám đậm */
+  .ant-input,
+  .ant-input-number,
+  .ant-select-selector,
+  .ant-picker-input > input {
+    background-color: #ffffff !important;
+    color: #0c0c0c !important;
+    border-color: #444 !important;
+  }
+
+  /* Placeholder trong Ant Design Select */
+  .ant-select-selector::placeholder,
+  .ant-input::placeholder,
+  .ant-picker-input > input::placeholder {
+    color: #999 !important; /* hoặc đổi theo ý bạn */
   }
 }
 
